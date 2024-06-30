@@ -9,23 +9,11 @@ import SwiftUI
 
 struct WatchPlayingView: View {
     @Environment(WatchNavigationManager.self) var navigationManager
-    @State var showMarkerListOverlay : Bool = false
+    @State var showMarkerListOverlay: Bool = false
     
     var body: some View {
         ZStack{
             VStack {
-                HStack{
-                    Spacer()
-                    Button(action: {
-                        showMarkerListOverlay.toggle()
-                    }, label:{
-                        Image(systemName: "list.bullet")
-                    }).buttonBorderShape(.circle)
-                        .frame(width:50)
-
-                }
-                Spacer()
-                
                 TabView{
                     WatchPlayingMarkerView()
                     WatchPlayingSpeedView()
@@ -47,14 +35,24 @@ struct WatchPlayingView: View {
                         
                     }, label:{
                         Image(systemName: "arrow.circlepath")
-
+                        
                     })
                 }
             }
-            if showMarkerListOverlay{
-                WatchMarkerListView(showMarkerListOverlay: $showMarkerListOverlay)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing){
+                Button(action:{
+                    showMarkerListOverlay = true
+                }, label:{
+                    Image(systemName: "list.bullet")
+                }).buttonBorderShape(.circle)
+                    .frame(width:50)
             }
         }
+        .fullScreenCover(isPresented: $showMarkerListOverlay, content: {
+            WatchMarkerListView()
+        })
         
     }
 }

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
-    @Environment(WatchNavigationManager.self) var navigationManager
     
     var body: some View {
         VStack{
@@ -31,5 +30,4 @@ struct WatchMarkerDetailView: View {
 
 #Preview {
     WatchMarkerDetailView()
-        .environment(WatchNavigationManager())
 }

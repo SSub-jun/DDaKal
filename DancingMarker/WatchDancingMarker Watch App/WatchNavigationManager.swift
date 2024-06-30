@@ -10,10 +10,6 @@ import SwiftUI
 enum WatchPathType: Hashable {
     case musicList
     case playing
-    case playingMarker
-    case playingSpeed
-    case markerDetail
-    case markerEdit
 }
 
 extension WatchPathType {
@@ -25,18 +21,6 @@ extension WatchPathType {
             
         case .playing:
             WatchPlayingView()
-            
-        case .playingMarker:
-            WatchPlayingMarkerView()
-            
-        case .playingSpeed:
-            WatchPlayingSpeedView()
-            
-        case .markerDetail:
-            WatchMarkerDetailView()
-            
-        case .markerEdit:
-            WatchMarkerEditView()
         }
     }
 }
