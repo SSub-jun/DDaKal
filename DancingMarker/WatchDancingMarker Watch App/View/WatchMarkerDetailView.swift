@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WatchMarkerDetailView: View {
     
+    let data: String
+    
     var body: some View {
         VStack{
             Text("5:13")
@@ -29,5 +31,5 @@ struct WatchMarkerDetailView: View {
 }
 
 #Preview {
-    WatchMarkerDetailView()
+    WatchMarkerDetailView(data: "dd")
 }

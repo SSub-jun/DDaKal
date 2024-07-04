@@ -24,7 +24,10 @@ struct WatchMarkerListView: View {
                     
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(tempData, id: \.self) { item in
-                            WatchMarkerListCellView(data: item)
+                            NavigationLink(destination: WatchMarkerDetailView(data: item)) {
+                                WatchMarkerListCellView(data: item)
+                            }
+                            .buttonStyle(PlainButtonStyle()) // <- 이 부분을 추가해 탭 가능 영역을 제한합니다.
                         }
                     }
                     .padding(.horizontal)
