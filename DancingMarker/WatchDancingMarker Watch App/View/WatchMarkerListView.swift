@@ -1,33 +1,66 @@
-//
-//  MarkerListOverlay.swift
-//  WatchDancingMarker Watch App
-//
-//  Created by 변준섭 on 6/25/24.
-//
 
 import SwiftUI
 
 struct WatchMarkerListView: View {
     
+    let tempData = ["추가1", "추가2", "추가3"]
+    
+    let columns = [
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
-        ZStack{
+        NavigationView {
             VStack{
+                
                 ScrollView{
-                    Button(action:{
-                    }, label:{
-                        Text("추가")
-                    })
-                    Button(action:{
-                    }, label:{
-                        Text("5:13")
-                    })
-                    Button(action:{
-                    }, label:{
-                        Text("추가")
-                    })
+                    HStack {
+                        Text("마커 관리")
+                            .bold()
+                            .padding([.leading, .bottom])
+                        
+                        Spacer()
+                    }
+                    
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(tempData, id: \.self) { item in
+                            WatchMarkerListCellView(data: item)
+                        }
+                    }
+                    .padding(.horizontal)
+                    
                 }
             }
         }
+    }
+}
+
+struct WatchMarkerListCellView: View {
+    
+    let data: String
+    
+    var body: some View {
+        
+        ZStack {
+            Rectangle()
+                .fill(.blue)
+                .cornerRadius(4)
+                .frame(height: 44)
+            
+            HStack {
+                markerImage()
+                markerTime()
+            }
+        }
+    }
+    
+    func markerImage() -> some View {
+        Image(systemName: "shield.fill")
+    }
+    
+    func markerTime() -> some View {
+        Text("\(data)")
+            .bold()
     }
 }
 
