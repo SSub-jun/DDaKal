@@ -1,9 +1,3 @@
-//
-//  MarkerDetailView.swift
-//  WatchDancingMarker Watch App
-//
-//  Created by 변준섭 on 6/25/24.
-//
 
 import SwiftUI
 
@@ -12,24 +6,57 @@ struct WatchMarkerDetailView: View {
     let data: String
     
     var body: some View {
-        VStack{
-            Text("5:13")
-            Button(action:{
+        
+        VStack(spacing: 10){
+            
+            Text("\(data)")
+                .padding(.bottom)
+            
+            Button(action: {
                 
-            }, label:{
+            }, label: {
                 Text("수정하기")
             })
-            Button(action:{
+            .buttonStyle(EditButtonStyle())
+            
+            Button(action: {
                 
-            }, label:{
-                Text("삭제하기")
-                    .foregroundStyle(.red)
+            }, label: {
+                Text("초기화하기")
             })
+            .buttonStyle(ResetButtonStyle())
+           
         }
-        
+    }
+}
+
+struct EditButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .bold()
+            .background(Color.gray.opacity(0.2))
+            .cornerRadius(9)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+    }
+}
+
+struct ResetButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .bold()
+            .background(Color.red.opacity(0.4))
+            .foregroundColor(.red)
+            .cornerRadius(9)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
 
 #Preview {
-    WatchMarkerDetailView(data: "dd")
+    WatchMarkerDetailView(data: "임시 데이터")
 }

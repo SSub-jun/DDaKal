@@ -16,7 +16,7 @@ struct WatchMarkerListView: View {
                 ScrollView{
                     HStack {
                         Text("마커 관리")
-                            .bold()
+                            .fontWeight(.heavy)
                             .padding([.leading, .bottom])
                         
                         Spacer()
@@ -27,7 +27,7 @@ struct WatchMarkerListView: View {
                             NavigationLink(destination: WatchMarkerDetailView(data: item)) {
                                 WatchMarkerListCellView(data: item)
                             }
-                            .buttonStyle(PlainButtonStyle()) // <- 이 부분을 추가해 탭 가능 영역을 제한합니다.
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.horizontal)
@@ -46,7 +46,7 @@ struct WatchMarkerListCellView: View {
         
         ZStack {
             Rectangle()
-                .fill(.blue)
+                .fill(Color.gray.opacity(0.2))
                 .cornerRadius(4)
                 .frame(height: 44)
             
@@ -59,6 +59,9 @@ struct WatchMarkerListCellView: View {
     
     func markerImage() -> some View {
         Image(systemName: "shield.fill")
+            .resizable()
+            .frame(width: 12, height: 20)
+            .padding()
     }
     
     func markerTime() -> some View {
