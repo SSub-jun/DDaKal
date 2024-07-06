@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5147EDEC2C3697C600AE1A24 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5147EDEB2C3697C600AE1A24 /* Music.swift */; };
 		901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
 		901BF9832C29804A00C02FF9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9822C29804A00C02FF9 /* ContentView.swift */; };
 		901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5147EDEB2C3697C600AE1A24 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingMarkerApp.swift; sourceTree = "<group>"; };
 		901BF9822C29804A00C02FF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -100,6 +102,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		51CAA1042C392B2500406BB8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5147EDEB2C3697C600AE1A24 /* Music.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		901BF9742C29804A00C02FF9 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +131,7 @@
 		901BF97F2C29804A00C02FF9 /* DancingMarker */ = {
 			isa = PBXGroup;
 			children = (
+				51CAA1042C392B2500406BB8 /* Model */,
 				901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */,
 				901BF9822C29804A00C02FF9 /* ContentView.swift */,
 				90E28F4B2C2D057A009098BE /* MusicListView.swift */,
@@ -284,6 +295,7 @@
 				90E28F582C2D0D89009098BE /* NowPlayingView.swift in Sources */,
 				90E28F502C2D05A3009098BE /* MusicEditView.swift in Sources */,
 				90E28F522C2D05B1009098BE /* PlayingView.swift in Sources */,
+				5147EDEC2C3697C600AE1A24 /* Music.swift in Sources */,
 				90E28F4E2C2D0592009098BE /* MusicAddView.swift in Sources */,
 				90E28F562C2D092E009098BE /* NavigationManager.swift in Sources */,
 				90E28F4C2C2D057A009098BE /* MusicListView.swift in Sources */,
