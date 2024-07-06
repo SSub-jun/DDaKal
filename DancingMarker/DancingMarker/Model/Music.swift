@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Player {
+class Music {
     var title: String
     var artist: String
     var path: String
