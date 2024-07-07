@@ -9,25 +9,42 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var navigationManager = NavigationManager()
+    @State private var showMusicList = false
+    @State private var currentView: PathType? = nil
 
     var body: some View {
-        ZStack{
-            NavigationStack(path: $navigationManager.path) {
-                VStack {
-                    Text("여기는 실제로 보이지 않는 화면입니다.")
-                    Button("Go to MusicListView") {
-                        navigationManager.push(to: .musicList)
-                    }
-                }
-                .navigationDestination(for: PathType.self) { pathType in
-                    pathType.NavigatingView()
+        NavigationStack(path: $navigationManager.path) {
+            VStack {
+                //MARK: - 스플래시 화면 구현 필요
+                switch currentView {
+                case .musicList:
+                    MusicListView()
+                default: Text("Drop The Beat(로고)")
+                        .font(.largeTitle)
+                        .padding()
                 }
             }
-            .environment(navigationManager)
+            .navigationDestination(for: PathType.self) { pathType in
+                pathType.NavigatingView()
+            }
+
+        }
+        .environment(navigationManager)
+        .onAppear {
+            resetShowMusicList()
+        }
+    }
+    
+    private func resetShowMusicList() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            showMusicList = true
+            currentView = .musicList
         }
     }
 }
 
+
 #Preview {
     ContentView()
+        .preferredColorScheme(.dark)
 }

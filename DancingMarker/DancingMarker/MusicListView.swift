@@ -10,24 +10,30 @@ import SwiftUI
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
 
-    
     var body: some View {
         VStack{
-            Spacer()
-            Text("여기는 MusicListView.")
-            Spacer()
-            Button("Go to MusicAddView") {
-                navigationManager.push(to: .musicadd)
-            }.buttonBorderShape(.roundedRectangle)
-            Spacer()
-            Button("Go to PlayingView") {
-                navigationManager.push(to: .playing)
-            }.buttonBorderShape(.roundedRectangle)
-            Spacer()
-            Button("Go to NowPlayingView") {
-                navigationManager.push(to: .nowplaying)
-            }.buttonBorderShape(.roundedRectangle)
-            Spacer()
+            HStack(spacing: 10){
+                RoundedRectangle(cornerRadius: 13)
+                    .fill(Color.gray)
+                    .frame(width: 66, height: 66)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("음원 제목")
+                        .font(.title3)
+                        .bold()
+                    Text("아티스트")
+                        .font(.body)
+                }
+
+            }
+        }
+        .navigationTitle("내 음악")
+        .toolbar {
+            ToolbarItem (placement: .topBarTrailing) {
+                Button("추가하기") {
+                    navigationManager.push(to: .musicadd)
+                }
+            }
         }
     }
 }
@@ -35,5 +41,6 @@ struct MusicListView: View {
 #Preview {
     MusicListView()
         .environment(NavigationManager())
+        .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
 
 }
