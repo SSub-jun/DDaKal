@@ -22,7 +22,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(EditButtonStyle())
             .fullScreenCover(isPresented: $isShowingEditView, content: {
-                WatchMarkerEditView()
+                WatchMarkerEditView(data: data)
             })
             
             
