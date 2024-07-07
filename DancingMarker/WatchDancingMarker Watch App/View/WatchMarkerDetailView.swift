@@ -3,6 +3,8 @@ import SwiftUI
 
 struct WatchMarkerDetailView: View {
     
+    @State var isShownFullScreenCover = false
+    
     let data: String
     
     var body: some View {
@@ -20,13 +22,39 @@ struct WatchMarkerDetailView: View {
             .buttonStyle(EditButtonStyle())
             
             Button(action: {
-                
+                self.isShownFullScreenCover.toggle()
             }, label: {
                 Text("초기화하기")
             })
             .buttonStyle(ResetButtonStyle())
-           
+            .fullScreenCover(isPresented: $isShownFullScreenCover, content: {
+                MarkerResetAlert()
+            })
         }
+        .padding()
+    }
+}
+
+struct MarkerResetAlert: View {
+    
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            Text("이 마커를\n초기화시키겠습니까?")
+                .padding()
+                .padding(.bottom, 20)
+                .multilineTextAlignment(.center)
+            
+            Button(action: {
+                // 마커 초기화
+            }, label: {
+                Text("초기화하기")
+            })
+            .buttonStyle(ResetButtonStyle())
+        }
+        .padding()
     }
 }
 
