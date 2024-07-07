@@ -3,8 +3,10 @@ import SwiftUI
 
 struct WatchMarkerDetailView: View {
     
+    @Binding var navigationPath: NavigationPath
+    
+    @State private var isShowingEditView = false // EditView로 이동 상태관리 변수
     @State private var isShownResetAlert = false // ResetAlert
-    @State private var isShowingEditView = false // 네비게이션을 제어하는 상태 변수
     
     let data: String
     
@@ -25,16 +27,15 @@ struct WatchMarkerDetailView: View {
                 WatchMarkerEditView(data: data)
             })
             
-            
             Button(action: {
                 self.isShownResetAlert.toggle()
             }, label: {
                 Text("초기화하기")
             })
             .buttonStyle(ResetButtonStyle())
-            .fullScreenCover(isPresented: $isShownResetAlert, content: {
-                MarkerResetAlert()
-            })
+            .fullScreenCover(isPresented: $isShownResetAlert) {
+                MarkerResetAlert(navigationPath: $navigationPath)
+            }
         }
         .padding()
     }
@@ -42,18 +43,26 @@ struct WatchMarkerDetailView: View {
 
 struct MarkerResetAlert: View {
     
+    @Binding var navigationPath: NavigationPath
+    
     
     var body: some View {
         VStack {
             Spacer()
             
-            Text("이 마커를\n초기화시키겠습니까?")
-                .padding()
-                .padding(.bottom, 20)
-                .multilineTextAlignment(.center)
+            HStack {
+                Text("이 마커를\n초기화시키겠습니까?")
+                    .font(.system(size: 14))
+                    .padding()
+                    .padding(.bottom, 20)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity)
             
             Button(action: {
-                // 마커 초기화
+                navigationPath.removeLast(navigationPath.count) // Navigation Stack 초기화
+                // 마커 초기화 구현해야함
             }, label: {
                 Text("초기화하기")
             })
@@ -90,6 +99,7 @@ struct ResetButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
-    WatchMarkerDetailView(data: "임시 데이터")
-}
+//#Preview {
+//    //    WatchMarkerDetailView(data: "임시 데이터")
+//    MarkerResetAlert(navigationPath: Binding<NavigationPath>)
+//}

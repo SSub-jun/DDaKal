@@ -3,6 +3,8 @@ import SwiftUI
 
 struct WatchMarkerListView: View {
     
+    @State private var navigationPath = NavigationPath()
+    
     let tempData = ["추가1", "추가2", "추가3"]
     
     let columns = [
@@ -10,29 +12,28 @@ struct WatchMarkerListView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            VStack{
-                
-                ScrollView{
+        NavigationStack(path: $navigationPath) {
+            VStack {
+                ScrollView {
                     HStack {
                         Text("마커 관리")
                             .fontWeight(.heavy)
                             .padding([.leading, .bottom])
-                        
                         Spacer()
                     }
-                    
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(tempData, id: \.self) { item in
-                            NavigationLink(destination: WatchMarkerDetailView(data: item)) {
+                            NavigationLink(value: item) {
                                 WatchMarkerListCellView(data: item)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.horizontal)
-                    
                 }
+            }
+            .navigationDestination(for: String.self) { item in
+                WatchMarkerDetailView(navigationPath: $navigationPath, data: item)
             }
         }
     }
