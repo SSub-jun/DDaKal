@@ -11,6 +11,7 @@ struct WatchMarkerDetailView: View {
     var body: some View {
         VStack(spacing: 10) {
             Text("\(convertTime(seconds: data))")
+                .font(.system(size: 17))
                 .padding(.bottom)
             
             Button(action: {
@@ -20,7 +21,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(EditButtonStyle())
             .fullScreenCover(isPresented: $isShowingEditView) {
-                WatchMarkerEditView(data: data)
+                WatchMarkerEditView(data: data, isPresented: $isShowingEditView)
             }
             
             Button(action: {
@@ -42,8 +43,6 @@ struct WatchMarkerDetailView: View {
         return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
-
-import SwiftUI
 
 struct MarkerResetAlert: View {
     

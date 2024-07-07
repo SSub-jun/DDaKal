@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WatchMarkerListView: View {
+    
     @State private var navigationPath = NavigationPath()
     
     let tempData = [47, 97, 206]

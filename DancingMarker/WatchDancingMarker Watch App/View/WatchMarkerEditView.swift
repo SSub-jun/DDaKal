@@ -3,13 +3,18 @@ import SwiftUI
 struct WatchMarkerEditView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @State private var count = 1
+    
     @State var data: Int
+    @State private var count = 1
     @State private var initialData: Int
     
-    init(data: Int) {
+    @State private var showingAlert = false
+    @Binding var isPresented: Bool
+    
+    init(data: Int, isPresented: Binding<Bool>) {
         self.data = data
         self._initialData = State(initialValue: data)
+        self._isPresented = isPresented
     }
     
     var body: some View {
@@ -75,7 +80,11 @@ struct WatchMarkerEditView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        if data != initialData {
+                            showingAlert = true
+                        } else {
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
@@ -84,6 +93,9 @@ struct WatchMarkerEditView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
+            }
+            .fullScreenCover(isPresented: $showingAlert) {
+                MarkerEditAlert(isPresented: $isPresented)
             }
         }
     }
@@ -106,8 +118,7 @@ struct WatchMarkerEditView: View {
     
 }
 
-
-
+// MARK: 저장하기 버튼 스타일
 struct SaveButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

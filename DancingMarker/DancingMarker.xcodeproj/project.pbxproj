@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F429E6B2C3ABF0D007F510C /* WatchMarkerEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */; };
 		901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
 		901BF9832C29804A00C02FF9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9822C29804A00C02FF9 /* ContentView.swift */; };
 		901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMarkerEditAlert.swift; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingMarkerApp.swift; sourceTree = "<group>"; };
 		901BF9822C29804A00C02FF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				901BF9AF2C2A52A300C02FF9 /* WatchMarkerListView.swift */,
 				901BF9B12C2A52B700C02FF9 /* WatchMarkerDetailView.swift */,
 				901BF9B32C2A52C600C02FF9 /* WatchMarkerEditView.swift */,
+				1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F429E6B2C3ABF0D007F510C /* WatchMarkerEditAlert.swift in Sources */,
 				901BF9A52C29834A00C02FF9 /* DancingMarkerApp.swift in Sources */,
 				901BF9B22C2A52B700C02FF9 /* WatchMarkerDetailView.swift in Sources */,
 				901BF9AE2C2A528F00C02FF9 /* WatchPlayingSpeedView.swift in Sources */,
