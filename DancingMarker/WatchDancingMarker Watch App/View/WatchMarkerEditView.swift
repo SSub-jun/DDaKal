@@ -3,7 +3,7 @@ import SwiftUI
 struct WatchMarkerEditView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    let data: String
+    let data: Int
     
     var body: some View {
         NavigationView {
@@ -25,7 +25,7 @@ struct WatchMarkerEditView: View {
                     }
                     Spacer()
                     
-                    Text("\(data)")
+                    Text("\(convertTime(seconds: data))")
                         .font(.system(size: 22))
                     
                     Spacer()
@@ -74,7 +74,15 @@ struct WatchMarkerEditView: View {
             }
         }
     }
+    
+    func convertTime(seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, remainingSeconds)
+    }
+    
 }
+
 struct SaveButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -89,6 +97,6 @@ struct SaveButtonStyle: ButtonStyle {
 }
 
 
-#Preview {
-    WatchMarkerEditView(data: "2:09")
-}
+//#Preview {
+//    WatchMarkerEditView(data: "2:09")
+//}

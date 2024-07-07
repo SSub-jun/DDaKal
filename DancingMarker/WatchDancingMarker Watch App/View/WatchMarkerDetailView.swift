@@ -1,15 +1,16 @@
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
+    
     @Binding var navigationPath: NavigationPath
     @State private var isShowingEditView = false
     @State private var isShownResetAlert = false
     
-    let data: String
+    let data: Int
     
     var body: some View {
         VStack(spacing: 10) {
-            Text("\(data)")
+            Text("\(convertTime(seconds: data))")
                 .padding(.bottom)
             
             Button(action: {
@@ -33,6 +34,12 @@ struct WatchMarkerDetailView: View {
             }
         }
         .padding()
+    }
+    
+    func convertTime(seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
 

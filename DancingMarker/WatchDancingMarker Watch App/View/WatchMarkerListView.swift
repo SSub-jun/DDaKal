@@ -3,7 +3,7 @@ import SwiftUI
 struct WatchMarkerListView: View {
     @State private var navigationPath = NavigationPath()
     
-    let tempData = ["추가1", "추가2", "추가3"]
+    let tempData = [47, 97, 206]
     
     let columns = [
         GridItem(.flexible())
@@ -30,7 +30,7 @@ struct WatchMarkerListView: View {
                     .padding(.horizontal)
                 }
             }
-            .navigationDestination(for: String.self) { item in
+            .navigationDestination(for: Int.self) { item in
                 WatchMarkerDetailView(navigationPath: $navigationPath, data: item)
             }
         }
@@ -38,7 +38,7 @@ struct WatchMarkerListView: View {
 }
 
 struct WatchMarkerListCellView: View {
-    let data: String
+    let data: Int
     
     var body: some View {
         ZStack {
@@ -61,8 +61,14 @@ struct WatchMarkerListCellView: View {
     }
     
     func markerTime() -> some View {
-        Text("\(data)")
+        Text("\(convertTime(seconds: data))")
             .bold()
+    }
+    
+    func convertTime(seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
 
