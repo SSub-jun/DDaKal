@@ -3,7 +3,8 @@ import SwiftUI
 
 struct WatchMarkerDetailView: View {
     
-    @State var isShownFullScreenCover = false
+    @State private var isShownResetAlert = false // ResetAlert
+    @State private var isShowingEditView = false // 네비게이션을 제어하는 상태 변수
     
     let data: String
     
@@ -15,19 +16,23 @@ struct WatchMarkerDetailView: View {
                 .padding(.bottom)
             
             Button(action: {
-                
+                self.isShowingEditView.toggle()
             }, label: {
                 Text("수정하기")
             })
             .buttonStyle(EditButtonStyle())
+            .fullScreenCover(isPresented: $isShowingEditView, content: {
+                WatchMarkerEditView()
+            })
+            
             
             Button(action: {
-                self.isShownFullScreenCover.toggle()
+                self.isShownResetAlert.toggle()
             }, label: {
                 Text("초기화하기")
             })
             .buttonStyle(ResetButtonStyle())
-            .fullScreenCover(isPresented: $isShownFullScreenCover, content: {
+            .fullScreenCover(isPresented: $isShownResetAlert, content: {
                 MarkerResetAlert()
             })
         }
