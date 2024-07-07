@@ -1,19 +1,14 @@
-
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
-    
     @Binding var navigationPath: NavigationPath
-    
-    @State private var isShowingEditView = false // EditView로 이동 상태관리 변수
-    @State private var isShownResetAlert = false // ResetAlert
+    @State private var isShowingEditView = false
+    @State private var isShownResetAlert = false
     
     let data: String
     
     var body: some View {
-        
-        VStack(spacing: 10){
-            
+        VStack(spacing: 10) {
             Text("\(data)")
                 .padding(.bottom)
             
@@ -23,9 +18,9 @@ struct WatchMarkerDetailView: View {
                 Text("수정하기")
             })
             .buttonStyle(EditButtonStyle())
-            .fullScreenCover(isPresented: $isShowingEditView, content: {
+            .fullScreenCover(isPresented: $isShowingEditView) {
                 WatchMarkerEditView(data: data)
-            })
+            }
             
             Button(action: {
                 self.isShownResetAlert.toggle()
@@ -41,36 +36,54 @@ struct WatchMarkerDetailView: View {
     }
 }
 
+import SwiftUI
+
 struct MarkerResetAlert: View {
     
+    @Environment(\.presentationMode) var presentationMode
     @Binding var navigationPath: NavigationPath
     
-    
     var body: some View {
-        VStack {
-            Spacer()
-            
-            HStack {
-                Text("이 마커를\n초기화시키겠습니까?")
-                    .font(.system(size: 14))
-                    .padding()
-                    .padding(.bottom, 20)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
+        NavigationView {
+            VStack {
+                Spacer()
+                HStack {
+                    Text("이 마커를\n초기화시키겠습니까?")
+                        .font(.system(size: 14))
+                        .padding()
+                        .padding(.bottom, 20)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity)
+                
+                Button(action: {
+                    // 마커 초기화 코드
+                    navigationPath.removeLast(navigationPath.count)
+                }, label: {
+                    Text("초기화하기")
+                })
+                .buttonStyle(ResetButtonStyle())
             }
-            .frame(maxWidth: .infinity)
-            
-            Button(action: {
-                navigationPath.removeLast(navigationPath.count) // Navigation Stack 초기화
-                // 마커 초기화 구현해야함
-            }, label: {
-                Text("초기화하기")
-            })
-            .buttonStyle(ResetButtonStyle())
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.gray)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+            .padding()
+           
         }
-        .padding()
     }
 }
+
 
 struct EditButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

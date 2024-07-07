@@ -1,8 +1,8 @@
-
 import SwiftUI
 
 struct WatchMarkerEditView: View {
     
+    @Environment(\.presentationMode) var presentationMode
     let data: String
     
     var body: some View {
@@ -15,8 +15,8 @@ struct WatchMarkerEditView: View {
                         Circle()
                             .fill(.gray.opacity(0.2))
                             .frame(width: 40, height: 40)
-                            
-                       Image(systemName: "gobackward")
+                        
+                        Image(systemName: "gobackward")
                             .resizable()
                             .frame(width: 25, height: 25)
                         
@@ -34,8 +34,8 @@ struct WatchMarkerEditView: View {
                         Circle()
                             .fill(.gray.opacity(0.2))
                             .frame(width: 40, height: 40)
-                            
-                       Image(systemName: "goforward")
+                        
+                        Image(systemName: "goforward")
                             .resizable()
                             .frame(width: 25, height: 25)
                         
@@ -47,7 +47,7 @@ struct WatchMarkerEditView: View {
                 
                 HStack{
                     Button(action: {
-                        
+                        presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Text("저장하기")
                     })
@@ -59,12 +59,22 @@ struct WatchMarkerEditView: View {
                     .fontWeight(.heavy)
                     .foregroundColor(.yellow)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.gray)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
         }
     }
 }
-
 struct SaveButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

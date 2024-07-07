@@ -1,8 +1,6 @@
-
 import SwiftUI
 
 struct WatchMarkerListView: View {
-    
     @State private var navigationPath = NavigationPath()
     
     let tempData = ["추가1", "추가2", "추가3"]
@@ -40,17 +38,14 @@ struct WatchMarkerListView: View {
 }
 
 struct WatchMarkerListCellView: View {
-    
     let data: String
     
     var body: some View {
-        
         ZStack {
             Rectangle()
                 .fill(Color.gray.opacity(0.2))
                 .cornerRadius(4)
                 .frame(height: 44)
-            
             HStack {
                 markerImage()
                 markerTime()
