@@ -10,7 +10,7 @@ import SwiftUI
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
     //MARK: - 임의로 음원 있다고 가정, 추후 실제 음원 및 모델 사용 해야함
-    @State private var musicList: [String] = []
+    @State private var musicList: [Music] = []
 
     var body: some View {
         VStack {
@@ -29,7 +29,7 @@ struct MusicListView: View {
                             .frame(width: 66, height: 66)
                         
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(music)
+                            Text(music.title)
                                 .font(.title3)
                                 .bold()
                             Text("아티스트")

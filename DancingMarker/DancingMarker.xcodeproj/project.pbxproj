@@ -59,6 +59,7 @@
 
 /* Begin PBXFileReference section */
 		5147EDEB2C3697C600AE1A24 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
+		51FD01772C3BC6B1003F99B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingMarkerApp.swift; sourceTree = "<group>"; };
 		901BF9822C29804A00C02FF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -131,6 +132,7 @@
 		901BF97F2C29804A00C02FF9 /* DancingMarker */ = {
 			isa = PBXGroup;
 			children = (
+				51FD01772C3BC6B1003F99B5 /* Info.plist */,
 				51CAA1042C392B2500406BB8 /* Model */,
 				901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */,
 				901BF9822C29804A00C02FF9 /* ContentView.swift */,
@@ -461,6 +463,8 @@
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DancingMarker/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -491,6 +495,8 @@
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DancingMarker/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
