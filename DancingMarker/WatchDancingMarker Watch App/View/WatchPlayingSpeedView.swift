@@ -9,6 +9,7 @@ struct WatchPlayingSpeedView: View {
             HStack {
                 Text("-")
                     .font(.system(size: 17))
+                    .foregroundColor(speed < 0.55 ? .gray : .white)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 48)
@@ -34,6 +35,7 @@ struct WatchPlayingSpeedView: View {
             HStack {
                 Text("+")
                     .font(.system(size: 17))
+                    .foregroundColor(speed == 1.5 ? .gray : .white)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 48)
@@ -50,14 +52,14 @@ struct WatchPlayingSpeedView: View {
     // 배속 감소
     private func decreaseSpeed() {
         if speed > 0.5 {
-            speed = max(0.5, speed - 0.1)
+            speed = max(0.5, speed - 0.1) // 부동소수점 처리
         }
     }
     
     // 배속 증가
     private func increaseSpeed() {
         if speed < 1.5 {
-            speed = min(1.5, speed + 0.1)
+            speed = min(1.5, speed + 0.1) // 부동소수점 처리
         }
     }
     

@@ -63,7 +63,6 @@ struct WatchMarkerListCellView: View {
     
     func markerTime() -> some View {
         Text("\(convertTime(seconds: data))")
-            .bold()
     }
     
     func convertTime(seconds: Int) -> String {
