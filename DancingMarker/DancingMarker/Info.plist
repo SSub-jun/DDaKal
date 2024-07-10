@@ -5,8 +5,9 @@
 	<key>NSFileProviderDomainUsageDescription</key>
 	<string>음원 파일 접근</string>
     <key>NSDownloadsFolderUsageDescription</key>
-    <string>CSV 파일을 읽어오기 위해 권한이 필요합니다.</string>
+    <string>다운로드 파일을 읽어오기 위해 권한이 필요합니다.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
 	<string>음원 파일을 읽어오기 위해 권한이 필요합니다.</string>
+    
 </dict>
 </plist>
