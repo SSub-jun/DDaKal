@@ -6,13 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct DancingMarkerApp: App {
+    var modelContainer: ModelContainer = {
+            let schema = Schema([Music.self])
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+            
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer: \(error)")
+            }
+        }()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.dark)
+                .modelContainer(modelContainer)
+                .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
         }
     }
 }
+

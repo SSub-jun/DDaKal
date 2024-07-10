@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
+import AVFoundation
 
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
-    //MARK: - 임의로 음원 있다고 가정, 추후 실제 음원 및 모델 사용 해야함
+    @Environment(\.modelContext) private var modelContext
     @State private var musicList: [Music] = []
+    @State private var isFileImporterPresented: Bool = false
 
     var body: some View {
         VStack {
@@ -32,8 +35,11 @@ struct MusicListView: View {
                             Text(music.title)
                                 .font(.title3)
                                 .bold()
-                            Text("아티스트")
+                            Text(music.artist)
                                 .font(.body)
+                        }
+                        .contextMenu {
+                            musicContextMenu(music: music)
                         }
                         
                     }
@@ -46,16 +52,62 @@ struct MusicListView: View {
             ToolbarItem (placement: .topBarTrailing) {
                 Button("추가하기") {
                     //navigationManager.push(to: .musicadd)
-                    loadMusicList()
+                    isFileImporterPresented.toggle()
                 }
+            }
+        }
+        .fileImporter(
+            isPresented: $isFileImporterPresented,
+            allowedContentTypes: [.audio],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                if let url = urls.first {
+                    addMusic(from: url)
+                }
+            case .failure(let error):
+                print("Failed to import file: \(error.localizedDescription)")
             }
         }
     }
     
-    private func loadMusicList() {
-        // 실제 음원 데이터를 로드하는 로직을 여기에 추가합니다.
-        // 예시로 임시 데이터를 추가합니다.
-        musicList = ["음원 제목 1", "음원 제목 2"]
+    private func addMusic(from url: URL) {
+        let title = url.deletingPathExtension().lastPathComponent
+        let artist = "Unknown Artist" // 실제로는 메타데이터를 사용해야 함
+        let path = url.path
+        let markers: [TimeInterval] = [] // 추후에 실제 마커 데이터를 추가해야 함
+        
+        let newMusic = Music(title: title, artist: artist, path: path, markers: markers)
+        modelContext.insert(newMusic)
+        musicList.append(newMusic)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save music: \(error.localizedDescription)")
+        }
+    }
+    
+    private func musicContextMenu(music: Music) -> some View {
+        Group {
+            Button(action: {
+                // 수정 기능
+            }) {
+                Text("수정하기")
+                Image(systemName: "pencil")
+            }
+            Button(role: .destructive, action: {
+                if let index = self.musicList.firstIndex(of: music) {
+                    self.musicList.remove(at: index)
+                    modelContext.delete(music)
+                }
+            }) {
+                Text("삭제하기")
+                Image(systemName: "trash")
+            }
+            
+        }
     }
 }
 
