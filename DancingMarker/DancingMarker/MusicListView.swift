@@ -50,6 +50,9 @@ struct MusicListView: View {
                         }
                         
                     }
+                    .onTapGesture {
+                        navigationManager.push(to: .playing(music: music))
+                    }
                 }
                 .listStyle(.inset)
             }
