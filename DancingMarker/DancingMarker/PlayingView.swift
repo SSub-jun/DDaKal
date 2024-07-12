@@ -113,7 +113,7 @@ struct PlayingView: View {
                         
                         Button(action: {
                             self.playbackRate = 1.0
-                            self.updatePlaybackRate()
+                            self.updateAudioPlayer()
                         }) {
                             Text(String(format: "x%.1f", self.playbackRate))
                                 .font(.title3)
@@ -149,6 +149,7 @@ struct PlayingView: View {
                             let newProgress = min(max(0, Double(value.location.x / geometry.size.width)), 1.0)
                             self.progress = newProgress
                             let newTime = newProgress * self.duration
+                            self.updateAudioPlayer(with: newTime)
                             self.currentTime = newTime
                             self.formattedProgress = self.formattedTime(newTime)
                         }))
@@ -235,20 +236,25 @@ struct PlayingView: View {
     private func decreasePlaybackRate() {
         if self.playbackRate > 0.5 {
             self.playbackRate -= 0.1
-            self.updatePlaybackRate()
+            self.updateAudioPlayer()
         }
     }
 
     private func increasePlaybackRate() {
         if self.playbackRate < 2.0 {
             self.playbackRate += 0.1
-            self.updatePlaybackRate()
+            self.updateAudioPlayer()
         }
     }
     
-    private func updatePlaybackRate() {
+    private func updateAudioPlayer() {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.rate = playbackRate
+        
+    }
+    private func updateAudioPlayer(with time: TimeInterval) {
+        guard let audioPlayer = audioPlayer else { return }
+        audioPlayer.currentTime = time
     }
     
     /// 음원 재생, 조작, 초기화
