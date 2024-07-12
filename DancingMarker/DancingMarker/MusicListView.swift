@@ -12,7 +12,7 @@ import AVFoundation
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
     @Environment(\.modelContext) private var modelContext
-    @State private var musicList: [Music] = []
+    @Query private var musicList: [Music] = []
     @State private var isFileImporterPresented: Bool = false
     
     var body: some View {
@@ -121,7 +121,7 @@ struct MusicListView: View {
             
             let newMusic = Music(title: title, artist: artist, path: path, markers: markers, albumArt: albumArt)
             
-            musicList.append(newMusic)
+            // musicList.append(newMusic)
             modelContext.insert(newMusic)
             
             try modelContext.save()
@@ -130,7 +130,7 @@ struct MusicListView: View {
         }
         
         // 보안 범위 설정 종료
-        url.stopAccessingSecurityScopedResource()
+        // url.stopAccessingSecurityScopedResource()
     }
     
     
@@ -144,7 +144,7 @@ struct MusicListView: View {
             }
             Button(role: .destructive, action: {
                 if let index = self.musicList.firstIndex(of: music) {
-                    self.musicList.remove(at: index)
+                    // self.musicList.remove(at: index)
                     modelContext.delete(music)
                 }
             }) {

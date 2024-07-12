@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct PlayingView: View {
     @Environment(NavigationManager.self) var navigationManager
     var music: Music
     
     /// 슬라이드용 임시 음원 정보
-    @State private var progress: Double = 0.5 // 예시로 초기값 설정
+    @State private var progress: Double = 0.0 // 예시로 초기값 설정
     @State private var formattedProgress = "0:00"
     @State private var formattedDuration = "0:00"
-    @State private var duration: TimeInterval = 100.0 // 예시로 재생 시간 설정
-    @State private var currentTime: TimeInterval = 50.0 // 예시로 현재 시간 설정
-        
+    @State private var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
+    @State private var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
+    
+    @State var audioPlayer: AVAudioPlayer?
+    @State private var isPlaying = false
+    @State private var isDragging = false
+    
     var body: some View {
         VStack {
             /// 음원 정보
@@ -55,41 +60,41 @@ struct PlayingView: View {
             .padding(.vertical, 12)
             
             Button(action: {
-                        // 버튼 클릭 시 실행할 액션 추가
-                    }) {
-                        Text("추가")
-                            .font(.title3)
-                            .foregroundColor(.white)
-                            .frame(width: 360, height: 60)
-                            .background(.buttonDarkGray)
-                            .cornerRadius(12)
-                    }
-                    .padding(.bottom, 8)
-             
-            Button(action: {
-                        // 버튼 클릭 시 실행할 액션 추가
-                    }) {
-                        Text("추가")
-                            .font(.title3)
-                            .foregroundColor(.white)
-                            .frame(width: 360, height: 60)
-                            .background(.primaryYellow)
-                            // 마커가 있을 경우 텍스트는 검은색으로
-                            .cornerRadius(12)
-                    }
-                    .padding(.bottom, 8)
+                // 버튼 클릭 시 실행할 액션 추가
+            }) {
+                Text("추가")
+                    .font(.title3)
+                    .foregroundColor(.white)
+                    .frame(width: 360, height: 60)
+                    .background(.buttonDarkGray)
+                    .cornerRadius(12)
+            }
+            .padding(.bottom, 8)
             
             Button(action: {
-                        // 버튼 클릭 시 실행할 액션 추가
-                    }) {
-                        Text("추가")
-                            .font(.title3)
-                            .foregroundColor(.white)
-                            .frame(width: 360, height: 60)
-                            .background(.buttonDarkGray)
-                            .cornerRadius(12)
-                    }
-                    .padding(.bottom, 67)
+                // 버튼 클릭 시 실행할 액션 추가
+            }) {
+                Text("추가")
+                    .font(.title3)
+                    .foregroundColor(.white)
+                    .frame(width: 360, height: 60)
+                    .background(.primaryYellow)
+                // 마커가 있을 경우 텍스트는 검은색으로
+                    .cornerRadius(12)
+            }
+            .padding(.bottom, 8)
+            
+            Button(action: {
+                // 버튼 클릭 시 실행할 액션 추가
+            }) {
+                Text("추가")
+                    .font(.title3)
+                    .foregroundColor(.white)
+                    .frame(width: 360, height: 60)
+                    .background(.buttonDarkGray)
+                    .cornerRadius(12)
+            }
+            .padding(.bottom, 67)
             
             /// 배속 버튼
             RoundedRectangle(cornerRadius: 12)
@@ -162,7 +167,7 @@ struct PlayingView: View {
                     .foregroundStyle(.buttonDarkGray)
                     .frame(width: 60)
                     .overlay(
-                Button(action: {
+                        Button(action: {
                             // 버튼 클릭 시 실행할 액션 추가
                         }) {
                             Image(systemName: "gobackward.5")
@@ -171,18 +176,17 @@ struct PlayingView: View {
                                 .frame(width: 36)
                                 .foregroundStyle(.white)
                         }
-                )
+                    )
                 Spacer()
-                
                 
                 Circle()
                     .foregroundStyle(.buttonDarkGray)
                     .frame(width: 80)
                     .overlay(
                         Button(action: {
-                            // 버튼 클릭 시 실행할 액션 추가
+                            togglePlayback()
                         }) {
-                            Image(systemName: "play.fill")
+                            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 30)
@@ -196,7 +200,7 @@ struct PlayingView: View {
                     .foregroundStyle(.buttonDarkGray)
                     .frame(width: 60)
                     .overlay(
-                Button(action: {
+                        Button(action: {
                             // 버튼 클릭 시 실행할 액션 추가
                         }) {
                             Image(systemName: "goforward.5")
@@ -205,14 +209,15 @@ struct PlayingView: View {
                                 .frame(width: 36)
                                 .foregroundStyle(.white)
                         }
-                )
+                    )
             }
-            
-            
             
             Spacer()
         }
         .padding(.horizontal, 16)
+        .onAppear {
+            initAudioPlayer()
+        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
     }
@@ -224,6 +229,72 @@ struct PlayingView: View {
         formatter.zeroFormattingBehavior = [.pad]
         return formatter.string(from: time)!
     }
+    
+    private func togglePlayback() {
+        if let audioPlayer = audioPlayer {
+            if self.isPlaying {
+                audioPlayer.pause()
+            } else {
+                audioPlayer.play()
+            }
+            self.isPlaying.toggle()
+        }
+    }
+    
+    private func initAudioPlayer() {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = [.pad]
+        
+        print("Attempting to load file at path: \(music.path)")
+        
+        // 파일 경로를 URL로 변환
+        let fileURL = URL(fileURLWithPath: music.path)
+        
+        // 파일 존재 여부 확인
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            print("File not found at path: \(fileURL.path)")
+            return
+        }
+        
+        do {
+            // AVAudioSession 설정
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            // AVAudioPlayer 초기화
+            self.audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            guard let audioPlayer = self.audioPlayer else {
+                print("Failed to initialize audio player")
+                return
+            }
+            
+            // 오디오 플레이어 준비 및 속성 설정
+            audioPlayer.prepareToPlay()
+            audioPlayer.enableRate = true
+            
+            // 포맷된 길이 설정
+            formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
+            duration = audioPlayer.duration
+            
+            // 타이머 설정
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+                if !audioPlayer.isPlaying {
+                    self.isPlaying = false
+                }
+                
+                if !self.isDragging {
+                    self.currentTime = audioPlayer.currentTime
+                    self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
+                    self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
+                }
+            }
+        } catch {
+            print("Error initializing audio player: \(error.localizedDescription)")
+        }
+    }
+
 }
 
 #Preview {

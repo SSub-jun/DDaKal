@@ -28,7 +28,7 @@ extension PathType {
         case .musicedit:
             MusicEditView()
             
-        case .playing(var music):
+        case .playing(let music):
             PlayingView(music: music)
             
         case .nowplaying:
