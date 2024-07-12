@@ -20,6 +20,7 @@ struct PlayingView: View {
     @State private var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
     
     @State var audioPlayer: AVAudioPlayer?
+    @State private var playbackRate: Float = 1.0
     @State private var isPlaying = false
     @State private var isDragging = false
     
@@ -103,7 +104,7 @@ struct PlayingView: View {
                 .overlay(
                     HStack(spacing: 10) {
                         Button(action: {
-                            // Minus button action
+                            decreasePlaybackRate()
                         }) {
                             Image(systemName: "minus")
                                 .foregroundStyle(.white)
@@ -111,16 +112,17 @@ struct PlayingView: View {
                         Spacer()
                         
                         Button(action: {
-                            // Close button action
+                            self.playbackRate = 1.0
+                            self.updatePlaybackRate()
                         }) {
-                            Text("x1")
+                            Text(String(format: "x%.1f", self.playbackRate))
                                 .font(.title3)
                                 .foregroundColor(.white)
                         }
                         Spacer()
                         
                         Button(action: {
-                            // Plus button action
+                            increasePlaybackRate()
                         }) {
                             Image(systemName: "plus")
                                 .foregroundStyle(.white)
@@ -151,8 +153,7 @@ struct PlayingView: View {
                             self.formattedProgress = self.formattedTime(newTime)
                         }))
                 }
-                .frame(height: 5) // Slider의 높이 설정
-                
+                .frame(height: 5)
                 
                 HStack {
                     Text("\(self.formattedProgress)")
@@ -168,7 +169,7 @@ struct PlayingView: View {
                     .frame(width: 60)
                     .overlay(
                         Button(action: {
-                            // 버튼 클릭 시 실행할 액션 추가
+                            backward5Sec()
                         }) {
                             Image(systemName: "gobackward.5")
                                 .resizable()
@@ -201,7 +202,7 @@ struct PlayingView: View {
                     .frame(width: 60)
                     .overlay(
                         Button(action: {
-                            // 버튼 클릭 시 실행할 액션 추가
+                            forward5Sec()
                         }) {
                             Image(systemName: "goforward.5")
                                 .resizable()
@@ -230,17 +231,27 @@ struct PlayingView: View {
         return formatter.string(from: time)!
     }
     
-    private func togglePlayback() {
-        if let audioPlayer = audioPlayer {
-            if self.isPlaying {
-                audioPlayer.pause()
-            } else {
-                audioPlayer.play()
-            }
-            self.isPlaying.toggle()
+    /// 배속 조절 기능
+    private func decreasePlaybackRate() {
+        if self.playbackRate > 0.5 {
+            self.playbackRate -= 0.1
+            self.updatePlaybackRate()
+        }
+    }
+
+    private func increasePlaybackRate() {
+        if self.playbackRate < 2.0 {
+            self.playbackRate += 0.1
+            self.updatePlaybackRate()
         }
     }
     
+    private func updatePlaybackRate() {
+        guard let audioPlayer = audioPlayer else { return }
+        audioPlayer.rate = playbackRate
+    }
+    
+    /// 음원 재생, 조작, 초기화
     private func initAudioPlayer() {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -293,6 +304,39 @@ struct PlayingView: View {
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
+    }
+    
+    private func togglePlayback() {
+        if let audioPlayer = audioPlayer {
+            if self.isPlaying {
+                audioPlayer.pause()
+            } else {
+                audioPlayer.play()
+            }
+            self.isPlaying.toggle()
+        }
+    }
+    
+    /// 음원 5초 앞으로 뒤로 가기 기능
+    private func seekToTime(to time: TimeInterval) {
+        guard let player = audioPlayer else { return }
+        player.currentTime = time
+        progress = CGFloat(time / player.duration)
+        formattedProgress = formattedTime(time)
+    }
+    
+    private func backward5Sec() {
+        guard let player = audioPlayer else { return }
+        let newTime = max(player.currentTime - 5, 0)
+        seekToTime(to: newTime)
+        // 제어 센터 업데이트 코드 추가
+    }
+
+    private func forward5Sec() {
+        guard let player = audioPlayer else { return }
+        let newTime = min(player.currentTime + 5, player.duration)
+        seekToTime(to: newTime)
+        // 제어 센터 업데이트 코드 추가
     }
 
 }
