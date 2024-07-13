@@ -202,14 +202,12 @@ struct PlayingView: View {
                     addMarkerButton(index: 0)
                 }
                 
-                // 1번째 마커 버튼
                 if let marker = music.markers[1] {
                     markerButton(for: marker, index: 1)
                 } else {
                     addMarkerButton(index: 1)
                 }
                 
-                // 2번째 마커 버튼
                 if let marker = music.markers[2] {
                     markerButton(for: marker, index: 2)
                 } else {
