@@ -196,12 +196,24 @@ struct PlayingView: View {
             .padding(.vertical, 12)
             
             VStack {
-                ForEach(0..<3, id: \.self) { index in
-                    if index < music.markers.count {
-                        markerButton(for: music.markers[index])
-                    } else {
-                        addMarkerButton(index: index)
-                    }
+                if let marker = music.markers[0] {
+                    markerButton(for: marker, index: 0)
+                } else {
+                    addMarkerButton(index: 0)
+                }
+                
+                // 1번째 마커 버튼
+                if music.markers.count > 1, let marker = music.markers[1] {
+                    markerButton(for: marker, index: 1)
+                } else {
+                    addMarkerButton(index: 1)
+                }
+                
+                // 2번째 마커 버튼
+                if music.markers.count > 2, let marker = music.markers[2] {
+                    markerButton(for: marker, index: 2)
+                } else {
+                    addMarkerButton(index: 2)
                 }
             }
             .padding(.bottom, 8)
@@ -227,9 +239,9 @@ struct PlayingView: View {
         
         let newMarker = audioPlayer.currentTime
         if music.markers.count > index {
-            music.markers[index] = newMarker
+            music.markers[index] = newMarker // 기존 마커 업데이트
         } else {
-            music.markers.append(newMarker)
+            music.markers.append(newMarker) // 새로운 마커 추가
         }
         
         do {
@@ -240,13 +252,12 @@ struct PlayingView: View {
     }
     
     @ViewBuilder
-    private func markerButton(for marker: TimeInterval) -> some View {
+    private func markerButton(for marker: TimeInterval, index: Int) -> some View {
         Button(action: {
             moveToMarker(marker)
         }) {
             Text(formattedTime(marker))
                 .font(.title3)
-                .italic()
                 .foregroundColor(.black)
                 .frame(width: 360, height: 60)
                 .background(Color.primaryYellow)

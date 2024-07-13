@@ -122,9 +122,7 @@ struct MusicListView: View {
             // 파일 복사
             try FileManager.default.copyItem(at: url, to: destinationURL)
             
-            let markers: [TimeInterval] = [] // 추후에 실제 마커 데이터를 추가해야 함
-            
-            let newMusic = Music(title: title, artist: artist, path: destinationURL, markers: markers, albumArt: albumArt)
+            let newMusic = Music(title: title, artist: artist, path: destinationURL, albumArt: albumArt)
             
             modelContext.insert(newMusic)
             

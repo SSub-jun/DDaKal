@@ -21,14 +21,14 @@ class Music : Equatable {
     var title: String
     var artist: String
     var path: URL
-    var markers: [TimeInterval]
+    var markers: [TimeInterval?]
     var albumArt: Data?
     
-    init(title: String, artist: String, path: URL, markers: [TimeInterval], albumArt: Data?) {
+    init(title: String, artist: String, path: URL, albumArt: Data?) {
         self.title = title
         self.artist = artist
         self.path = path
-        self.markers = markers
+        self.markers = [nil, nil, nil]
         self.albumArt = albumArt
     }
 }
