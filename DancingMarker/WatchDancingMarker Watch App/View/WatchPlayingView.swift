@@ -54,7 +54,7 @@ struct WatchPlayingView: View {
                         print("현재 노래 재생 & 일시정지")
                         // 현재 노래 재생/일시정지 기능 구현
                     }, label: {
-                        Image(systemName: "play.fill") // 재생 중일 때 아이콘 변경해야하는건가 ?
+                        Image(systemName: "play.fill") // 재생 중일 때 아이콘 변경
                             .resizable()
                             .frame(width: 22, height: 22)
                     })
