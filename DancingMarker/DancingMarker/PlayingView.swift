@@ -266,12 +266,9 @@ struct PlayingView: View {
         
         print("Attempting to load file at path: \(music.path)")
         
-        // 파일 경로를 URL로 변환
-        let fileURL = URL(fileURLWithPath: music.path)
-        
         // 파일 존재 여부 확인
-        guard FileManager.default.fileExists(atPath: fileURL.path) else {
-            print("File not found at path: \(fileURL.path)")
+        guard FileManager.default.fileExists(atPath: music.path.path) else {
+            print("File not found at path: \(music.path)")
             return
         }
         
@@ -281,7 +278,7 @@ struct PlayingView: View {
             try AVAudioSession.sharedInstance().setActive(true)
             
             // AVAudioPlayer 초기화
-            self.audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            self.audioPlayer = try AVAudioPlayer(contentsOf: music.path)
             guard let audioPlayer = self.audioPlayer else {
                 print("Failed to initialize audio player")
                 return
@@ -347,8 +344,8 @@ struct PlayingView: View {
 
 }
 
-#Preview {
-    PlayingView(music: Music(title: "노래", artist: "아티스트", path: "", markers: [], albumArt: nil))
-        .environment(NavigationManager())
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    PlayingView(music: Music(title: "노래", artist: "아티스트", path: "", markers: [], albumArt: nil))
+//        .environment(NavigationManager())
+//        .preferredColorScheme(.dark)
+//}
