@@ -1,14 +1,12 @@
 import SwiftUI
 
+
 struct WatchMarkerListView: View {
     
     @State private var navigationPath = NavigationPath()
+    let columns = [ GridItem(.flexible()) ]
     
-    let tempData = [47, 97, 206]
-    
-    let columns = [
-        GridItem(.flexible())
-    ]
+    let tempData = [47, 97, 206] // 임시 데이터
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -20,6 +18,8 @@ struct WatchMarkerListView: View {
                             .padding([.leading, .bottom])
                         Spacer()
                     }
+                    
+                    // 여기서 스위프트에 저장되어있는 data를 cell 변수로 넣어서 보여주기
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(tempData, id: \.self) { item in
                             NavigationLink(value: item) {
@@ -38,7 +38,9 @@ struct WatchMarkerListView: View {
     }
 }
 
+// 여기서 marker 데이터가 있을경우 없을경우 나눠서 CellView 다르게 나오게
 struct WatchMarkerListCellView: View {
+    
     let data: Int
     
     var body: some View {

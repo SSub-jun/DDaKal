@@ -16,7 +16,9 @@ struct WatchPlayingMarkerView: View {
                     Image(systemName: "shield.fill")
                     
                     Button(action: {
+                        
                         print("Tapped: 마커1")
+                        
                     }, label: {
                         
                         Text("추가")
@@ -46,7 +48,6 @@ struct WatchPlayingMarkerView: View {
             }
             
             ZStack {
-                
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .cornerRadius(4)

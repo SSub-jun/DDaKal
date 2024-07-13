@@ -10,7 +10,7 @@ struct WatchPlayingView: View {
         
         VStack {
             HStack {
-                Text("NewJeans-Supernatural")
+                Text("NewJeans-Supernatural") // 음원 Title 들어가면 됨
                     .font(.system(size: 12))
             }
             
@@ -29,7 +29,9 @@ struct WatchPlayingView: View {
                         .cornerRadius(4)
                         .frame(height: 44)
                     Button(action:{
+                        
                         // 5초 뒤로 가는 기능
+                        
                     }, label:{
                         Image(systemName: "gobackward.5")
                             .resizable()
@@ -42,7 +44,9 @@ struct WatchPlayingView: View {
                 
                 HStack {
                     Button(action:{
-                        // 재생&일시정지
+                        
+                        // 재생 & 일시정지
+                        
                     }, label:{
                         Image(systemName: "play.fill")
                     })
@@ -54,7 +58,9 @@ struct WatchPlayingView: View {
                         .cornerRadius(4)
                         .frame(height: 44)
                     Button(action:{
+                        
                         // 5초 앞으로 가는 기능
+                        
                     }, label:{
                         Image(systemName: "goforward.5")
                             .resizable()
@@ -68,12 +74,12 @@ struct WatchPlayingView: View {
             }
             
             HStack {
-                Text("00:25")
+                Text("00:25") // 현재 재생시간 데이터 넣어주기
                     .font(.system(size: 10))
             }
             .padding(.bottom, 10)
         }
-        .edgesIgnoringSafeArea(.bottom) // 바텀 safearea만 무시 !
+        .edgesIgnoringSafeArea(.bottom)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing){
                 Button(action:{

@@ -4,7 +4,7 @@ struct WatchMarkerEditView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @State private var isButtonEnabled = false // 저장하기 버튼 Enabled/Disabled
-
+    
     @State var data: Int // 음악 시간 데이터
     @State private var count = 1 // 1초 증가/감소 변수
     @State private var initialData: Int // 음악시간 초기값 저장
@@ -37,7 +37,7 @@ struct WatchMarkerEditView: View {
                         
                     }
                     .onTapGesture {
-                        decrementCount()
+                        decrementCount() // 1초 감소 함수
                     }
                     Spacer()
                     
@@ -58,7 +58,7 @@ struct WatchMarkerEditView: View {
                         Text("1")
                     }
                     .onTapGesture {
-                        incrementCount()
+                        incrementCount() // 1초 증가 함수
                     }
                 }
                 
@@ -68,11 +68,9 @@ struct WatchMarkerEditView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
-                       
-                            Text("저장하기")
-                            .foregroundColor(data != initialData ? .white : .gray)
-                       
-                       
+                        
+                        Text("저장하기")
+                            .foregroundColor(data != initialData ? .white : .gray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
                     })
                     .buttonStyle(SaveButtonStyle())
                     .disabled(data == initialData)
@@ -106,16 +104,19 @@ struct WatchMarkerEditView: View {
         }
     }
     
+    // 1초 증가 함수
     func incrementCount() {
         count += 1
         data += 1
     }
     
+    // 1초 감소 함수
     func decrementCount() {
         count -= 1
         data -= 1
     }
     
+    // [분:초] formatter
     func convertTime(seconds: Int) -> String {
         let minutes = seconds / 60
         let remainingSeconds = seconds % 60

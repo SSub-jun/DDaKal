@@ -1,10 +1,11 @@
+
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
     
     @Binding var navigationPath: NavigationPath
-    @State private var isShowingEditView = false
-    @State private var isShownResetAlert = false
+    @State private var isShowingEditView = false // 수정하기 Bool 변수
+    @State private var isShownResetAlert = false // 초기화하기 Bool 변수
     
     let data: Int
     
@@ -44,6 +45,7 @@ struct WatchMarkerDetailView: View {
     }
 }
 
+// MARK: 마커 초기화 Alert
 struct MarkerResetAlert: View {
     
     @Environment(\.presentationMode) var presentationMode
@@ -64,8 +66,9 @@ struct MarkerResetAlert: View {
                 .frame(maxWidth: .infinity)
                 
                 Button(action: {
-                    // 마커 초기화 코드
-                    navigationPath.removeLast(navigationPath.count)
+                    // 마커 초기화 기능 들어가면 됨
+                    
+                    navigationPath.removeLast(navigationPath.count) // 뷰 이동
                 }, label: {
                     Text("초기화하기")
                 })
@@ -90,7 +93,7 @@ struct MarkerResetAlert: View {
     }
 }
 
-
+// MARK: 버튼 View Style
 struct EditButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
