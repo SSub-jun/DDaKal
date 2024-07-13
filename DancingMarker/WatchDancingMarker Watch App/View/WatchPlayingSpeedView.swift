@@ -15,7 +15,7 @@ struct WatchPlayingSpeedView: View {
                     .foregroundColor(speed < 0.55 ? .gray : .white) // 0.5배가 되면 Gray색상으로
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 48)
+            .frame(height: 52)
             .background(Color.gray.opacity(0.2))
             .clipShape(RoundedCorner(radius: 4, corners: [.topLeft, .bottomLeft]))
             .onTapGesture {
@@ -30,7 +30,7 @@ struct WatchPlayingSpeedView: View {
                     .font(.system(size: 17))
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 48)
+            .frame(height: 52)
             .background(Color.gray.opacity(0.2))
             .onTapGesture {
                 print("Tapped: 원배 버튼눌렀습니다.")
@@ -44,7 +44,7 @@ struct WatchPlayingSpeedView: View {
                     .foregroundColor(speed == 1.5 ? .gray : .white) // 1.5배가 되면 Gray색상으로
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 48)
+            .frame(height: 52)
             .background(Color.gray.opacity(0.2))
             .clipShape(RoundedCorner(radius: 4, corners: [.topRight, .bottomRight]))
             .onTapGesture {

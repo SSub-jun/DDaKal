@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct WatchPlayingMarkerView: View {
@@ -6,11 +5,12 @@ struct WatchPlayingMarkerView: View {
     var body: some View {
         
         HStack{
+            // MARK: 마커 1
             ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 48)
+                    .frame(height: 52)
                 
                 VStack {
                     Image(systemName: "shield.fill")
@@ -23,11 +23,12 @@ struct WatchPlayingMarkerView: View {
                 // 마커 추가
             }
             
+            // MARK: 마커 2
             ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 48)
+                    .frame(height: 52)
                 
                 VStack {
                     Image(systemName: "shield.fill")
@@ -40,11 +41,12 @@ struct WatchPlayingMarkerView: View {
                 // 마커 추가
             }
             
+            // MARK: 마커 3
             ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 48)
+                    .frame(height: 52)
                 
                 VStack {
                     Image(systemName: "shield.fill")
