@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5104B7F62C3D67F2008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
-		5104B7F72C3D6C38008E10E8 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
-		5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
+		1F429E6B2C3ABF0D007F510C /* WatchMarkerEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */; };
 		901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
 		901BF9832C29804A00C02FF9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9822C29804A00C02FF9 /* ContentView.swift */; };
 		901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
@@ -59,6 +57,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+
+		1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMarkerEditAlert.swift; sourceTree = "<group>"; };
 		5104B7F52C3D67F2008E10E8 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
 		51FD01772C3BC6B1003F99B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +187,7 @@
 				901BF9AF2C2A52A300C02FF9 /* WatchMarkerListView.swift */,
 				901BF9B12C2A52B700C02FF9 /* WatchMarkerDetailView.swift */,
 				901BF9B32C2A52C600C02FF9 /* WatchMarkerEditView.swift */,
+				1F429E6A2C3ABF0D007F510C /* WatchMarkerEditAlert.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -309,6 +310,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F429E6B2C3ABF0D007F510C /* WatchMarkerEditAlert.swift in Sources */,
+
 				901BF9B22C2A52B700C02FF9 /* WatchMarkerDetailView.swift in Sources */,
 				901BF9AE2C2A528F00C02FF9 /* WatchPlayingSpeedView.swift in Sources */,
 				901BF9972C29809900C02FF9 /* ContentView.swift in Sources */,
@@ -462,7 +465,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
+
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
@@ -494,7 +499,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
+
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
@@ -525,7 +532,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
+
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
@@ -556,7 +565,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
+
 				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
