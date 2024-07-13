@@ -1,37 +1,28 @@
-//
-//  MusicListView.swift
-//  WatchDancingMarker Watch App
-//
-//  Created by 변준섭 on 6/25/24.
-//
-
 import SwiftUI
 
 struct WatchMusicListView: View {
+    
     @Environment(WatchNavigationManager.self) var navigationManager
+    let columns = [ GridItem(.flexible()) ]
 
+    let tempMusic = ["Music1", "Music2", "Music3", "Music4"]
+    
     var body: some View {
+        
         ScrollView {
-            Button("Music 1") {
-                navigationManager.push(to: .playing)
-            }.buttonBorderShape(.roundedRectangle)
+            LazyVGrid(columns: columns) {
+                ForEach(tempMusic, id: \.self) { music in // 여기서 SwiftData 노래목록 가져오기
+                    Button(music) {
+                        navigationManager.push(to: .playing)
+                    }
+                    .buttonBorderShape(.roundedRectangle)
+                }
+            }
             
-            Button("Music 2") {
-                navigationManager.push(to: .playing)
-            }.buttonBorderShape(.roundedRectangle)
-            
-            Button("Music 3") {
-                navigationManager.push(to: .playing)
-            }.buttonBorderShape(.roundedRectangle)
-            
-            Button("Music 4") {
-                navigationManager.push(to: .playing)
-            }.buttonBorderShape(.roundedRectangle)
         }
     }
 }
 
-#Preview {
-    WatchMusicListView()
-        .environment(WatchNavigationManager())
-}
+//#Preview {
+//    WatchMusicListView()
+//}

@@ -10,7 +10,7 @@ struct WatchPlayingView: View {
         
         VStack {
             HStack {
-                Text("NewJeans-Supernatural") // 음원 Title 들어가면 됨
+                Text("NewJeans-Supernatural") // SwiftData 음원 Title 들어가면 됨
                     .font(.system(size: 12))
             }
             
@@ -20,6 +20,7 @@ struct WatchPlayingView: View {
                     WatchPlayingSpeedView()
                 }
             }
+            
             
             HStack{
                 
