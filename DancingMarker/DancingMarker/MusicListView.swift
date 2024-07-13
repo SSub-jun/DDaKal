@@ -12,7 +12,7 @@ import AVFoundation
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
     @Environment(\.modelContext) private var modelContext
-    @State private var musicList: [Music] = []
+    @Query var musicList: [Music] = []
     @State private var isFileImporterPresented: Bool = false
     
     var body: some View {
@@ -49,6 +49,9 @@ struct MusicListView: View {
                             musicContextMenu(music: music)
                         }
                         
+                    }
+                    .onTapGesture {
+                        navigationManager.push(to: .playing(music: music))
                     }
                 }
                 .listStyle(.inset)
@@ -113,12 +116,16 @@ struct MusicListView: View {
         
         do {
             let (title, artist, albumArt) = try await fetchMusicMetadata(from: url)
-            let path = url.path
+            let fileName = url.lastPathComponent
+            let destinationURL = getDocumentsDirectory().appendingPathComponent(fileName)
+            
+            // 파일 복사
+            try FileManager.default.copyItem(at: url, to: destinationURL)
+            
             let markers: [TimeInterval] = [] // 추후에 실제 마커 데이터를 추가해야 함
             
-            let newMusic = Music(title: title, artist: artist, path: path, markers: markers, albumArt: albumArt)
+            let newMusic = Music(title: title, artist: artist, path: destinationURL, markers: markers, albumArt: albumArt)
             
-            musicList.append(newMusic)
             modelContext.insert(newMusic)
             
             try modelContext.save()
@@ -127,9 +134,13 @@ struct MusicListView: View {
         }
         
         // 보안 범위 설정 종료
-        url.stopAccessingSecurityScopedResource()
+        // url.stopAccessingSecurityScopedResource()
     }
     
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
     
     private func musicContextMenu(music: Music) -> some View {
         Group {
@@ -139,9 +150,9 @@ struct MusicListView: View {
                 Text("수정하기")
                 Image(systemName: "pencil")
             }
+            
             Button(role: .destructive, action: {
-                if let index = self.musicList.firstIndex(of: music) {
-                    self.musicList.remove(at: index)
+                if self.musicList.firstIndex(of: music) != nil {
                     modelContext.delete(music)
                 }
             }) {
