@@ -1,22 +1,63 @@
-//
-//  PlayingMarkerView.swift
-//  WatchDancingMarker Watch App
-//
-//  Created by 변준섭 on 6/25/24.
-//
 
 import SwiftUI
 
 struct WatchPlayingMarkerView: View {
+    
     var body: some View {
-        VStack{
-            HStack{
-                RoundedRectangle(cornerRadius: 10)
-                RoundedRectangle(cornerRadius: 10)
-                RoundedRectangle(cornerRadius: 10)
+        
+        HStack{
+            ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
+                    .cornerRadius(4)
+                    .frame(maxHeight: 48)
+                
+                VStack {
+                    Image(systemName: "shield.fill")
+                    
+                    Text("추가") // 마커 추가가 되었다면 ? 마커 시간 : "추가"
+                }
+            }
+            .onTapGesture {
+                print("마커 추가 #")
+                // 마커 추가
+            }
+            
+            ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
+                    .cornerRadius(4)
+                    .frame(maxHeight: 48)
+                
+                VStack {
+                    Image(systemName: "shield.fill")
+                    
+                    Text("추가")  // 마커 추가가 되었다면 ? 마커 시간 : "추가"
+                }
+            }
+            .onTapGesture {
+                print("마커 추가 ##")
+                // 마커 추가
+            }
+            
+            ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
+                    .cornerRadius(4)
+                    .frame(maxHeight: 48)
+                
+                VStack {
+                    Image(systemName: "shield.fill")
+                    
+                    Text("추가")  // 마커 추가가 되었다면 ? 마커 시간 : "추가"
+                }
+            }
+            .onTapGesture {
+                print("마커 추가 ###")
+                // 마커 추가
             }
         }
-        
+        .padding(.bottom)
     }
 }
 
