@@ -53,7 +53,8 @@ struct WatchPlayingSpeedView: View {
             }
             .disabled(speed > 1.45) // 배속이 1.5 이상일 때 버튼 비활성화
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.bottom)
     }
     
     // 배속 감소

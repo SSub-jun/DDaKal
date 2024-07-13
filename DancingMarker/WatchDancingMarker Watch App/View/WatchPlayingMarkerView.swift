@@ -10,7 +10,7 @@ struct WatchPlayingMarkerView: View {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 52)
+                    .frame(maxHeight: 48)
                 
                 VStack {
                     Image(systemName: "shield.fill")
@@ -27,7 +27,7 @@ struct WatchPlayingMarkerView: View {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 52)
+                    .frame(maxHeight: 48)
                 
                 VStack {
                     Image(systemName: "shield.fill")
@@ -44,7 +44,7 @@ struct WatchPlayingMarkerView: View {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2)) // 마커 추가가 되었다면 ? .yellow : Color.gray.opacity(0.2)
                     .cornerRadius(4)
-                    .frame(maxHeight: 52)
+                    .frame(maxHeight: 48)
                 
                 VStack {
                     Image(systemName: "shield.fill")
@@ -57,6 +57,7 @@ struct WatchPlayingMarkerView: View {
                 // 마커 추가
             }
         }
+        .padding(.bottom)
     }
 }
 
