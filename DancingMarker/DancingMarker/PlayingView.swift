@@ -203,14 +203,14 @@ struct PlayingView: View {
                 }
                 
                 // 1번째 마커 버튼
-                if music.markers.count > 1, let marker = music.markers[1] {
+                if let marker = music.markers[1] {
                     markerButton(for: marker, index: 1)
                 } else {
                     addMarkerButton(index: 1)
                 }
                 
                 // 2번째 마커 버튼
-                if music.markers.count > 2, let marker = music.markers[2] {
+                if let marker = music.markers[2] {
                     markerButton(for: marker, index: 2)
                 } else {
                     addMarkerButton(index: 2)
@@ -262,6 +262,32 @@ struct PlayingView: View {
                 .frame(width: 360, height: 60)
                 .background(Color.primaryYellow)
                 .cornerRadius(12)
+        }
+        .contextMenu{
+            Button(action: {
+                // 수정 기능
+            }) {
+                Text("수정하기")
+                Image(systemName: "pencil")
+            }
+            Button(role: .destructive, action: {
+                deleteMarker(at: index)
+            }) {
+                Text("삭제하기")
+                Image(systemName: "trash")
+            }
+        }
+    }
+    
+    private func deleteMarker(at index: Int) {
+        guard index < music.markers.count else { return }
+        
+        music.markers[index] = nil
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context after deleting marker: \(error.localizedDescription)")
         }
     }
     
