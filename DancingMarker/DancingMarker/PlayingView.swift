@@ -10,6 +10,7 @@ import AVFoundation
 
 struct PlayingView: View {
     @Environment(NavigationManager.self) var navigationManager
+    @Environment(\.modelContext) private var modelContext
     var music: Music
     
     /// 슬라이드용 임시 음원 정보
@@ -50,52 +51,8 @@ struct PlayingView: View {
             }
             .padding(.vertical, 12)
             
-            HStack {
-                Text("마커리스트")
-                    .font(.headline)
-                Spacer()
-                
-                Image(systemName: "questionmark.circle")
-                    .foregroundStyle(.markerPurple)
-            }
-            .padding(.vertical, 12)
-            
-            Button(action: {
-                // 버튼 클릭 시 실행할 액션 추가
-            }) {
-                Text("추가")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .frame(width: 360, height: 60)
-                    .background(.buttonDarkGray)
-                    .cornerRadius(12)
-            }
-            .padding(.bottom, 8)
-            
-            Button(action: {
-                // 버튼 클릭 시 실행할 액션 추가
-            }) {
-                Text("추가")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .frame(width: 360, height: 60)
-                    .background(.primaryYellow)
-                // 마커가 있을 경우 텍스트는 검은색으로
-                    .cornerRadius(12)
-            }
-            .padding(.bottom, 8)
-            
-            Button(action: {
-                // 버튼 클릭 시 실행할 액션 추가
-            }) {
-                Text("추가")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .frame(width: 360, height: 60)
-                    .background(.buttonDarkGray)
-                    .cornerRadius(12)
-            }
-            .padding(.bottom, 67)
+            /// 마커 리스트
+            MarkerListView()
             
             /// 배속 버튼
             RoundedRectangle(cornerRadius: 12)
@@ -131,6 +88,7 @@ struct PlayingView: View {
                         .padding(.horizontal, 20)
                 )
                 .padding(.bottom, 30)
+                .padding(.top, 59)
             
             /// 슬라이더
             VStack() {
@@ -224,6 +182,86 @@ struct PlayingView: View {
         .navigationTitle("")
     }
     
+    @ViewBuilder
+    func MarkerListView() -> some View {
+        VStack {
+            HStack {
+                Text("마커리스트")
+                    .font(.headline)
+                Spacer()
+                
+                Image(systemName: "questionmark.circle")
+                    .foregroundStyle(.markerPurple)
+            }
+            .padding(.vertical, 12)
+            
+            VStack {
+                ForEach(0..<3, id: \.self) { index in
+                    if index < music.markers.count {
+                        markerButton(for: music.markers[index])
+                    } else {
+                        addMarkerButton(index: index)
+                    }
+                }
+            }
+            .padding(.bottom, 8)
+            
+        }
+    }
+    
+    private func addMarkerButton(index: Int) -> some View {
+        Button(action: {
+            addMarker(at: index)
+        }) {
+            Text("추가")
+                .font(.title3)
+                .foregroundColor(.white)
+                .frame(width: 360, height: 60)
+                .background(Color.buttonDarkGray)
+                .cornerRadius(12)
+        }
+    }
+    
+    private func addMarker(at index: Int) {
+        guard let audioPlayer = audioPlayer else { return }
+        
+        let newMarker = audioPlayer.currentTime
+        if music.markers.count > index {
+            music.markers[index] = newMarker
+        } else {
+            music.markers.append(newMarker)
+        }
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context: \(error.localizedDescription)")
+        }
+    }
+    
+    @ViewBuilder
+    private func markerButton(for marker: TimeInterval) -> some View {
+        Button(action: {
+            moveToMarker(marker)
+        }) {
+            Text(formattedTime(marker))
+                .font(.title3)
+                .italic()
+                .foregroundColor(.black)
+                .frame(width: 360, height: 60)
+                .background(Color.primaryYellow)
+                .cornerRadius(12)
+        }
+    }
+    
+    private func moveToMarker(_ marker: TimeInterval) {
+        self.audioPlayer?.currentTime = marker
+        self.progress = CGFloat(marker / self.duration)
+        self.formattedProgress = self.formattedTime(marker)
+        audioPlayer?.play()
+        isPlaying = true
+    }
+    
     private func formattedTime(_ time: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -239,7 +277,7 @@ struct PlayingView: View {
             self.updateAudioPlayer()
         }
     }
-
+    
     private func increasePlaybackRate() {
         if self.playbackRate < 2.0 {
             self.playbackRate += 0.1
@@ -252,6 +290,7 @@ struct PlayingView: View {
         audioPlayer.rate = playbackRate
         
     }
+    
     private func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
@@ -334,14 +373,14 @@ struct PlayingView: View {
         seekToTime(to: newTime)
         // 제어 센터 업데이트 코드 추가
     }
-
+    
     private func forward5Sec() {
         guard let player = audioPlayer else { return }
         let newTime = min(player.currentTime + 5, player.duration)
         seekToTime(to: newTime)
         // 제어 센터 업데이트 코드 추가
     }
-
+    
 }
 
 //#Preview {
