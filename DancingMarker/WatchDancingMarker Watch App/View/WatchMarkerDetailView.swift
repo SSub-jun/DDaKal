@@ -66,6 +66,7 @@ struct MarkerResetAlert: View {
                 .frame(maxWidth: .infinity)
                 
                 Button(action: {
+                    
                     // 마커 초기화 기능 들어가면 됨
                     
                     navigationPath.removeLast(navigationPath.count) // 뷰 이동
@@ -88,7 +89,7 @@ struct MarkerResetAlert: View {
                 }
             }
             .padding()
-           
+            
         }
     }
 }

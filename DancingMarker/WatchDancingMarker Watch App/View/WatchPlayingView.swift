@@ -10,7 +10,8 @@ struct WatchPlayingView: View {
         
         VStack {
             HStack {
-                Text("NewJeans-Supernatural") // SwiftData 음원 Title 들어가면 됨
+                // SwiftData 음원 Title + Artist 들어가면 됨 ( artist 없을시 "" 처리 )
+                Text("NewJeans-Supernatural")
                     .font(.system(size: 12))
             }
             
@@ -21,17 +22,15 @@ struct WatchPlayingView: View {
                 }
             }
             
-            
             HStack{
-                
                 ZStack {
                     Circle()
                         .fill(Color.gray.opacity(0.2))
                         .cornerRadius(4)
                         .frame(height: 44)
                     Button(action:{
-                        
-                        // 5초 뒤로 가는 기능
+                        print("현재 노래를 5초전으로 돌립니다.")
+                        // 현재 노래 5초 뒤로 가는 기능
                         
                     }, label:{
                         Image(systemName: "gobackward.5")
@@ -46,11 +45,14 @@ struct WatchPlayingView: View {
                 HStack {
                     Button(action:{
                         
-                        // 재생 & 일시정지
+                        // 현재 노래 재생 & 일시정지
                         
                     }, label:{
+                        // 재생 on/off에 따라 이미지를 다르게 ? -> 노래가 재생중인지 여부
                         Image(systemName: "play.fill")
+                        
                     })
+                    .buttonBorderShape(.circle)
                 }
                 
                 ZStack {
@@ -59,8 +61,8 @@ struct WatchPlayingView: View {
                         .cornerRadius(4)
                         .frame(height: 44)
                     Button(action:{
-                        
-                        // 5초 앞으로 가는 기능
+                        print("현재 노래를 5초 후로 돌립니다.")
+                        // 현재 노래 5초 앞으로 가는 기능
                         
                     }, label:{
                         Image(systemName: "goforward.5")
@@ -73,7 +75,6 @@ struct WatchPlayingView: View {
                 .frame(maxWidth: .infinity)
                 
             }
-            
             HStack {
                 Text("00:25") // 현재 재생시간 데이터 넣어주기
                     .font(.system(size: 10))

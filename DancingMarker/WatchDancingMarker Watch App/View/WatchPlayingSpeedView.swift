@@ -22,6 +22,7 @@ struct WatchPlayingSpeedView: View {
                 print("Tapped: 배속 - 버튼눌렀습니다.")
                 decreaseSpeed() // 배속 줄이는 함수
             }
+            .disabled(speed < 0.55) // 배속이 0.5 이하일 때 버튼 비활성화
             
             // MARK: 배속 Text & 원배로 돌아가는 버튼
             HStack {
@@ -50,6 +51,7 @@ struct WatchPlayingSpeedView: View {
                 print("Tapped: 배속 + 버튼눌렀습니다.")
                 increaseSpeed() // 배속 증가 함수
             }
+            .disabled(speed > 1.45) // 배속이 1.5 이상일 때 버튼 비활성화
         }
         .frame(maxWidth: .infinity)
     }
