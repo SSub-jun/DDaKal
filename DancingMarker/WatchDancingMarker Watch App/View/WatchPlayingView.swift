@@ -36,7 +36,7 @@ struct WatchPlayingView: View {
                     }, label:{
                         Image(systemName: "gobackward.5")
                             .resizable()
-                            .frame(width: 22, height: 22)
+                            .frame(width: 20, height: 20)
                         
                     })
                     .buttonStyle(PlainButtonStyle())
@@ -47,14 +47,14 @@ struct WatchPlayingView: View {
                     Circle()
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 44)
-                    CircleProgressView(progress: $progress)
+                    CircleProgressView(progress: $progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
                         .frame(width: 42, height: 42)
                     
                     Button(action: {
                         print("현재 노래 재생 & 일시정지")
                         // 현재 노래 재생/일시정지 기능 구현
                     }, label: {
-                        Image(systemName: "play.fill") // 재생 중일 때 아이콘 변경해야하는건가 ?
+                        Image(systemName: "play.fill") // 재생 on/off에 따라 이미지 변경
                             .resizable()
                             .frame(width: 22, height: 22)
                     })
@@ -75,7 +75,7 @@ struct WatchPlayingView: View {
                     }, label:{
                         Image(systemName: "goforward.5")
                             .resizable()
-                            .frame(width: 22, height: 22)
+                            .frame(width: 20, height: 20)
                         
                     })
                     .buttonStyle(PlainButtonStyle())
@@ -108,6 +108,7 @@ struct WatchPlayingView: View {
     }
 }
 
+// MARK: 재생 버튼 ProgressBar
 struct CircleProgressView: View {
     
     @Binding var progress: Double

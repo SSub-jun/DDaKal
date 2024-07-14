@@ -24,6 +24,7 @@ struct WatchMarkerEditView: View {
                 Spacer()
                 
                 HStack {
+                    // MARK: 1초 감소 버튼
                     ZStack {
                         Circle()
                             .fill(.gray.opacity(0.2))
@@ -37,15 +38,17 @@ struct WatchMarkerEditView: View {
                         
                     }
                     .onTapGesture {
-                        decrementCount() // 1초 감소 함수
+                        decrementCount() // 임시로 만들어준 1초 감소 함수입니다.
                     }
                     Spacer()
                     
+                    // MARK: 현재 마커 시간
                     Text("\(convertTime(seconds: data))")
                         .font(.system(size: 22))
                     
                     Spacer()
                     
+                    // MARK: 1초 증가 버튼
                     ZStack {
                         Circle()
                             .fill(.gray.opacity(0.2))
@@ -58,14 +61,17 @@ struct WatchMarkerEditView: View {
                         Text("1")
                     }
                     .onTapGesture {
-                        incrementCount() // 1초 증가 함수
+                        incrementCount() // 임시로 만들어준 1초 감소 함수입니다.
                     }
                 }
                 
                 Spacer()
                 
+                // MARK: 저장하기 버튼
                 HStack{
                     Button(action: {
+                        // 마커 시간 수정한 후 저장하는 기능이 들어가면 됩니다.
+                        
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
                         
