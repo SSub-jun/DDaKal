@@ -67,9 +67,9 @@ struct MarkerResetAlert: View {
                 
                 Button(action: {
                     
-                    // 마커 초기화 기능 들어가면 됨
+                    // 마커 초기화 기능이 들어가면 됩니다.
                     
-                    navigationPath.removeLast(navigationPath.count) // 뷰 이동
+                    navigationPath.removeLast(navigationPath.count) // 초기화 되면서 뷰 이동
                 }, label: {
                     Text("초기화하기")
                 })

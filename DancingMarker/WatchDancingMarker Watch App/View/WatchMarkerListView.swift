@@ -19,7 +19,7 @@ struct WatchMarkerListView: View {
                         Spacer()
                     }
                     
-                    // 여기서 스위프트에 저장되어있는 data를 cell 변수로 넣어서 보여주기
+                    // 여기서 임시데이터가 아닌 스위프트에 저장되어있는 data를 cell 변수로 넣어서 보여주기
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(tempData, id: \.self) { item in
                             NavigationLink(value: item) {

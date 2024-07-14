@@ -20,7 +20,7 @@ struct WatchPlayingSpeedView: View {
             .clipShape(RoundedCorner(radius: 4, corners: [.topLeft, .bottomLeft]))
             .onTapGesture {
                 print("Tapped: 배속 - 버튼눌렀습니다.")
-                decreaseSpeed() // 배속 줄이는 함수
+                decreaseSpeed() // 임시로 만든 배속 줄이는 함수
             }
             .disabled(speed < 0.55) // 배속이 0.5 이하일 때 버튼 비활성화
             
@@ -34,7 +34,7 @@ struct WatchPlayingSpeedView: View {
             .background(Color.gray.opacity(0.2))
             .onTapGesture {
                 print("Tapped: 원배 버튼눌렀습니다.")
-                originalSpeed() // 원배로 돌아가는 함수
+                originalSpeed() // 임시로 만든 원배로 돌아가는 함수입니다.
             }
             
             // MARK: + 버튼
@@ -49,7 +49,7 @@ struct WatchPlayingSpeedView: View {
             .clipShape(RoundedCorner(radius: 4, corners: [.topRight, .bottomRight]))
             .onTapGesture {
                 print("Tapped: 배속 + 버튼눌렀습니다.")
-                increaseSpeed() // 배속 증가 함수
+                increaseSpeed() // 임시로 만든 배속 증가 함수
             }
             .disabled(speed > 1.45) // 배속이 1.5 이상일 때 버튼 비활성화
         }

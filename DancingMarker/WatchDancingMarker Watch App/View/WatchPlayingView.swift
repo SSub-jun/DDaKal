@@ -21,7 +21,6 @@ struct WatchPlayingView: View {
                     WatchPlayingMarkerView()
                     WatchPlayingSpeedView()
                 }
-                
             }
             
             HStack{

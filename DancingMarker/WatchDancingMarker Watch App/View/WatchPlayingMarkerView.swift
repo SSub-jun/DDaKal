@@ -20,7 +20,7 @@ struct WatchPlayingMarkerView: View {
             }
             .onTapGesture {
                 print("마커 추가 #")
-                // 마커 추가
+                // 첫번째 마커 추가 기능이 들어가면 됩니다.
             }
             
             // MARK: 마커 2
@@ -38,7 +38,7 @@ struct WatchPlayingMarkerView: View {
             }
             .onTapGesture {
                 print("마커 추가 ##")
-                // 마커 추가
+                // 첫번째 마커 추가 기능이 들어가면 됩니다.
             }
             
             // MARK: 마커 3
@@ -56,7 +56,7 @@ struct WatchPlayingMarkerView: View {
             }
             .onTapGesture {
                 print("마커 추가 ###")
-                // 마커 추가
+                // 첫번째 마커 추가 기능이 들어가면 됩니다.
             }
         }
         .padding(.bottom)
