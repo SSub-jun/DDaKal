@@ -11,43 +11,36 @@ import AVFoundation
 struct PlayingView: View {
     @Environment(NavigationManager.self) var navigationManager
     @Environment(\.modelContext) private var modelContext
-    var music: Music
-    
-    /// 슬라이드용 임시 음원 정보
-    @State private var progress: Double = 0.0 // 예시로 초기값 설정
-    @State private var formattedProgress = "0:00"
-    @State private var formattedDuration = "0:00"
-    @State private var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
-    @State private var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
-    
-    @State var audioPlayer: AVAudioPlayer?
-    @State private var playbackRate: Float = 1.0
-    @State private var isPlaying = false
-    @State private var isDragging = false
-    
+    @EnvironmentObject var playerModel: PlayerModel
+
     var body: some View {
         VStack {
             /// 음원 정보
             HStack(spacing: 10) {
-                if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
-                    Image(uiImage: albumArt)
-                        .resizable()
-                        .frame(width: 66, height: 66)
-                        .cornerRadius(13)
-                } else {
-                    RoundedRectangle(cornerRadius: 13)
-                        .fill(Color.gray)
-                        .frame(width: 66, height: 66)
+                if let music = playerModel.music {
+                    
+                    if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
+                        Image(uiImage: albumArt)
+                            .resizable()
+                            .frame(width: 66, height: 66)
+                            .cornerRadius(13)
+                    } else {
+                        RoundedRectangle(cornerRadius: 13)
+                            .fill(Color.gray)
+                            .frame(width: 66, height: 66)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(music.title)
+                            .font(.title3)
+                            .bold()
+                        Text(music.artist)
+                            .font(.body)
+                    }
+                    Spacer()
+                }else {
+                    Text("선택된 음악이 없습니다.")
                 }
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(music.title)
-                        .font(.title3)
-                        .bold()
-                    Text(music.artist)
-                        .font(.body)
-                }
-                Spacer()
             }
             .padding(.vertical, 12)
             
@@ -61,7 +54,7 @@ struct PlayingView: View {
                 .overlay(
                     HStack(spacing: 10) {
                         Button(action: {
-                            decreasePlaybackRate()
+                            playerModel.decreasePlaybackRate()
                         }) {
                             Image(systemName: "minus")
                                 .foregroundStyle(.white)
@@ -69,17 +62,17 @@ struct PlayingView: View {
                         Spacer()
                         
                         Button(action: {
-                            self.playbackRate = 1.0
-                            self.updateAudioPlayer()
+                            playerModel.playbackRate = 1.0
+                            playerModel.updateAudioPlayer()
                         }) {
-                            Text(String(format: "x%.1f", self.playbackRate))
+                            Text(String(format: "x%.1f", playerModel.playbackRate))
                                 .font(.title3)
                                 .foregroundColor(.white)
                         }
                         Spacer()
                         
                         Button(action: {
-                            increasePlaybackRate()
+                            playerModel.increasePlaybackRate()
                         }) {
                             Image(systemName: "plus")
                                 .foregroundStyle(.white)
@@ -99,25 +92,25 @@ struct PlayingView: View {
                         
                         Rectangle()
                             .foregroundColor(.white)
-                            .frame(width: geometry.size.width * CGFloat(self.progress), height: geometry.size.height)
+                            .frame(width: geometry.size.width * CGFloat(playerModel.progress), height: geometry.size.height)
                     }
                     .cornerRadius(12)
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged({ value in
                             let newProgress = min(max(0, Double(value.location.x / geometry.size.width)), 1.0)
-                            self.progress = newProgress
-                            let newTime = newProgress * self.duration
-                            self.updateAudioPlayer(with: newTime)
-                            self.currentTime = newTime
-                            self.formattedProgress = self.formattedTime(newTime)
+                            playerModel.progress = newProgress
+                            let newTime = newProgress * playerModel.duration
+                            playerModel.updateAudioPlayer(with: newTime)
+                            playerModel.currentTime = newTime
+                            playerModel.formattedProgress = playerModel.formattedTime(newTime)
                         }))
                 }
                 .frame(height: 5)
                 
                 HStack {
-                    Text("\(self.formattedProgress)")
+                    Text("\(playerModel.formattedProgress)")
                     Spacer()
-                    Text("\(self.formattedDuration)")
+                    Text("\(playerModel.formattedDuration)")
                 }
             }
             .padding(.bottom, 40)
@@ -128,7 +121,7 @@ struct PlayingView: View {
                     .frame(width: 60)
                     .overlay(
                         Button(action: {
-                            backward5Sec()
+                            playerModel.backward5Sec()
                         }) {
                             Image(systemName: "gobackward.5")
                                 .resizable()
@@ -144,9 +137,9 @@ struct PlayingView: View {
                     .frame(width: 80)
                     .overlay(
                         Button(action: {
-                            togglePlayback()
+                            playerModel.togglePlayback()
                         }) {
-                            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
+                            Image(systemName: playerModel.isPlaying ? "pause.fill" : "play.fill")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 30)
@@ -161,7 +154,7 @@ struct PlayingView: View {
                     .frame(width: 60)
                     .overlay(
                         Button(action: {
-                            forward5Sec()
+                            playerModel.forward5Sec()
                         }) {
                             Image(systemName: "goforward.5")
                                 .resizable()
@@ -176,7 +169,7 @@ struct PlayingView: View {
         }
         .padding(.horizontal, 16)
         .onAppear {
-            initAudioPlayer()
+            playerModel.initAudioPlayer()
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
@@ -196,189 +189,20 @@ struct PlayingView: View {
             .padding(.vertical, 12)
             
             VStack {
-                ForEach(0..<3, id: \.self) { index in
-                    if index < music.markers.count {
-                        markerButton(for: music.markers[index])
-                    } else {
-                        addMarkerButton(index: index)
+                if let music = playerModel.music {
+                    ForEach(0..<3, id: \.self) { index in
+                        let emptyTimeInterval: TimeInterval = 5999.0
+                        if music.markers[index] != emptyTimeInterval {
+                            playerModel.markerButton(for: music.markers[index])
+                        } else {
+                            playerModel.addMarkerButton(index: index)
+                        }
                     }
                 }
             }
             .padding(.bottom, 8)
             
         }
-    }
-    
-    private func addMarkerButton(index: Int) -> some View {
-        Button(action: {
-            addMarker(at: index)
-        }) {
-            Text("추가")
-                .font(.title3)
-                .foregroundColor(.white)
-                .frame(width: 360, height: 60)
-                .background(Color.buttonDarkGray)
-                .cornerRadius(12)
-        }
-    }
-    
-    private func addMarker(at index: Int) {
-        guard let audioPlayer = audioPlayer else { return }
-        
-        let newMarker = audioPlayer.currentTime
-        if music.markers.count > index {
-            music.markers[index] = newMarker
-        } else {
-            music.markers.append(newMarker)
-        }
-        
-        do {
-            try modelContext.save()
-        } catch {
-            print("Failed to save context: \(error.localizedDescription)")
-        }
-    }
-    
-    @ViewBuilder
-    private func markerButton(for marker: TimeInterval) -> some View {
-        Button(action: {
-            moveToMarker(marker)
-        }) {
-            Text(formattedTime(marker))
-                .font(.title3)
-                .italic()
-                .foregroundColor(.black)
-                .frame(width: 360, height: 60)
-                .background(Color.primaryYellow)
-                .cornerRadius(12)
-        }
-    }
-    
-    private func moveToMarker(_ marker: TimeInterval) {
-        self.audioPlayer?.currentTime = marker
-        self.progress = CGFloat(marker / self.duration)
-        self.formattedProgress = self.formattedTime(marker)
-        audioPlayer?.play()
-        isPlaying = true
-    }
-    
-    private func formattedTime(_ time: TimeInterval) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = [.pad]
-        return formatter.string(from: time)!
-    }
-    
-    /// 배속 조절 기능
-    private func decreasePlaybackRate() {
-        if self.playbackRate > 0.5 {
-            self.playbackRate -= 0.1
-            self.updateAudioPlayer()
-        }
-    }
-    
-    private func increasePlaybackRate() {
-        if self.playbackRate < 2.0 {
-            self.playbackRate += 0.1
-            self.updateAudioPlayer()
-        }
-    }
-    
-    private func updateAudioPlayer() {
-        guard let audioPlayer = audioPlayer else { return }
-        audioPlayer.rate = playbackRate
-        
-    }
-    
-    private func updateAudioPlayer(with time: TimeInterval) {
-        guard let audioPlayer = audioPlayer else { return }
-        audioPlayer.currentTime = time
-    }
-    
-    /// 음원 재생, 조작, 초기화
-    private func initAudioPlayer() {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = [.pad]
-        
-        print("Attempting to load file at path: \(music.path)")
-        
-        // 파일 존재 여부 확인
-        guard FileManager.default.fileExists(atPath: music.path.path) else {
-            print("File not found at path: \(music.path)")
-            return
-        }
-        
-        do {
-            // AVAudioSession 설정
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            // AVAudioPlayer 초기화
-            self.audioPlayer = try AVAudioPlayer(contentsOf: music.path)
-            guard let audioPlayer = self.audioPlayer else {
-                print("Failed to initialize audio player")
-                return
-            }
-            
-            // 오디오 플레이어 준비 및 속성 설정
-            audioPlayer.prepareToPlay()
-            audioPlayer.enableRate = true
-            
-            // 포맷된 길이 설정
-            formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
-            duration = audioPlayer.duration
-            
-            // 타이머 설정
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                if !audioPlayer.isPlaying {
-                    self.isPlaying = false
-                }
-                
-                if !self.isDragging {
-                    self.currentTime = audioPlayer.currentTime
-                    self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
-                    self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
-                }
-            }
-        } catch {
-            print("Error initializing audio player: \(error.localizedDescription)")
-        }
-    }
-    
-    private func togglePlayback() {
-        if let audioPlayer = audioPlayer {
-            if self.isPlaying {
-                audioPlayer.pause()
-            } else {
-                audioPlayer.play()
-            }
-            self.isPlaying.toggle()
-        }
-    }
-    
-    /// 음원 5초 앞으로 뒤로 가기 기능
-    private func seekToTime(to time: TimeInterval) {
-        guard let player = audioPlayer else { return }
-        player.currentTime = time
-        progress = CGFloat(time / player.duration)
-        formattedProgress = formattedTime(time)
-    }
-    
-    private func backward5Sec() {
-        guard let player = audioPlayer else { return }
-        let newTime = max(player.currentTime - 5, 0)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
-    }
-    
-    private func forward5Sec() {
-        guard let player = audioPlayer else { return }
-        let newTime = min(player.currentTime + 5, player.duration)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
     }
     
 }
