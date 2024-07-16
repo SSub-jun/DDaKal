@@ -4,6 +4,8 @@ import SwiftUI
 struct WatchPlayingView: View {
     
     @Environment(WatchNavigationManager.self) var navigationManager
+    @EnvironmentObject var viewModel: WatchViewModel
+    
     @State var showMarkerListOverlay: Bool = false
     
     @State var progress: Double = 0.25 // 현재 진행 상황을 나타내는 변수
@@ -30,9 +32,7 @@ struct WatchPlayingView: View {
                         .cornerRadius(4)
                         .frame(height: 35)
                     Button(action:{
-                        print("현재 노래를 5초전으로 돌립니다.")
-                        // 현재 노래 5초 뒤로 가는 기능
-                        
+                        viewModel.playBackward()
                     }, label:{
                         Image(systemName: "gobackward.5")
                             .resizable()
@@ -51,8 +51,7 @@ struct WatchPlayingView: View {
                         .frame(width: 42, height: 42)
                     
                     Button(action: {
-                        print("현재 노래 재생 & 일시정지")
-                        // 현재 노래 재생/일시정지 기능 구현
+                        viewModel.playToggle()
                     }, label: {
                         Image(systemName: "play.fill") // 재생 on/off에 따라 이미지 변경
                             .resizable()
@@ -69,9 +68,7 @@ struct WatchPlayingView: View {
                         .frame(height: 35)
                     
                     Button(action:{
-                        print("현재 노래를 5초 후로 돌립니다.")
-                        // 현재 노래 5초 앞으로 가는 기능
-                        
+                        viewModel.playForward()
                     }, label:{
                         Image(systemName: "goforward.5")
                             .resizable()

@@ -3,6 +3,8 @@ import SwiftUI
 struct WatchMusicListView: View {
     
     @Environment(WatchNavigationManager.self) var navigationManager
+    @EnvironmentObject var viewModel: WatchViewModel
+
     let columns = [ GridItem(.flexible()) ]
     
     let tempMusic = ["NewJeans-SuperNatural", "Music2", "Music3", "Music4"]
@@ -28,7 +30,3 @@ struct WatchMusicListView: View {
         }
     }
 }
-
-//#Preview {
-//    WatchMusicListView()
-//}

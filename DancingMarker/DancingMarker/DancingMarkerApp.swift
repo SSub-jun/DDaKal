@@ -21,10 +21,13 @@ struct DancingMarkerApp: App {
             }
         }()
     
+    @StateObject var viewModel = PlayerModel(connectivityManager: WatchConnectivityManager())
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .modelContainer(modelContainer)
+                .environmentObject(viewModel)
                 .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
         }
     }

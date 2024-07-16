@@ -11,7 +11,7 @@ enum PathType: Hashable {
     case musicList
     case musicadd
     case musicedit
-    case playing(music: Music)
+    case playing
     case nowplaying
 }
 
@@ -28,8 +28,8 @@ extension PathType {
         case .musicedit:
             MusicEditView()
             
-        case .playing(let music):
-            PlayingView(music: music)
+        case .playing:
+            PlayingView()
             
         case .nowplaying:
             NowPlayingView()
