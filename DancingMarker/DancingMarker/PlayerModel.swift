@@ -62,6 +62,24 @@ class PlayerModel: ObservableObject {
             name: .markerSave,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationDecreaseSpeedAction),
+            name: .decreaseSpeed,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationIncreaseSpeedAction),
+            name: .increaseSpeed,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationOriginalSpeedAction),
+            name: .originalSpeed,
+            object: nil
+        )
     }
     
     @objc func notificationPlaytoggleAction(_ notification: Notification) {
@@ -78,6 +96,22 @@ class PlayerModel: ObservableObject {
     @objc func notificationBackwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
         backward5Sec()
+    }
+    
+    @objc func notificationIncreaseSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        increasePlaybackRate()
+    }
+    
+    @objc func notificationDecreaseSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        decreasePlaybackRate()
+    }
+    
+    @objc func notificationOriginalSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        self.playbackRate = 1.0
+        self.updateAudioPlayer()
     }
     
     @objc func notificationMarkerPlayAction(_ notification: Notification) {
@@ -195,12 +229,13 @@ class PlayerModel: ObservableObject {
     func updateAudioPlayer() {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.rate = playbackRate
-        
+        connectivityManager.sendSpeedToWatch(playbackRate)
     }
     
     func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
+        connectivityManager.sendSpeedToWatch(playbackRate)
     }
     
     /// 음원 재생, 조작, 초기화

@@ -12,6 +12,8 @@ class WatchViewModel: ObservableObject {
     
     var connectivityManager: WatchConnectivityManager
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
+    @Published var speed: Float = 1.0
+
     
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
@@ -19,6 +21,12 @@ class WatchViewModel: ObservableObject {
             self,
             selector: #selector(updateMarkers(_:)),
             name: .sendMarkers,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateSpeed(_:)),
+            name: .sendSpeed,
             object: nil
         )
     }
@@ -33,6 +41,13 @@ class WatchViewModel: ObservableObject {
         }
     }
     
+    @objc func updateSpeed(_ notification: Notification) {
+        if let speed = notification.object as? Float {
+            // 수신한 markers 데이터를 처리하는 로직
+            self.speed = speed
+        }
+    }
+    
     func playToggle() {
         connectivityManager.sendPlayToggleToIOS()
     }
@@ -42,6 +57,15 @@ class WatchViewModel: ObservableObject {
     }
     func playBackward() {
         connectivityManager.sendBackwardToIOS()
+    }
+    func decreasePlaybackRate() {
+        connectivityManager.sendDecreasePlaybackToIOS()
+    }
+    func increasePlaybackRate() {
+        connectivityManager.sendIncreasePlaybackToIOS()
+    }
+    func originalPlaybckRate() {
+        connectivityManager.sendOriginalPlaybackToIOS()
     }
     
     func formattedTime(_ time: TimeInterval) -> String {

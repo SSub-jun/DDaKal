@@ -92,11 +92,51 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             replyHandler(["success": false])
         }
         
+        
         if let action = message["action"] as? String,
            action == "Backward" {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .backward,
+                    object: nil
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "SendIncreasePlayback" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .increaseSpeed,
+                    object: nil
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "SendDecreasePlayback" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .decreaseSpeed,
+                    object: nil
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "SendOriginalPlayback" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .originalSpeed,
                     object: nil
                 )
                 replyHandler(["success": true])
@@ -147,6 +187,20 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         } else {
             replyHandler(["success": false])
         }
+        
+        if let action = message["action"] as? String,
+           action == "SendSpeed" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .sendSpeed,
+                    object: message["speed"]
+                )
+                replyHandler(["success": true])
+                print("성공!")
+            }
+        } else {
+            replyHandler(["success": false])
+        }
 
         #endif
     }
@@ -161,6 +215,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             "markers": markers
         ] as [String : Any]
 
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendSpeedToWatch(_ speed: Float){
+        let message = [
+            "action": "SendSpeed",
+            "speed": speed
+        ] as [String : Any]
+        
         session.sendMessage(message) { replyHandler in
             print(replyHandler)
         } errorHandler: { error in
@@ -235,6 +302,50 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    func decreasePlaybackRate() {
+//        connectivityManager.sendBackwardToIOS()
+    }
+    func increasePlaybackRate() {
+//        connectivityManager.sendBackwardToIOS()
+    }
+    func originalPlaybckRate() {
+//        connectivityManager.sendBackwardToIOS()
+    }
+    func sendIncreasePlaybackToIOS() {
+        let message = [
+            "action": "SendIncreasePlayback"
+        ]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendDecreasePlaybackToIOS() {
+        let message = [
+            "action": "SendDecreasePlayback"
+        ]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendOriginalPlaybackToIOS() {
+        let message = [
+            "action": "SendOriginalPlayback"
+        ]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
     #endif
 
     
@@ -273,6 +384,10 @@ extension Notification.Name {
     static let backward = Notification.Name("Backward")
     static let markerPlay = Notification.Name("MarkerPlay")
     static let markerSave = Notification.Name("MarkerSave")
-    
+    static let increaseSpeed = Notification.Name("SendIncreasePlayback")
+    static let decreaseSpeed = Notification.Name("SendDecreasePlayback")
+    static let originalSpeed = Notification.Name("SendOriginalSpeed")
+
     static let sendMarkers = Notification.Name("SendMarkers")
+    static let sendSpeed = Notification.Name("SendSpeed")
 }
