@@ -201,6 +201,34 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         } else {
             replyHandler(["success": false])
         }
+        
+        if let action = message["action"] as? String,
+           action == "SendIsPlaying" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .sendIsPlaying,
+                    object: message["isPlaying"]
+                )
+                replyHandler(["success": true])
+                print("성공!")
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "SendPlayingTimes" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .sendPlayingTimes,
+                    object: message["playingTimes"]
+                )
+                replyHandler(["success": true])
+                print("성공!")
+            }
+        } else {
+            replyHandler(["success": false])
+        }
 
         #endif
     }
@@ -228,6 +256,32 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             "speed": speed
         ] as [String : Any]
         
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendIsPlayingToWatch(_ isPlaying: Bool){
+        let message = [
+            "action": "SendIsPlaying",
+            "isPlaying": isPlaying
+        ] as [String : Any]
+        
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendPlayingTimesToWatch(_ playingTimes: [TimeInterval]) {
+        let message = [
+            "action": "SendPlayingTimes",
+            "playingTimes": playingTimes
+        ] as [String : Any]
+
         session.sendMessage(message) { replyHandler in
             print(replyHandler)
         } errorHandler: { error in
@@ -390,4 +444,6 @@ extension Notification.Name {
 
     static let sendMarkers = Notification.Name("SendMarkers")
     static let sendSpeed = Notification.Name("SendSpeed")
+    static let sendIsPlaying = Notification.Name("SendIsPlaying")
+    static let sendPlayingTimes = Notification.Name("SendPlayingTimes")
 }

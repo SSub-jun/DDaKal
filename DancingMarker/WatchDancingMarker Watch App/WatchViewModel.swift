@@ -13,7 +13,15 @@ class WatchViewModel: ObservableObject {
     var connectivityManager: WatchConnectivityManager
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
     @Published var speed: Float = 1.0
-
+    @Published var isPlaying = false
+    
+    @Published var progress: Double = 0.0 // 예시로 초기값 설정
+    @Published var formattedProgress = "0:00"
+    @Published var formattedDuration = "0:00"
+    @Published var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
+    @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
+    
+    private var timer: Timer?
     
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
@@ -27,6 +35,18 @@ class WatchViewModel: ObservableObject {
             self,
             selector: #selector(updateSpeed(_:)),
             name: .sendSpeed,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateIsPlaying(_:)),
+            name: .sendIsPlaying,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updatePlayingTimes(_:)),
+            name: .sendPlayingTimes,
             object: nil
         )
     }
@@ -45,6 +65,30 @@ class WatchViewModel: ObservableObject {
         if let speed = notification.object as? Float {
             // 수신한 markers 데이터를 처리하는 로직
             self.speed = speed
+        }
+    }
+    
+    @objc func updateIsPlaying(_ notification: Notification) {
+        if let isPlaying = notification.object as? Bool {
+            // 수신한 markers 데이터를 처리하는 로직
+            self.isPlaying = isPlaying
+            if isPlaying {
+                startTimer()
+            } else{
+                stopTimer()
+            }
+        }
+    }
+    
+    @objc func updatePlayingTimes(_ notification: Notification) {
+        if let playingTimes = notification.object as? [TimeInterval] {
+            // 수신한 markers 데이터를 처리하는 로직
+            DispatchQueue.main.async{
+                self.currentTime = playingTimes[0]
+                self.duration = playingTimes[1]
+                self.progress = self.currentTime / self.duration
+                self.formattedProgress = self.formattedTime(self.currentTime)
+            }
         }
     }
     
@@ -74,5 +118,28 @@ class WatchViewModel: ObservableObject {
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior = [.pad]
         return formatter.string(from: time)!
+    }
+    
+    private func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.updateTime()
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func updateTime() {
+        guard isPlaying else { return }
+        currentTime += 1
+        if currentTime >= duration {
+            currentTime = duration
+            stopTimer()
+        }
+        progress = currentTime / duration
+        formattedProgress = formattedTime(currentTime)
     }
 }

@@ -87,7 +87,6 @@ class PlayerModel: ObservableObject {
         togglePlayback()
     }
     
-    
     @objc func notificationForwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
         forward5Sec()
@@ -201,6 +200,9 @@ class PlayerModel: ObservableObject {
         self.formattedProgress = self.formattedTime(marker)
         audioPlayer?.play()
         isPlaying = true
+        
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+        connectivityManager.sendIsPlayingToWatch(isPlaying)
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -235,7 +237,8 @@ class PlayerModel: ObservableObject {
     func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
-        connectivityManager.sendSpeedToWatch(playbackRate)
+//        connectivityManager.sendSpeedToWatch(playbackRate)
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
     /// 음원 재생, 조작, 초기화
@@ -293,14 +296,18 @@ class PlayerModel: ObservableObject {
     }
     
     func togglePlayback() {
-        if let audioPlayer = audioPlayer {
-            if self.isPlaying {
-                audioPlayer.pause()
-            } else {
-                audioPlayer.play()
+        DispatchQueue.main.async{
+            if let audioPlayer = self.audioPlayer {
+                if self.isPlaying {
+                    audioPlayer.pause()
+                } else {
+                    audioPlayer.play()
+                }
+                self.isPlaying.toggle()
             }
-            self.isPlaying.toggle()
+            self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
         }
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
     /// 음원 5초 앞으로 뒤로 가기 기능
@@ -309,6 +316,7 @@ class PlayerModel: ObservableObject {
         player.currentTime = time
         progress = CGFloat(time / player.duration)
         formattedProgress = formattedTime(time)
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
     func backward5Sec() {

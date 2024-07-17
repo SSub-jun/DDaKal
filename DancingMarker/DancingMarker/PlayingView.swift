@@ -97,12 +97,14 @@ struct PlayingView: View {
                     .cornerRadius(12)
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged({ value in
-                            let newProgress = min(max(0, Double(value.location.x / geometry.size.width)), 1.0)
-                            playerModel.progress = newProgress
-                            let newTime = newProgress * playerModel.duration
-                            playerModel.updateAudioPlayer(with: newTime)
-                            playerModel.currentTime = newTime
-                            playerModel.formattedProgress = playerModel.formattedTime(newTime)
+                            DispatchQueue.main.async{
+                                let newProgress = min(max(0, Double(value.location.x / geometry.size.width)), 1.0)
+                                playerModel.progress = newProgress
+                                let newTime = newProgress * playerModel.duration
+                                playerModel.currentTime = newTime
+                                playerModel.formattedProgress = playerModel.formattedTime(newTime)
+                                playerModel.updateAudioPlayer(with: newTime)
+                            }
                         }))
                 }
                 .frame(height: 5)
