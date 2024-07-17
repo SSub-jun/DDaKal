@@ -14,6 +14,7 @@ struct MusicListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query var musicList: [Music] = []
     @State private var isFileImporterPresented: Bool = false
+    @EnvironmentObject var playerModel: PlayerModel
     
     var body: some View {
         VStack {
@@ -51,7 +52,10 @@ struct MusicListView: View {
                         
                     }
                     .onTapGesture {
-                        navigationManager.push(to: .playing(music: music))
+                        DispatchQueue.main.async{
+                            playerModel.music = music
+                            navigationManager.push(to: .playing)
+                        }
                     }
                 }
                 .listStyle(.inset)
@@ -122,7 +126,10 @@ struct MusicListView: View {
             // 파일 복사
             try FileManager.default.copyItem(at: url, to: destinationURL)
             
-            let newMusic = Music(title: title, artist: artist, path: destinationURL, albumArt: albumArt)
+            let emptyTimeInterval: TimeInterval = 5999.0
+            let markers: [TimeInterval] = [emptyTimeInterval, emptyTimeInterval, emptyTimeInterval] // 추후에 실제 마커 데이터를 추가해야 함
+            
+            let newMusic = Music(title: title, artist: artist, path: destinationURL, markers: markers, albumArt: albumArt)
             
             modelContext.insert(newMusic)
             
