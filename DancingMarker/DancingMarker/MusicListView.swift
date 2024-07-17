@@ -129,7 +129,7 @@ struct MusicListView: View {
             let emptyTimeInterval: TimeInterval = 5999.0
             let markers: [TimeInterval] = [emptyTimeInterval, emptyTimeInterval, emptyTimeInterval] // 추후에 실제 마커 데이터를 추가해야 함
             
-            let newMusic = Music(title: title, artist: artist, path: destinationURL, markers: markers, albumArt: albumArt)
+            let newMusic = Music(title: title, artist: artist, path: destinationURL, albumArt: albumArt)
             
             modelContext.insert(newMusic)
             

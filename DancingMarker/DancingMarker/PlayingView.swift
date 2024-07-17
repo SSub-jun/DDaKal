@@ -12,7 +12,7 @@ struct PlayingView: View {
     @Environment(NavigationManager.self) var navigationManager
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var playerModel: PlayerModel
-    
+
     var body: some View {
         VStack {
             /// 음원 정보
@@ -204,7 +204,9 @@ struct PlayingView: View {
             
         }
     }
+    
 }
+
 //#Preview {
 //    PlayingView(music: Music(title: "노래", artist: "아티스트", path: "", markers: [], albumArt: nil))
 //        .environment(NavigationManager())
