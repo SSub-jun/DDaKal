@@ -55,10 +55,11 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     func sessionWatchStateDidChange(_ session: WCSession) {
         print("Session watch state did change: \(session.activationState.rawValue)")
     }
+    
     #endif
     
     // MARK: MESSAGE RECEIVER
-
+    
     func session(
         _ session: WCSession,
         didReceiveMessage message: [String : Any],
@@ -229,7 +230,20 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         } else {
             replyHandler(["success": false])
         }
-
+        
+        if let action = message["action"] as? String,
+           action == "SendMusicList" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .sendMusicList,
+                    object: message["musicList"]
+                )
+                replyHandler(["success": true])
+                print("성공!")
+            }
+        } else {
+            replyHandler(["success": false])
+        }
         #endif
     }
     
@@ -288,22 +302,26 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    
+    func sendMusicListToWatch(_ musics: [String]) {
+        let message = [
+            "action": "SendMusicList",
+            "musicList": musics
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+
     #endif
     
     
     
     
     // MARK: WATCH MESSAGE RECIEVERS
-
-    
-//    func session(
-//        _ session: WCSession,
-//        didReceiveMessage message: [String : Any],
-//        replyHandler: @escaping ([String : Any]) -> Void
-//    ) {
-//
-//    }
-    
     
     // MARK: WATCH MESSAGE SENDERS
     #if os(watchOS)
@@ -356,15 +374,7 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
-    func decreasePlaybackRate() {
-//        connectivityManager.sendBackwardToIOS()
-    }
-    func increasePlaybackRate() {
-//        connectivityManager.sendBackwardToIOS()
-    }
-    func originalPlaybckRate() {
-//        connectivityManager.sendBackwardToIOS()
-    }
+    
     func sendIncreasePlaybackToIOS() {
         let message = [
             "action": "SendIncreasePlayback"
@@ -401,7 +411,6 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
     #endif
-
     
     func sendMarkerPlayToIOS(_ index: Int) {
         let message = [
@@ -446,4 +455,5 @@ extension Notification.Name {
     static let sendSpeed = Notification.Name("SendSpeed")
     static let sendIsPlaying = Notification.Name("SendIsPlaying")
     static let sendPlayingTimes = Notification.Name("SendPlayingTimes")
+    static let sendMusicList = Notification.Name("SendMusicList")
 }

@@ -5,10 +5,9 @@
 //  Created by 변준섭 on 7/16/24.
 //
 import SwiftUI
+import SwiftData
 
 class WatchViewModel: ObservableObject {
-    
-    var music: Music?
     
     var connectivityManager: WatchConnectivityManager
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
@@ -20,6 +19,7 @@ class WatchViewModel: ObservableObject {
     @Published var formattedDuration = "0:00"
     @Published var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
+    @Published var musicList: [String] = []
     
     private var timer: Timer?
     
@@ -49,6 +49,13 @@ class WatchViewModel: ObservableObject {
             name: .sendPlayingTimes,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMusicList(_:)),
+            name: .sendMusicList,
+            object: nil
+        )
+        self.musicList = UserDefaults.standard.getMusicList()
     }
     convenience init() {
            self.init(connectivityManager: WatchConnectivityManager())
@@ -92,6 +99,18 @@ class WatchViewModel: ObservableObject {
         }
     }
     
+    @objc func updateMusicList(_ notification: Notification) {
+        print("musicList ok")
+        if let musics = notification.object as? [String] {
+            if let musics = notification.object as? [String] {
+                // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
+                UserDefaults.standard.clearMusicList()
+                UserDefaults.standard.saveMusicList(musics)
+                self.musicList = musics
+            }
+        }
+    }
+    
     func playToggle() {
         connectivityManager.sendPlayToggleToIOS()
     }
@@ -110,6 +129,9 @@ class WatchViewModel: ObservableObject {
     }
     func originalPlaybckRate() {
         connectivityManager.sendOriginalPlaybackToIOS()
+    }
+    func requireMusicList() {
+//        connectivityManager.
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -141,5 +163,23 @@ class WatchViewModel: ObservableObject {
         }
         progress = currentTime / duration
         formattedProgress = formattedTime(currentTime)
+    }
+}
+
+extension UserDefaults {
+    private enum Keys {
+        static let musicList = "musicList"
+    }
+
+    func saveMusicList(_ list: [String]) {
+        set(list, forKey: Keys.musicList)
+    }
+
+    func getMusicList() -> [String] {
+        return array(forKey: Keys.musicList) as? [String] ?? []
+    }
+
+    func clearMusicList() {
+        removeObject(forKey: Keys.musicList)
     }
 }

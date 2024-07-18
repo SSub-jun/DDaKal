@@ -9,12 +9,15 @@ import SwiftUI
 import NotificationCenter
 import AVFoundation
 import MediaPlayer
+import SwiftData
 
 class PlayerModel: ObservableObject {
     
     var music: Music?
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
+    
+    @Query var musicList: [Music]
 
     @Published var progress: Double = 0.0 // 예시로 초기값 설정
     @Published var formattedProgress = "0:00"
@@ -89,12 +92,18 @@ class PlayerModel: ObservableObject {
     
     @objc func notificationForwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
-        forward5Sec()
+        DispatchQueue.main.async{
+            self.forward5Sec()
+//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+        }
     }
     
     @objc func notificationBackwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
-        backward5Sec()
+        DispatchQueue.main.async{
+            self.backward5Sec()
+//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+        }
     }
     
     @objc func notificationIncreaseSpeedAction(_ notification: Notification) {
@@ -313,23 +322,38 @@ class PlayerModel: ObservableObject {
     /// 음원 5초 앞으로 뒤로 가기 기능
     func seekToTime(to time: TimeInterval) {
         guard let player = audioPlayer else { return }
-        player.currentTime = time
-        progress = CGFloat(time / player.duration)
-        formattedProgress = formattedTime(time)
-        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+        DispatchQueue.main.async{
+            player.currentTime = time
+            self.progress = CGFloat(time / player.duration)
+            self.formattedProgress = self.formattedTime(time)
+            self.connectivityManager.sendPlayingTimesToWatch([player.currentTime, self.duration])
+        }
     }
     
     func backward5Sec() {
         guard let player = audioPlayer else { return }
-        let newTime = max(player.currentTime - 5, 0)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
+        DispatchQueue.main.async{
+            let newTime = max(player.currentTime - 5, 0)
+            self.seekToTime(to: newTime)
+        }
     }
     
     func forward5Sec() {
         guard let player = audioPlayer else { return }
         let newTime = min(player.currentTime + 5, player.duration)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
+        self.seekToTime(to: newTime)
+    }
+    
+    func sendMusicListToWatch(with musicList: [Music]) {
+        print(musicList.count)
+        if musicList.count != 0{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                let musicTitles = musicList.map { $0.title }
+                print(musicTitles)
+                self.connectivityManager.sendMusicListToWatch(musicTitles)
+            }
+        } else {
+            print("no swiftdata musicList")
+        }
     }
 }

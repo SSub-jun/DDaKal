@@ -134,6 +134,9 @@ struct MusicListView: View {
             modelContext.insert(newMusic)
             
             try modelContext.save()
+            
+            print("\(musicList.count) before")
+            playerModel.sendMusicListToWatch(with:musicList)
         } catch {
             print("Failed to fetch music metadata: \(error.localizedDescription)")
         }
@@ -157,8 +160,11 @@ struct MusicListView: View {
             }
             
             Button(role: .destructive, action: {
-                if self.musicList.firstIndex(of: music) != nil {
-                    modelContext.delete(music)
+                DispatchQueue.main.async{
+                    if self.musicList.firstIndex(of: music) != nil {
+                        modelContext.delete(music)
+                    }
+                    playerModel.sendMusicListToWatch(with: musicList)
                 }
             }) {
                 Text("삭제하기")

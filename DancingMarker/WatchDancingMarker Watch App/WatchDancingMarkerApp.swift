@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct WatchDancingMarker_Watch_AppApp: App {
     
     @StateObject var viewModel = WatchViewModel(connectivityManager: WatchConnectivityManager())
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
