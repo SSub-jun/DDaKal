@@ -1,10 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct WatchMusicListView: View {
     
     @Environment(WatchNavigationManager.self) var navigationManager
     @EnvironmentObject var viewModel: WatchViewModel
 
+//    @Query var musicList: [watchMusic] = []
     let columns = [ GridItem(.flexible()) ]
     
     let tempMusic = ["NewJeans-SuperNatural", "Music2", "Music3", "Music4"]
@@ -13,7 +15,7 @@ struct WatchMusicListView: View {
         
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(tempMusic, id: \.self) { music in // 여기서 SwiftData 가져오기
+                ForEach(viewModel.musicList, id: \.self) { music in // 여기서 SwiftData 가져오기
                     Button(action: {
                         navigationManager.push(to: .playing)
                     }) {

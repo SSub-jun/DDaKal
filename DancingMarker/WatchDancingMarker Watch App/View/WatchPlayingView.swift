@@ -47,13 +47,15 @@ struct WatchPlayingView: View {
                     Circle()
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 44)
-                    CircleProgressView(progress: $progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
+                    CircleProgressView(progress: viewModel.progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
                         .frame(width: 42, height: 42)
                     
                     Button(action: {
                         viewModel.playToggle()
                     }, label: {
-                        Image(systemName: "play.fill") // 재생 on/off에 따라 이미지 변경
+                        Image(systemName:
+                              viewModel.isPlaying == true ? "pause.fill" : "play.fill"
+                        ) // 재생 on/off에 따라 이미지 변경
                             .resizable()
                             .frame(width: 22, height: 22)
                     })
@@ -82,7 +84,7 @@ struct WatchPlayingView: View {
             }
             
             HStack {
-                Text("00:25") // 현재 재생시간 데이터 넣어주기
+                Text(viewModel.formattedProgress) // 현재 재생시간 데이터 넣어주기
                     .font(.system(size: 10))
             }
             .padding(.bottom, 10)
@@ -108,7 +110,8 @@ struct WatchPlayingView: View {
 // MARK: 재생 버튼 ProgressBar
 struct CircleProgressView: View {
     
-    @Binding var progress: Double
+//    @Binding var progress: Double
+    var progress: Double
     
     var body: some View {
         ZStack {
