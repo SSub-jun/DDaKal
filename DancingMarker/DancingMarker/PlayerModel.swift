@@ -13,7 +13,18 @@ import SwiftData
 
 class PlayerModel: ObservableObject {
     
-    var music: Music?
+    @Published var music: Music? {
+            didSet {
+                if let music = music {
+                    if oldValue == nil || oldValue != music {
+                        stopAudioPlayer() // 기존 재생 중인 음악을 중지
+                        initAudioPlayer(for: music) // 새로운 음악으로 초기화
+                        playAudio() // 음악 자동 재생
+                    }
+                }
+            }
+        }
+    
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
     
@@ -251,8 +262,15 @@ class PlayerModel: ObservableObject {
     }
     
     /// 음원 재생, 조작, 초기화
-    func initAudioPlayer() {
-        guard let music = music else { return }
+    
+    func playAudio() {
+            guard let audioPlayer = audioPlayer else { return }
+            audioPlayer.play()
+            isPlaying = true
+        }
+    
+    func initAudioPlayer(for music: Music) {
+        //guard let music = music else { return }
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -302,6 +320,11 @@ class PlayerModel: ObservableObject {
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
+    }
+    
+    func stopAudioPlayer() {
+        audioPlayer?.stop()
+        audioPlayer = nil
     }
     
     func togglePlayback() {
