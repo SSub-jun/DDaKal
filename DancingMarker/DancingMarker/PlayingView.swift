@@ -172,14 +172,6 @@ struct PlayingView: View {
         .padding(.horizontal, 16)
         .onAppear {
             guard let music = playerModel.music else { return }
-            
-            playerModel.initAudioPlayer(for: music)
-            if playerModel.isPlaying {
-                print("노래 틀어")
-                playerModel.playAudio()
-            }
-            print("암튼 호출됨")
-
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")

@@ -52,31 +52,42 @@ struct MusicListView: View {
                         
                     }
                     .onTapGesture {
-                        DispatchQueue.main.async {
-                            let isSameMusic = playerModel.music?.id == music.id
+                        //DispatchQueue.main.async {
                             
-                            // MusicListView에서 선택한 음원을 PlayerModel에 설정
-                            //playerModel.music = music
+                            let selectedMusic = music
                             
-                            if isSameMusic {
-                                // 동일한 음원 선택 시, 음원의 상태에 따라 필요 시 재생 토글
-                                print("음원 그대로임")
+                            if playerModel.music == nil {
+                                // 음원이 nil 일 때 (처음 노래를 켤 때)
+                                playerModel.music = selectedMusic
+                                playerModel.isPlaying = true
+                                playerModel.initAudioPlayer(for: selectedMusic)
+                                playerModel.playAudio()
+                                print("음원 \(playerModel.music?.title)으로 처음 재생됨")
+                            } else if playerModel.music?.id == selectedMusic.id {
+                                // 현재 재생 중인 음원과 동일할 때
+                                print("음원 그대로임 \(playerModel.music?.title)")
                                 if !playerModel.isPlaying {
                                     // 음원이 정지된 상태라면 재생 시작
+                                    print("정지였었삼: \(playerModel.music?.title)")
                                     playerModel.isPlaying = true
                                     playerModel.playAudio()
                                 }
                             } else {
                                 // 새로운 음원으로 변경되었을 경우
                                 playerModel.stopAudio()
-                                playerModel.music = music
-                                print("음원 \(playerModel.music?.title)으로 바뀜")
+                                playerModel.stopTimer() // 기존 타이머 중지
+                                
+                                playerModel.music = selectedMusic
                                 playerModel.isPlaying = true
+                                playerModel.initAudioPlayer(for: selectedMusic)
+                                print("음원 \(playerModel.music?.title)으로 바뀜")
+                                
+                                playerModel.playAudio()
                             }
                             
                             // PlayingView로 이동
                             navigationManager.push(to: .playing)
-                        }
+                        //}
                     }
 
                 }

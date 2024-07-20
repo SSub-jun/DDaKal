@@ -28,6 +28,7 @@ class PlayerModel: ObservableObject {
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
     
     @Published var audioPlayer: AVAudioPlayer?
+    var timer: Timer?
     @Published var playbackRate: Float = 1.0
     @Published var isPlaying = false
     @Published var isDragging = false
@@ -265,16 +266,10 @@ class PlayerModel: ObservableObject {
     }
     
     func initAudioPlayer(for music: Music) {
-        //guard let music = music else { return }
-//        if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying {
-//            existingPlayer.stop()
-//        }
         if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying, self.music == music {
-             print("The same music is already playing. No need to reinitialize.")
-             return
-         }
-        
-        self.audioPlayer = nil
+            print("The same music is already playing. No need to reinitialize.")
+            return
+        }
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -309,22 +304,13 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
-            // 타이머 설정
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                if !audioPlayer.isPlaying {
-                    self.isPlaying = false
-                }
-                
-                if !self.isDragging {
-                    self.currentTime = audioPlayer.currentTime
-                    self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
-                    self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
-                }
-            }
+            // 타이머 시작
+            startTimer()
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
+
     
     func togglePlayback() {
         DispatchQueue.main.async{
@@ -340,6 +326,32 @@ class PlayerModel: ObservableObject {
         }
         connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
+    
+    func startTimer() {
+        // 기존 타이머가 있으면 무효화
+        timer?.invalidate()
+        
+        // 새로운 타이머 설정
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            guard let audioPlayer = self.audioPlayer else { return }
+            
+            if !audioPlayer.isPlaying {
+                self.isPlaying = false
+            }
+            
+            if !self.isDragging {
+                self.currentTime = audioPlayer.currentTime
+                self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
+                self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
+            }
+        }
+    }
+
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+
     
     /// 음원 5초 앞으로 뒤로 가기 기능
     func seekToTime(to time: TimeInterval) {
