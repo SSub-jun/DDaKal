@@ -52,11 +52,44 @@ struct MusicListView: View {
                         
                     }
                     .onTapGesture {
-                        DispatchQueue.main.async{
-                            playerModel.music = music
+                        //DispatchQueue.main.async {
+                            
+                            let selectedMusic = music
+                            
+                            if playerModel.music == nil {
+                                // 음원이 nil 일 때 (처음 노래를 켤 때)
+                                playerModel.music = selectedMusic
+                                playerModel.isPlaying = true
+                                playerModel.initAudioPlayer(for: selectedMusic)
+                                playerModel.playAudio()
+                                print("음원 \(playerModel.music?.title)으로 처음 재생됨")
+                            } else if playerModel.music?.id == selectedMusic.id {
+                                // 현재 재생 중인 음원과 동일할 때
+                                print("음원 그대로임 \(playerModel.music?.title)")
+                                if !playerModel.isPlaying {
+                                    // 음원이 정지된 상태라면 재생 시작
+                                    print("정지였었삼: \(playerModel.music?.title)")
+                                    playerModel.isPlaying = true
+                                    playerModel.playAudio()
+                                }
+                            } else {
+                                // 새로운 음원으로 변경되었을 경우
+                                playerModel.stopAudio()
+                                playerModel.stopTimer() // 기존 타이머 중지
+                                
+                                playerModel.music = selectedMusic
+                                playerModel.isPlaying = true
+                                playerModel.initAudioPlayer(for: selectedMusic)
+                                print("음원 \(playerModel.music?.title)으로 바뀜")
+                                
+                                playerModel.playAudio()
+                            }
+                            
+                            // PlayingView로 이동
                             navigationManager.push(to: .playing)
-                        }
+                        //}
                     }
+
                 }
                 .listStyle(.inset)
             }
@@ -65,7 +98,6 @@ struct MusicListView: View {
         .toolbar {
             ToolbarItem (placement: .topBarTrailing) {
                 Button("추가하기") {
-                    //navigationManager.push(to: .musicadd)
                     isFileImporterPresented.toggle()
                 }
             }
@@ -120,29 +152,28 @@ struct MusicListView: View {
         
         do {
             let (title, artist, albumArt) = try await fetchMusicMetadata(from: url)
-            let fileName = url.lastPathComponent
-            let destinationURL = getDocumentsDirectory().appendingPathComponent(fileName)
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             
-            // 파일 복사
-            try FileManager.default.copyItem(at: url, to: destinationURL)
+            let uniqueFileURL = documentsDirectory.appendingUniquePathComponent(url.lastPathComponent)
             
-            let emptyTimeInterval: TimeInterval = 5999.0
-            let markers: [TimeInterval] = [emptyTimeInterval, emptyTimeInterval, emptyTimeInterval] // 추후에 실제 마커 데이터를 추가해야 함
+            try FileManager.default.copyItem(at: url, to: uniqueFileURL)
             
-            let newMusic = Music(title: title, artist: artist, path: destinationURL, markers: markers, albumArt: albumArt)
+            let newMusic = Music(
+                title: title,
+                artist: artist,
+                path: uniqueFileURL,
+                markers: [TimeInterval](repeating: 5999.0, count: 3),
+                albumArt: albumArt
+            )
             
             modelContext.insert(newMusic)
-            
             try modelContext.save()
             
-            print("\(musicList.count) before")
-            playerModel.sendMusicListToWatch(with:musicList)
+            playerModel.sendMusicListToWatch(with: musicList)
         } catch {
             print("Failed to fetch music metadata: \(error.localizedDescription)")
         }
         
-        // 보안 범위 설정 종료
-        // url.stopAccessingSecurityScopedResource()
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -160,9 +191,9 @@ struct MusicListView: View {
             }
             
             Button(role: .destructive, action: {
-                DispatchQueue.main.async{
-                    if self.musicList.firstIndex(of: music) != nil {
-                        modelContext.delete(music)
+                DispatchQueue.main.async {
+                    if let index = self.musicList.firstIndex(of: music) {
+                        modelContext.delete(musicList[index])
                     }
                     playerModel.sendMusicListToWatch(with: musicList)
                 }
@@ -170,8 +201,26 @@ struct MusicListView: View {
                 Text("삭제하기")
                 Image(systemName: "trash")
             }
-            
         }
+    }
+}
+
+extension URL {
+    func appendingUniquePathComponent(_ component: String) -> URL {
+        var newURL = self.appendingPathComponent(component)
+        let fileManager = FileManager.default
+        var fileExists = fileManager.fileExists(atPath: newURL.path)
+        
+        // Loop to find a unique name
+        while fileExists {
+            let baseName = newURL.deletingPathExtension().lastPathComponent
+            let extensionName = newURL.pathExtension
+            let uniqueName = "\(baseName)-\(UUID().uuidString).\(extensionName)"
+            newURL = self.appendingPathComponent(uniqueName)
+            fileExists = fileManager.fileExists(atPath: newURL.path)
+        }
+        
+        return newURL
     }
 }
 
@@ -179,5 +228,4 @@ struct MusicListView: View {
     MusicListView()
         .environment(NavigationManager())
         .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
-    
 }

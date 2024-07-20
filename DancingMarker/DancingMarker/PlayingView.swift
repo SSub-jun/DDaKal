@@ -38,7 +38,7 @@ struct PlayingView: View {
                             .font(.body)
                     }
                     Spacer()
-                }else {
+                } else {
                     Text("선택된 음악이 없습니다.")
                 }
             }
@@ -97,7 +97,7 @@ struct PlayingView: View {
                     .cornerRadius(12)
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged({ value in
-                            DispatchQueue.main.async{
+                            DispatchQueue.main.async {
                                 let newProgress = min(max(0, Double(value.location.x / geometry.size.width)), 1.0)
                                 playerModel.progress = newProgress
                                 let newTime = newProgress * playerModel.duration
@@ -171,7 +171,7 @@ struct PlayingView: View {
         }
         .padding(.horizontal, 16)
         .onAppear {
-            playerModel.initAudioPlayer()
+            guard let music = playerModel.music else { return }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
