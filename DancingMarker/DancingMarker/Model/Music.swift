@@ -18,6 +18,7 @@ class Music : Equatable {
             hasher.combine(id)
         }
     
+    let id: UUID
     var title: String
     var artist: String
     var path: URL
@@ -47,6 +48,7 @@ class Music : Equatable {
         }
     
     init(title: String, artist: String, path: URL, markers: [TimeInterval], albumArt: Data?) {
+        self.id = UUID()
         self.title = title
         self.artist = artist
         self.path = path

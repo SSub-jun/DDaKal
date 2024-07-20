@@ -53,10 +53,32 @@ struct MusicListView: View {
                     }
                     .onTapGesture {
                         DispatchQueue.main.async {
-                            playerModel.music = music
+                            let isSameMusic = playerModel.music?.id == music.id
+                            
+                            // MusicListView에서 선택한 음원을 PlayerModel에 설정
+                            //playerModel.music = music
+                            
+                            if isSameMusic {
+                                // 동일한 음원 선택 시, 음원의 상태에 따라 필요 시 재생 토글
+                                print("음원 그대로임")
+                                if !playerModel.isPlaying {
+                                    // 음원이 정지된 상태라면 재생 시작
+                                    playerModel.isPlaying = true
+                                    playerModel.playAudio()
+                                }
+                            } else {
+                                // 새로운 음원으로 변경되었을 경우
+                                playerModel.stopAudio()
+                                playerModel.music = music
+                                print("음원 \(playerModel.music?.title)으로 바뀜")
+                                playerModel.isPlaying = true
+                            }
+                            
+                            // PlayingView로 이동
                             navigationManager.push(to: .playing)
                         }
                     }
+
                 }
                 .listStyle(.inset)
             }

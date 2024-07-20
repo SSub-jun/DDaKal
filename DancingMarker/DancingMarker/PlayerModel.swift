@@ -13,17 +13,8 @@ import SwiftData
 
 class PlayerModel: ObservableObject {
     
-    @Published var music: Music? {
-            didSet {
-                if let music = music {
-                    if oldValue == nil || oldValue != music {
-                        stopAudioPlayer() // 기존 재생 중인 음악을 중지
-                        initAudioPlayer(for: music) // 새로운 음악으로 초기화
-                        playAudio() // 음악 자동 재생
-                    }
-                }
-            }
-        }
+    @Published var music: Music? 
+
     
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
@@ -42,7 +33,6 @@ class PlayerModel: ObservableObject {
     @Published var isDragging = false
     
     @Published var countNum: Int = 0
-
 
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
@@ -191,6 +181,7 @@ class PlayerModel: ObservableObject {
 //            music.markers.append(newMarker)
 //        }
         music.markers[index] = newMarker
+        //TODO: modelContext에 마커 넣기
         
         do {
             try modelContext.save()
@@ -264,13 +255,26 @@ class PlayerModel: ObservableObject {
     /// 음원 재생, 조작, 초기화
     
     func playAudio() {
-            guard let audioPlayer = audioPlayer else { return }
-            audioPlayer.play()
-            isPlaying = true
-        }
+        audioPlayer?.play()
+        isPlaying = true
+    }
+
+    func stopAudio() {
+        audioPlayer?.stop()
+        isPlaying = false
+    }
     
     func initAudioPlayer(for music: Music) {
         //guard let music = music else { return }
+//        if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying {
+//            existingPlayer.stop()
+//        }
+        if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying, self.music == music {
+             print("The same music is already playing. No need to reinitialize.")
+             return
+         }
+        
+        self.audioPlayer = nil
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -320,11 +324,6 @@ class PlayerModel: ObservableObject {
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
-    }
-    
-    func stopAudioPlayer() {
-        audioPlayer?.stop()
-        audioPlayer = nil
     }
     
     func togglePlayback() {
