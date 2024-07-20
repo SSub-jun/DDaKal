@@ -9,12 +9,17 @@ import SwiftUI
 import NotificationCenter
 import AVFoundation
 import MediaPlayer
+import SwiftData
 
 class PlayerModel: ObservableObject {
     
-    var music: Music?
+    @Published var music: Music? 
+
+    
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
+    
+    @Query var musicList: [Music]
 
     @Published var progress: Double = 0.0 // 예시로 초기값 설정
     @Published var formattedProgress = "0:00"
@@ -23,12 +28,12 @@ class PlayerModel: ObservableObject {
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
     
     @Published var audioPlayer: AVAudioPlayer?
+    var timer: Timer?
     @Published var playbackRate: Float = 1.0
     @Published var isPlaying = false
     @Published var isDragging = false
     
     @Published var countNum: Int = 0
-
 
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
@@ -62,6 +67,24 @@ class PlayerModel: ObservableObject {
             name: .markerSave,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationDecreaseSpeedAction),
+            name: .decreaseSpeed,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationIncreaseSpeedAction),
+            name: .increaseSpeed,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationOriginalSpeedAction),
+            name: .originalSpeed,
+            object: nil
+        )
     }
     
     @objc func notificationPlaytoggleAction(_ notification: Notification) {
@@ -69,15 +92,36 @@ class PlayerModel: ObservableObject {
         togglePlayback()
     }
     
-    
     @objc func notificationForwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
-        forward5Sec()
+        DispatchQueue.main.async{
+            self.forward5Sec()
+//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+        }
     }
     
     @objc func notificationBackwardAction(_ notification: Notification) {
         self.countNum = countNum + 1
-        backward5Sec()
+        DispatchQueue.main.async{
+            self.backward5Sec()
+//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+        }
+    }
+    
+    @objc func notificationIncreaseSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        increasePlaybackRate()
+    }
+    
+    @objc func notificationDecreaseSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        decreasePlaybackRate()
+    }
+    
+    @objc func notificationOriginalSpeedAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        self.playbackRate = 1.0
+        self.updateAudioPlayer()
     }
     
     @objc func notificationMarkerPlayAction(_ notification: Notification) {
@@ -138,6 +182,7 @@ class PlayerModel: ObservableObject {
 //            music.markers.append(newMarker)
 //        }
         music.markers[index] = newMarker
+        //TODO: modelContext에 마커 넣기
         
         do {
             try modelContext.save()
@@ -167,6 +212,9 @@ class PlayerModel: ObservableObject {
         self.formattedProgress = self.formattedTime(marker)
         audioPlayer?.play()
         isPlaying = true
+        
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+        connectivityManager.sendIsPlayingToWatch(isPlaying)
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -195,17 +243,33 @@ class PlayerModel: ObservableObject {
     func updateAudioPlayer() {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.rate = playbackRate
-        
+        connectivityManager.sendSpeedToWatch(playbackRate)
     }
     
     func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
+//        connectivityManager.sendSpeedToWatch(playbackRate)
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
     /// 음원 재생, 조작, 초기화
-    func initAudioPlayer() {
-        guard let music = music else { return }
+    
+    func playAudio() {
+        audioPlayer?.play()
+        isPlaying = true
+    }
+
+    func stopAudio() {
+        audioPlayer?.stop()
+        isPlaying = false
+    }
+    
+    func initAudioPlayer(for music: Music) {
+        if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying, self.music == music {
+            print("The same music is already playing. No need to reinitialize.")
+            return
+        }
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -240,53 +304,90 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
-            // 타이머 설정
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                if !audioPlayer.isPlaying {
-                    self.isPlaying = false
-                }
-                
-                if !self.isDragging {
-                    self.currentTime = audioPlayer.currentTime
-                    self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
-                    self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
-                }
-            }
+            // 타이머 시작
+            startTimer()
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
+
     
     func togglePlayback() {
-        if let audioPlayer = audioPlayer {
-            if self.isPlaying {
-                audioPlayer.pause()
-            } else {
-                audioPlayer.play()
+        DispatchQueue.main.async{
+            if let audioPlayer = self.audioPlayer {
+                if self.isPlaying {
+                    audioPlayer.pause()
+                } else {
+                    audioPlayer.play()
+                }
+                self.isPlaying.toggle()
             }
-            self.isPlaying.toggle()
+            self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
+        }
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+    }
+    
+    func startTimer() {
+        // 기존 타이머가 있으면 무효화
+        timer?.invalidate()
+        
+        // 새로운 타이머 설정
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            guard let audioPlayer = self.audioPlayer else { return }
+            
+            if !audioPlayer.isPlaying {
+                self.isPlaying = false
+            }
+            
+            if !self.isDragging {
+                self.currentTime = audioPlayer.currentTime
+                self.progress = audioPlayer.duration > 0 ? Double(audioPlayer.currentTime / audioPlayer.duration) : 0
+                self.formattedProgress = self.formattedTime(audioPlayer.currentTime)
+            }
         }
     }
+
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+
     
     /// 음원 5초 앞으로 뒤로 가기 기능
     func seekToTime(to time: TimeInterval) {
         guard let player = audioPlayer else { return }
-        player.currentTime = time
-        progress = CGFloat(time / player.duration)
-        formattedProgress = formattedTime(time)
+        DispatchQueue.main.async{
+            player.currentTime = time
+            self.progress = CGFloat(time / player.duration)
+            self.formattedProgress = self.formattedTime(time)
+            self.connectivityManager.sendPlayingTimesToWatch([player.currentTime, self.duration])
+        }
     }
     
     func backward5Sec() {
         guard let player = audioPlayer else { return }
-        let newTime = max(player.currentTime - 5, 0)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
+        DispatchQueue.main.async{
+            let newTime = max(player.currentTime - 5, 0)
+            self.seekToTime(to: newTime)
+        }
     }
     
     func forward5Sec() {
         guard let player = audioPlayer else { return }
         let newTime = min(player.currentTime + 5, player.duration)
-        seekToTime(to: newTime)
-        // 제어 센터 업데이트 코드 추가
+        self.seekToTime(to: newTime)
+    }
+    
+    func sendMusicListToWatch(with musicList: [Music]) {
+        print(musicList.count)
+        if musicList.count != 0{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                let musicTitles = musicList.map { $0.title }
+                print(musicTitles)
+                self.connectivityManager.sendMusicListToWatch(musicTitles)
+            }
+        } else {
+            print("no swiftdata musicList")
+        }
     }
 }

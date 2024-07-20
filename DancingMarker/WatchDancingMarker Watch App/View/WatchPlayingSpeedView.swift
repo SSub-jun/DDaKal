@@ -3,8 +3,8 @@ import SwiftUI
 
 struct WatchPlayingSpeedView: View {
     
-    @State private var speed: Double = 1.0 // 기본 속도
-    
+    @EnvironmentObject var viewModel: WatchViewModel
+
     var body: some View {
         HStack(spacing: 0) {
             
@@ -12,7 +12,7 @@ struct WatchPlayingSpeedView: View {
             HStack {
                 Text("-")
                     .font(.system(size: 17))
-                    .foregroundColor(speed < 0.55 ? .gray : .white) // 0.5배가 되면 Gray색상으로
+                    .foregroundColor(viewModel.speed < 0.55 ? .gray : .white) // 0.5배가 되면 Gray색상으로
             }
             .frame(maxWidth: .infinity)
             .frame(height: 52)
@@ -20,13 +20,13 @@ struct WatchPlayingSpeedView: View {
             .clipShape(RoundedCorner(radius: 4, corners: [.topLeft, .bottomLeft]))
             .onTapGesture {
                 print("Tapped: 배속 - 버튼눌렀습니다.")
-                decreaseSpeed() // 임시로 만든 배속 줄이는 함수
+                viewModel.decreasePlaybackRate()
             }
-            .disabled(speed < 0.55) // 배속이 0.5 이하일 때 버튼 비활성화
+            .disabled(viewModel.speed < 0.55) // 배속이 0.5 이하일 때 버튼 비활성화
             
             // MARK: 배속 Text & 원배로 돌아가는 버튼
             HStack {
-                Text(String(format: "%.1fx", speed))
+                Text(String(format: "%.1fx", viewModel.speed))
                     .font(.system(size: 17))
             }
             .frame(maxWidth: .infinity)
@@ -34,14 +34,14 @@ struct WatchPlayingSpeedView: View {
             .background(Color.gray.opacity(0.2))
             .onTapGesture {
                 print("Tapped: 원배 버튼눌렀습니다.")
-                originalSpeed() // 임시로 만든 원배로 돌아가는 함수입니다.
+                viewModel.originalPlaybckRate()
             }
             
             // MARK: + 버튼
             HStack {
                 Text("+")
                     .font(.system(size: 17))
-                    .foregroundColor(speed == 1.5 ? .gray : .white) // 1.5배가 되면 Gray색상으로
+                    .foregroundColor(viewModel.speed == 1.5 ? .gray : .white) // 1.5배가 되면 Gray색상으로
             }
             .frame(maxWidth: .infinity)
             .frame(height: 52)
@@ -49,33 +49,12 @@ struct WatchPlayingSpeedView: View {
             .clipShape(RoundedCorner(radius: 4, corners: [.topRight, .bottomRight]))
             .onTapGesture {
                 print("Tapped: 배속 + 버튼눌렀습니다.")
-                increaseSpeed() // 임시로 만든 배속 증가 함수
+                viewModel.increasePlaybackRate()
             }
-            .disabled(speed > 1.45) // 배속이 1.5 이상일 때 버튼 비활성화
+            .disabled(viewModel.speed > 1.45) // 배속이 1.5 이상일 때 버튼 비활성화
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.bottom)
-    }
-    
-    // 배속 감소
-    private func decreaseSpeed() {
-        if speed > 0.5 {
-            speed = max(0.5, speed - 0.1) // 부동소수점 처리
-        }
-    }
-    
-    // 배속 증가
-    private func increaseSpeed() {
-        if speed < 1.5 {
-            speed = min(1.5, speed + 0.1) // 부동소수점 처리
-        }
-    }
-    
-    // 배속 원배로 돌아오기
-    private func originalSpeed() {
-        if speed != 1.0 {
-            speed = 1.0
-        }
     }
 }
 
