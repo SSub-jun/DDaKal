@@ -162,7 +162,7 @@ struct MusicListView: View {
                 title: title,
                 artist: artist,
                 path: uniqueFileURL,
-                markers: [TimeInterval](repeating: 5999.0, count: 3),
+                markers: [nil, nil, nil],
                 albumArt: albumArt
             )
             
@@ -173,7 +173,6 @@ struct MusicListView: View {
         } catch {
             print("Failed to fetch music metadata: \(error.localizedDescription)")
         }
-        
     }
     
     private func getDocumentsDirectory() -> URL {

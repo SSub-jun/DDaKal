@@ -13,8 +13,7 @@ import SwiftData
 
 class PlayerModel: ObservableObject {
     
-    @Published var music: Music? 
-
+    @Published var music: Music?
     
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
@@ -125,11 +124,15 @@ class PlayerModel: ObservableObject {
     }
     
     @objc func notificationMarkerPlayAction(_ notification: Notification) {
-        self.countNum = countNum + 1
+        self.countNum += 1
         guard let music = music else { return }
         
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            let marker = music.markers[index]
+            guard let marker = music.markers[index] else {
+                print("Marker at index \(index) is nil")
+                return
+            }
+            
             guard let audioPlayer = audioPlayer else { return }
             audioPlayer.currentTime = marker
             self.progress = CGFloat(marker / self.duration)
@@ -140,17 +143,26 @@ class PlayerModel: ObservableObject {
             print("Invalid marker index or index out of bounds")
         }
     }
+
     
     @objc func notificationMarkerSaveAction(_ notification: Notification) {
         self.countNum = countNum + 1
         guard let music = music else { return }
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            guard let audioPlayer = audioPlayer else { return}
-            music.markers[index] = audioPlayer.currentTime
-            self.connectivityManager.sendMarkersToWatch(music.markers)
-        } else {
-            print("Invalid marker index or index out of bounds")
-        }
+                guard let marker = music.markers[index] else {
+                    print("Marker at index \(index) is nil")
+                    return
+                }
+                
+                guard let audioPlayer = audioPlayer else { return }
+                audioPlayer.currentTime = marker
+                self.progress = CGFloat(marker / self.duration)
+                self.formattedProgress = self.formattedTime(marker)
+                audioPlayer.play()
+                self.isPlaying = true
+            } else {
+                print("Invalid marker index or index out of bounds")
+            }
     }
     
     func addMarkerButton(index: Int) -> some View {
@@ -192,7 +204,7 @@ class PlayerModel: ObservableObject {
     }
     
     @ViewBuilder
-    func markerButton(for marker: TimeInterval) -> some View {
+    func markerButton(for marker: TimeInterval, index: Int) -> some View {
         Button(action: {
             self.moveToMarker(marker)
         }) {
@@ -204,7 +216,35 @@ class PlayerModel: ObservableObject {
                 .background(Color.primaryYellow)
                 .cornerRadius(12)
         }
+        .contextMenu{
+            Button(action: {
+                // 수정 기능
+            }) {
+                Text("수정하기")
+                Image(systemName: "pencil")
+            }
+            Button(role: .destructive, action: {
+                self.deleteMarker(at: index)
+            }) {
+                Text("삭제하기")
+                Image(systemName: "trash")
+            }
+        }
     }
+    
+    private func deleteMarker(at index: Int) {
+        guard let music = self.music else { return }
+        
+        music.markers[index] = nil 
+        //self.connectivityManager.sendMarkersToWatch(music.markers)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context after deleting marker: \(error.localizedDescription)")
+        }
+    }
+    
     
     private func moveToMarker(_ marker: TimeInterval) {
         self.audioPlayer?.currentTime = marker

@@ -251,7 +251,7 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     
     #if os (iOS)
     // MARK: iOS MESSAGE SENDERS
-    func sendMarkersToWatch(_ markers: [TimeInterval]) {
+    func sendMarkersToWatch(_ markers: [TimeInterval?]) {
         let message = [
             "action": "SendMarkers",
             "markers": markers
