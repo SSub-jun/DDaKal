@@ -20,11 +20,22 @@ struct MusicListView: View {
         VStack {
             if musicList.isEmpty {
                 VStack {
+                    Spacer()
+                    
+                    Image("emptyBox")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 332)
+                        .padding(.bottom, 20)
                     Text("추가된 음악이 없어요.")
                     Text("오른쪽 상단의 버튼을 눌러")
                     Text("음악을 추가해주세요.")
+                    
+                    Spacer(minLength: 220)
                 }
                 .font(.body)
+                .foregroundStyle(.inactiveGray)
+                
             } else {
                 List(musicList, id: \.self) { music in
                     HStack(spacing: 10){
@@ -51,6 +62,7 @@ struct MusicListView: View {
                         }
                         
                     }
+                    //MARK: - 코드 정리 필요
                     .onTapGesture {
                         //DispatchQueue.main.async {
                             
@@ -97,8 +109,11 @@ struct MusicListView: View {
         .navigationTitle("내 음악")
         .toolbar {
             ToolbarItem (placement: .topBarTrailing) {
-                Button("추가하기") {
+                Button(action: {
                     isFileImporterPresented.toggle()
+                }) {
+                    Text("추가하기")
+                        .foregroundStyle(.primaryYellow)
                 }
             }
         }
@@ -162,7 +177,7 @@ struct MusicListView: View {
                 title: title,
                 artist: artist,
                 path: uniqueFileURL,
-                markers: [TimeInterval](repeating: 5999.0, count: 3),
+                markers: [nil, nil, nil],
                 albumArt: albumArt
             )
             
@@ -173,7 +188,6 @@ struct MusicListView: View {
         } catch {
             print("Failed to fetch music metadata: \(error.localizedDescription)")
         }
-        
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -222,10 +236,4 @@ extension URL {
         
         return newURL
     }
-}
-
-#Preview {
-    MusicListView()
-        .environment(NavigationManager())
-        .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
 }

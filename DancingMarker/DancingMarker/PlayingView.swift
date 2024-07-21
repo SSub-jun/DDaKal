@@ -59,6 +59,7 @@ struct PlayingView: View {
                             Image(systemName: "minus")
                                 .foregroundStyle(.white)
                         }
+                        .padding(10)
                         Spacer()
                         
                         Button(action: {
@@ -77,8 +78,9 @@ struct PlayingView: View {
                             Image(systemName: "plus")
                                 .foregroundStyle(.white)
                         }
+                        .padding(10)
                     }
-                        .padding(.horizontal, 20)
+                    .padding(.horizontal, 20)
                 )
                 .padding(.bottom, 30)
                 .padding(.top, 59)
@@ -170,9 +172,6 @@ struct PlayingView: View {
             Spacer()
         }
         .padding(.horizontal, 16)
-        .onAppear {
-            guard let music = playerModel.music else { return }
-        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
     }
@@ -193,20 +192,20 @@ struct PlayingView: View {
             VStack {
                 if let music = playerModel.music {
                     ForEach(0..<3, id: \.self) { index in
-                        let emptyTimeInterval: TimeInterval = 5999.0
-                        if music.markers[index] != emptyTimeInterval {
-                            playerModel.markerButton(for: music.markers[index])
+                        if let marker = music.markers[index] {
+                            playerModel.markerButton(for: marker, index: index)
                         } else {
                             playerModel.addMarkerButton(index: index)
                         }
                     }
+                } else {
+                    Text("No music loaded")
                 }
             }
             .padding(.bottom, 8)
-            
+
         }
     }
-    
 }
 
 //#Preview {

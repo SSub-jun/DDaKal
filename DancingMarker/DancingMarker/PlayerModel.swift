@@ -13,8 +13,7 @@ import SwiftData
 
 class PlayerModel: ObservableObject {
     
-    @Published var music: Music? 
-
+    @Published var music: Music?
     
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
@@ -125,11 +124,15 @@ class PlayerModel: ObservableObject {
     }
     
     @objc func notificationMarkerPlayAction(_ notification: Notification) {
-        self.countNum = countNum + 1
+        self.countNum += 1
         guard let music = music else { return }
         
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            let marker = music.markers[index]
+            guard let marker = music.markers[index] else {
+                print("Marker at index \(index) is nil")
+                return
+            }
+            
             guard let audioPlayer = audioPlayer else { return }
             audioPlayer.currentTime = marker
             self.progress = CGFloat(marker / self.duration)
@@ -140,17 +143,26 @@ class PlayerModel: ObservableObject {
             print("Invalid marker index or index out of bounds")
         }
     }
+
     
     @objc func notificationMarkerSaveAction(_ notification: Notification) {
         self.countNum = countNum + 1
         guard let music = music else { return }
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            guard let audioPlayer = audioPlayer else { return}
-            music.markers[index] = audioPlayer.currentTime
-            self.connectivityManager.sendMarkersToWatch(music.markers)
-        } else {
-            print("Invalid marker index or index out of bounds")
-        }
+                guard let marker = music.markers[index] else {
+                    print("Marker at index \(index) is nil")
+                    return
+                }
+                
+                guard let audioPlayer = audioPlayer else { return }
+                audioPlayer.currentTime = marker
+                self.progress = CGFloat(marker / self.duration)
+                self.formattedProgress = self.formattedTime(marker)
+                audioPlayer.play()
+                self.isPlaying = true
+            } else {
+                print("Invalid marker index or index out of bounds")
+            }
     }
     
     func addMarkerButton(index: Int) -> some View {
@@ -162,12 +174,16 @@ class PlayerModel: ObservableObject {
             }
             
         }) {
-            Text("추가")
-                .font(.title3)
-                .foregroundColor(.white)
-                .frame(width: 360, height: 60)
-                .background(Color.buttonDarkGray)
-                .cornerRadius(12)
+            HStack(spacing: 8) {
+                Image("emptyMarker")
+                Text("추가")
+                    .font(.title3)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 360, height: 60)
+            .background(Color.buttonDarkGray)
+            .cornerRadius(12)
+            
         }
     }
     
@@ -176,11 +192,6 @@ class PlayerModel: ObservableObject {
         guard let music = music else { return }
         let newMarker = audioPlayer.currentTime
         
-//        if music.markers.count > index {
-//            music.markers[index] = newMarker
-//        } else {
-//            music.markers.append(newMarker)
-//        }
         music.markers[index] = newMarker
         //TODO: modelContext에 마커 넣기
         
@@ -192,17 +203,47 @@ class PlayerModel: ObservableObject {
     }
     
     @ViewBuilder
-    func markerButton(for marker: TimeInterval) -> some View {
+    func markerButton(for marker: TimeInterval, index: Int) -> some View {
         Button(action: {
             self.moveToMarker(marker)
         }) {
-            Text(formattedTime(marker))
-                .font(.title3)
-                .italic()
-                .foregroundColor(.black)
-                .frame(width: 360, height: 60)
-                .background(Color.primaryYellow)
-                .cornerRadius(12)
+            HStack(spacing: 8) {
+                Image("addedMarker")
+                Text(formattedTime(marker))
+                    .font(.title3)
+                    .italic()
+                    .foregroundColor(.black)
+            }
+            .frame(width: 360, height: 60)
+            .background(Color.primaryYellow)
+            .cornerRadius(12)
+        }
+        .contextMenu{
+            Button(action: {
+                // 수정 기능
+            }) {
+                Text("수정하기")
+                Image(systemName: "pencil")
+            }
+            Button(role: .destructive, action: {
+                self.deleteMarker(at: index)
+            }) {
+                Text("삭제하기")
+                Image(systemName: "trash")
+            }
+        }
+    }
+    
+    private func deleteMarker(at index: Int) {
+        guard let music = self.music else { return }
+        
+        music.markers[index] = nil 
+        //self.connectivityManager.sendMarkersToWatch(music.markers)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context after deleting marker: \(error.localizedDescription)")
         }
     }
     
@@ -234,7 +275,7 @@ class PlayerModel: ObservableObject {
     }
     
     func increasePlaybackRate() {
-        if self.playbackRate < 2.0 {
+        if self.playbackRate < 1.5 {
             self.playbackRate += 0.1
             self.updateAudioPlayer()
         }
@@ -249,7 +290,6 @@ class PlayerModel: ObservableObject {
     func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
-//        connectivityManager.sendSpeedToWatch(playbackRate)
         connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
@@ -351,7 +391,6 @@ class PlayerModel: ObservableObject {
         timer?.invalidate()
         timer = nil
     }
-
     
     /// 음원 5초 앞으로 뒤로 가기 기능
     func seekToTime(to time: TimeInterval) {

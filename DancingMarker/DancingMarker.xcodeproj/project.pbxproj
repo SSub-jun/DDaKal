@@ -118,6 +118,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		513303FF2C4CD65400CC5F22 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				901BF9842C29804B00C02FF9 /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		51CAA1042C392B2500406BB8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,7 +168,7 @@
 				90E28F512C2D05B1009098BE /* PlayingView.swift */,
 				90E28F552C2D092E009098BE /* NavigationManager.swift */,
 				902077072C464CB800988D2B /* PlayerModel.swift */,
-				901BF9842C29804B00C02FF9 /* Assets.xcassets */,
+				513303FF2C4CD65400CC5F22 /* Resource */,
 				901BF9862C29804B00C02FF9 /* Preview Content */,
 			);
 			path = DancingMarker;
