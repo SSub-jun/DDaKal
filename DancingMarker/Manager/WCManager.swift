@@ -251,7 +251,7 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     
     #if os (iOS)
     // MARK: iOS MESSAGE SENDERS
-    func sendMarkersToWatch(_ markers: [TimeInterval?]) {
+    func sendMarkersToWatch(_ markers: [TimeInterval]) {
         let message = [
             "action": "SendMarkers",
             "markers": markers
@@ -410,6 +410,18 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    
+    func sendRequireMusicListToIOS() {
+        let message = [
+            "action": "SendRequireMusicList"
+        ]
+        
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
     #endif
     
     func sendMarkerPlayToIOS(_ index: Int) {
@@ -450,6 +462,7 @@ extension Notification.Name {
     static let increaseSpeed = Notification.Name("SendIncreasePlayback")
     static let decreaseSpeed = Notification.Name("SendDecreasePlayback")
     static let originalSpeed = Notification.Name("SendOriginalSpeed")
+    static let requireMusicList = Notification.Name("SendRequireMusicList")
 
     static let sendMarkers = Notification.Name("SendMarkers")
     static let sendSpeed = Notification.Name("SendSpeed")

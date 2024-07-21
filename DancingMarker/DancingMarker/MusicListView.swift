@@ -96,10 +96,10 @@ struct MusicListView: View {
                                 
                                 playerModel.playAudio()
                             }
-                            
-                            // PlayingView로 이동
-                            navigationManager.push(to: .playing)
-                        //}
+                        playerModel.sendPlayingInformation()
+                        
+                        // PlayingView로 이동
+                        navigationManager.push(to: .playing)
                     }
 
                 }
@@ -177,7 +177,7 @@ struct MusicListView: View {
                 title: title,
                 artist: artist,
                 path: uniqueFileURL,
-                markers: [nil, nil, nil],
+                markers: [-1, -1, -1],
                 albumArt: albumArt
             )
             
@@ -203,11 +203,15 @@ struct MusicListView: View {
                 Text("수정하기")
                 Image(systemName: "pencil")
             }
-            
             Button(role: .destructive, action: {
                 DispatchQueue.main.async {
                     if let index = self.musicList.firstIndex(of: music) {
                         modelContext.delete(musicList[index])
+                        do{
+                            try modelContext.save()
+                        } catch {
+                            print("Failed to fetch music metadata: \(error.localizedDescription)")
+                        }
                     }
                     playerModel.sendMusicListToWatch(with: musicList)
                 }

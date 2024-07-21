@@ -19,7 +19,7 @@ class PlayerModel: ObservableObject {
     var connectivityManager: WatchConnectivityManager
     
     @Query var musicList: [Music]
-
+    
     @Published var progress: Double = 0.0 // 예시로 초기값 설정
     @Published var formattedProgress = "0:00"
     @Published var formattedDuration = "0:00"
@@ -88,6 +88,12 @@ class PlayerModel: ObservableObject {
             name: .originalSpeed,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationOriginalSpeedAction),
+            name: .requireMusicList,
+            object: nil
+        )
     }
     
     @objc func notificationPlaytoggleAction(_ notification: Notification) {
@@ -99,7 +105,7 @@ class PlayerModel: ObservableObject {
         self.countNum = countNum + 1
         DispatchQueue.main.async{
             self.forward5Sec()
-//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+            //            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
         }
     }
     
@@ -107,7 +113,7 @@ class PlayerModel: ObservableObject {
         self.countNum = countNum + 1
         DispatchQueue.main.async{
             self.backward5Sec()
-//            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+            //            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
         }
     }
     
@@ -132,11 +138,7 @@ class PlayerModel: ObservableObject {
         guard let music = music else { return }
         
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            guard let marker = music.markers[index] else {
-                print("Marker at index \(index) is nil")
-                return
-            }
-            
+            let marker = music.markers[index]
             guard let audioPlayer = audioPlayer else { return }
             audioPlayer.currentTime = marker
             self.progress = CGFloat(marker / self.duration)
@@ -147,26 +149,23 @@ class PlayerModel: ObservableObject {
             print("Invalid marker index or index out of bounds")
         }
     }
-
+    
     
     @objc func notificationMarkerSaveAction(_ notification: Notification) {
         self.countNum = countNum + 1
         guard let music = music else { return }
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-                guard let marker = music.markers[index] else {
-                    print("Marker at index \(index) is nil")
-                    return
-                }
-                
-                guard let audioPlayer = audioPlayer else { return }
-                audioPlayer.currentTime = marker
-                self.progress = CGFloat(marker / self.duration)
-                self.formattedProgress = self.formattedTime(marker)
-                audioPlayer.play()
-                self.isPlaying = true
-            } else {
-                print("Invalid marker index or index out of bounds")
-            }
+            guard let audioPlayer = audioPlayer else { return }
+            music.markers[index] = audioPlayer.currentTime
+            self.connectivityManager.sendMarkersToWatch(music.markers)
+        } else {
+            print("Invalid marker index or index out of bounds")
+        }
+    }
+    
+    @objc func notificationRequireMusicListAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        self.sendMusicListToWatch(with: musicList)
     }
     
     func addMarkerButton(index: Int) -> some View {
@@ -315,7 +314,7 @@ class PlayerModel: ObservableObject {
     private func deleteMarker(at index: Int) {
         guard let music = self.music else { return }
         
-        music.markers[index] = nil 
+        music.markers[index] = -1
         //self.connectivityManager.sendMarkersToWatch(music.markers)
         
         do {
@@ -376,7 +375,7 @@ class PlayerModel: ObservableObject {
         audioPlayer?.play()
         isPlaying = true
     }
-
+    
     func stopAudio() {
         audioPlayer?.stop()
         isPlaying = false
@@ -427,7 +426,7 @@ class PlayerModel: ObservableObject {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
-
+    
     
     func togglePlayback() {
         DispatchQueue.main.async{
@@ -463,7 +462,7 @@ class PlayerModel: ObservableObject {
             }
         }
     }
-
+    
     func stopTimer() {
         timer?.invalidate()
         timer = nil
@@ -504,6 +503,14 @@ class PlayerModel: ObservableObject {
             }
         } else {
             print("no swiftdata musicList")
+        }
+    }
+    
+    func sendPlayingInformation() {
+        connectivityManager.sendIsPlayingToWatch(isPlaying)
+        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+        if let music = music{
+            connectivityManager.sendMarkersToWatch(music.markers)
         }
     }
 }
