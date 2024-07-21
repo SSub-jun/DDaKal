@@ -192,8 +192,8 @@ struct PlayingView: View {
             VStack {
                 if let music = playerModel.music {
                     ForEach(0..<3, id: \.self) { index in
-                        if let marker = music.markers[index] {
-                            playerModel.markerButton(for: marker, index: index)
+                        if music.markers[index] != -1{
+                            playerModel.markerButton(for: music.markers[index], index: index)
                         } else {
                             playerModel.addMarkerButton(index: index)
                         }

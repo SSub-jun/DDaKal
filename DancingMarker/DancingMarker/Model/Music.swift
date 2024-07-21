@@ -22,7 +22,7 @@ class Music : Equatable {
     var title: String
     var artist: String
     var path: URL
-    var markers: [TimeInterval?]
+    var markers: [TimeInterval]
     var albumArt: Data?
     
     subscript(key: String) -> Any {
@@ -47,7 +47,7 @@ class Music : Equatable {
             }
         }
     
-    init(title: String, artist: String, path: URL, markers: [TimeInterval?], albumArt: Data?) {
+    init(title: String, artist: String, path: URL, markers: [TimeInterval], albumArt: Data?) {
         self.id = UUID()
         self.title = title
         self.artist = artist
