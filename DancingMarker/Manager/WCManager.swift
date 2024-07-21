@@ -172,6 +172,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             replyHandler(["success": false])
         }
         
+        if let action = message["action"] as? String,
+           action == "UUIDPlay" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .UUIDPlay,
+                    object: message["id"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
         
         #elseif os(watchOS)
         
@@ -303,7 +316,7 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
     
-    func sendMusicListToWatch(_ musics: [String]) {
+    func sendMusicListToWatch(_ musics: [[String]]) {
         let message = [
             "action": "SendMusicList",
             "musicList": musics
@@ -422,6 +435,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    func sendUUIDPlayToIOS(_ id: String) {
+        let message = [
+            "action": "UUIDPlay",
+            "id": id
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
     #endif
     
     func sendMarkerPlayToIOS(_ index: Int) {
@@ -463,6 +489,7 @@ extension Notification.Name {
     static let decreaseSpeed = Notification.Name("SendDecreasePlayback")
     static let originalSpeed = Notification.Name("SendOriginalSpeed")
     static let requireMusicList = Notification.Name("SendRequireMusicList")
+    static let UUIDPlay = Notification.Name("SendUUIDPlay")
 
     static let sendMarkers = Notification.Name("SendMarkers")
     static let sendSpeed = Notification.Name("SendSpeed")

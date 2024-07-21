@@ -18,7 +18,9 @@ class PlayerModel: ObservableObject {
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
     
-    @Query var musicList: [Music]
+    @Environment(NavigationManager.self) var navigationManager
+    
+    @Published var musicList: [Music] = []
     
     @Published var progress: Double = 0.0 // 예시로 초기값 설정
     @Published var formattedProgress = "0:00"
@@ -37,7 +39,7 @@ class PlayerModel: ObservableObject {
     @Published var isEditing: Bool = false
     @Published var editingIndex: Int? = nil
     @Published var editingMarker: TimeInterval = 0.0
-
+    
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
         NotificationCenter.default.addObserver(
@@ -92,6 +94,12 @@ class PlayerModel: ObservableObject {
             self,
             selector: #selector(notificationOriginalSpeedAction),
             name: .requireMusicList,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationUUIDPlayAction),
+            name: .UUIDPlay,
             object: nil
         )
     }
@@ -166,6 +174,45 @@ class PlayerModel: ObservableObject {
     @objc func notificationRequireMusicListAction(_ notification: Notification) {
         self.countNum = countNum + 1
         self.sendMusicListToWatch(with: musicList)
+    }
+    
+    @objc func notificationUUIDPlayAction(_ notification: Notification) {
+        self.countNum += 1
+        if let uuid = notification.object as? String, let idToPlay = UUID(uuidString: uuid) {
+            if let selectedMusic = musicList.first(where: { $0.id == idToPlay }) {
+                if self.music == nil {
+                    // 음원이 nil 일 때 (처음 노래를 켤 때)
+                    self.music = selectedMusic
+                    self.isPlaying = true
+                    self.initAudioPlayer(for: selectedMusic)
+                    self.playAudio()
+                    print("음원 \(self.music?.title)으로 처음 재생됨")
+                } else if self.music?.id == selectedMusic.id {
+                    // 현재 재생 중인 음원과 동일할 때
+                    print("음원 그대로임 \(self.music?.title)")
+                    if !self.isPlaying {
+                        // 음원이 정지된 상태라면 재생 시작
+                        print("정지였었삼: \(self.music?.title)")
+                        self.isPlaying = true
+                        self.playAudio()
+                    }
+                } else {
+                    // 새로운 음원으로 변경되었을 경우
+                    self.stopAudio()
+                    self.stopTimer() // 기존 타이머 중지
+                    
+                    self.music = selectedMusic
+                    self.isPlaying = true
+                    self.initAudioPlayer(for: selectedMusic)
+                    print("음원 \(self.music?.title)으로 바뀜")
+                    
+                    self.playAudio()
+                }
+            }
+            self.sendPlayingInformation()
+        } else {
+            print("Invalid UUID string or object is not a string.")
+        }
     }
     
     func addMarkerButton(index: Int) -> some View {
@@ -251,7 +298,7 @@ class PlayerModel: ObservableObject {
                 .frame(width: 40, height: 40)
                 .overlay {
                     Image("backward1SecIcon")
-                        
+                    
                 }
                 .onTapGesture {
                     if self.editingMarker > 1 {
@@ -289,7 +336,7 @@ class PlayerModel: ObservableObject {
                 .overlay {
                     Image(systemName: "checkmark")
                         .foregroundColor(Color.green)
-                        
+                    
                 }
                 .padding(.leading, 10)
                 .onTapGesture {
@@ -495,11 +542,12 @@ class PlayerModel: ObservableObject {
     
     func sendMusicListToWatch(with musicList: [Music]) {
         print(musicList.count)
+        self.musicList = musicList
         if musicList.count != 0{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                let musicTitles = musicList.map { $0.title }
-                print(musicTitles)
+                let musicTitles = musicList.map { [$0.title, $0.id.uuidString] }
                 self.connectivityManager.sendMusicListToWatch(musicTitles)
+                print(musicTitles)
             }
         } else {
             print("no swiftdata musicList")

@@ -19,7 +19,7 @@ class WatchViewModel: ObservableObject {
     @Published var formattedDuration = "0:00"
     @Published var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
-    @Published var musicList: [String] = []
+    @Published var musicList: [[String]] = []
     
     private var timer: Timer?
     
@@ -107,14 +107,14 @@ class WatchViewModel: ObservableObject {
     
     @objc func updateMusicList(_ notification: Notification) {
         print("musicList ok")
-        if let musics = notification.object as? [String] {
-            if let musics = notification.object as? [String] {
-                // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
-                UserDefaults.standard.clearMusicList()
-                UserDefaults.standard.saveMusicList(musics)
-                self.musicList = musics
-            }
+        
+        if let musics = notification.object as? [[String]] {
+            // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
+            UserDefaults.standard.clearMusicList()
+            UserDefaults.standard.saveMusicList(musics)
+            self.musicList = musics
         }
+        
     }
     
     func playToggle() {
@@ -138,6 +138,9 @@ class WatchViewModel: ObservableObject {
     }
     func requireMusicList() {
         //        connectivityManager.
+    }
+    func sendUUID(id: String) {
+        connectivityManager.sendUUIDPlayToIOS(id)
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -177,12 +180,12 @@ extension UserDefaults {
         static let musicList = "musicList"
     }
     
-    func saveMusicList(_ list: [String]) {
+    func saveMusicList(_ list: [[String]]) {
         set(list, forKey: Keys.musicList)
     }
     
-    func getMusicList() -> [String] {
-        return array(forKey: Keys.musicList) as? [String] ?? []
+    func getMusicList() -> [[String]] {
+        return array(forKey: Keys.musicList) as? [[String]] ?? []
     }
     
     func clearMusicList() {
