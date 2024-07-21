@@ -33,6 +33,10 @@ class PlayerModel: ObservableObject {
     @Published var isDragging = false
     
     @Published var countNum: Int = 0
+    
+    @Published var isEditing: Bool = false
+    @Published var editingIndex: Int? = nil
+    @Published var editingMarker: TimeInterval = 0.0
 
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
@@ -204,33 +208,107 @@ class PlayerModel: ObservableObject {
     
     @ViewBuilder
     func markerButton(for marker: TimeInterval, index: Int) -> some View {
-        Button(action: {
-            self.moveToMarker(marker)
-        }) {
+        if isEditing && editingIndex == index {
+            editMarkerButton(for: marker, index: index)
+        } else {
+            Button(action: {
+                self.moveToMarker(marker)
+            }) {
+                HStack(spacing: 8) {
+                    Image("addedMarker")
+                    Text(formattedTime(marker))
+                        .font(.title3)
+                        .italic()
+                        .foregroundColor(.black)
+                }
+                .frame(width: 360, height: 60)
+                .background(Color.primaryYellow)
+                .cornerRadius(12)
+            }
+            .contextMenu {
+                Button(action: {
+                    self.isEditing = true
+                    self.editingIndex = index
+                    self.editingMarker = marker
+                }) {
+                    Text("수정하기")
+                    Image(systemName: "pencil")
+                }
+                Button(role: .destructive, action: {
+                    self.deleteMarker(at: index)
+                }) {
+                    Text("삭제하기")
+                    Image(systemName: "trash")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func editMarkerButton(for marker: TimeInterval, index: Int) -> some View {
+        HStack(spacing: 6) {
+            Circle()
+                .frame(width: 40)
+                .foregroundStyle(.inactiveGray)
+                .overlay {
+                    Image("backward1SecIcon")
+                        
+                }
+                .onTapGesture {
+                    if self.editingMarker > 1 {
+                        self.editingMarker -= 1
+                    }
+                }
+            
             HStack(spacing: 8) {
-                Image("addedMarker")
-                Text(formattedTime(marker))
+                Text(formattedTime(editingMarker)) // editingMarker 사용
                     .font(.title3)
                     .italic()
                     .foregroundColor(.black)
             }
-            .frame(width: 360, height: 60)
-            .background(Color.primaryYellow)
+            .frame(width: 200, height: 60)
+            .background(.primaryYellow)
             .cornerRadius(12)
+            .padding(.horizontal, 6)
+            
+            Circle()
+                .frame(width: 40)
+                .foregroundStyle(.inactiveGray)
+                .overlay {
+                    Image("forward1SecIcon")
+                    
+                }
+                .onTapGesture {
+                    if self.editingMarker < self.duration - 1 {
+                        self.editingMarker += 1
+                    }
+                }
+            
+            Circle()
+                .frame(width: 40)
+                .foregroundStyle(.buttonDarkGray)
+                .overlay {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(Color.green)
+                        
+                }
+                .padding(.leading, 10)
+                .onTapGesture {
+                    self.saveMarker(at: index, with: self.editingMarker)
+                    self.isEditing = false
+                    self.editingIndex = nil
+                }
         }
-        .contextMenu{
-            Button(action: {
-                // 수정 기능
-            }) {
-                Text("수정하기")
-                Image(systemName: "pencil")
-            }
-            Button(role: .destructive, action: {
-                self.deleteMarker(at: index)
-            }) {
-                Text("삭제하기")
-                Image(systemName: "trash")
-            }
+    }
+    
+    /// 마커 수정에 필요한 기능
+    func saveMarker(at index: Int, with time: TimeInterval) {
+        guard let music = music else { return }
+        music.markers[index] = time
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context after saving marker: \(error.localizedDescription)")
         }
     }
     
@@ -294,7 +372,6 @@ class PlayerModel: ObservableObject {
     }
     
     /// 음원 재생, 조작, 초기화
-    
     func playAudio() {
         audioPlayer?.play()
         isPlaying = true
