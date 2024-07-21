@@ -248,8 +248,8 @@ class PlayerModel: ObservableObject {
     func editMarkerButton(for marker: TimeInterval, index: Int) -> some View {
         HStack(spacing: 6) {
             Circle()
-                .frame(width: 40)
-                .foregroundStyle(.inactiveGray)
+                .fill(.inactiveGray)
+                .frame(width: 40, height: 40)
                 .overlay {
                     Image("backward1SecIcon")
                         
@@ -272,8 +272,8 @@ class PlayerModel: ObservableObject {
             .padding(.horizontal, 6)
             
             Circle()
-                .frame(width: 40)
-                .foregroundStyle(.inactiveGray)
+                .fill(.inactiveGray)
+                .frame(width: 40, height: 40)
                 .overlay {
                     Image("forward1SecIcon")
                     
@@ -285,8 +285,8 @@ class PlayerModel: ObservableObject {
                 }
             
             Circle()
-                .frame(width: 40)
-                .foregroundStyle(.buttonDarkGray)
+                .fill(.buttonDarkGray)
+                .frame(width: 40, height: 40)
                 .overlay {
                     Image(systemName: "checkmark")
                         .foregroundColor(Color.green)
