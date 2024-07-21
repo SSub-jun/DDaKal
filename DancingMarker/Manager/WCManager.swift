@@ -185,6 +185,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             replyHandler(["success": false])
         }
         
+        if let action = message["action"] as? String,
+           action == "MarkerDelete" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .markerDelete,
+                    object: message["index"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
         
         #elseif os(watchOS)
         
@@ -475,6 +488,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    
+    func sendMarkerDeleteToIOS(_ index: Int) {
+        let message = [
+            "action": "MarkerDelete",
+            "index": index
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
 }
 
 extension Notification.Name {
@@ -490,6 +516,8 @@ extension Notification.Name {
     static let originalSpeed = Notification.Name("SendOriginalSpeed")
     static let requireMusicList = Notification.Name("SendRequireMusicList")
     static let UUIDPlay = Notification.Name("SendUUIDPlay")
+    static let markerDelete = Notification.Name("MarkerDelete")
+
 
     static let sendMarkers = Notification.Name("SendMarkers")
     static let sendSpeed = Notification.Name("SendSpeed")

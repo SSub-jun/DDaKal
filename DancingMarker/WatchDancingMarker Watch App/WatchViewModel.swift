@@ -11,6 +11,7 @@ class WatchViewModel: ObservableObject {
     
     var connectivityManager: WatchConnectivityManager
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
+    @Published var timeintervalMarkers: [TimeInterval] = [0.0, 0.0, 0.0]
     @Published var speed: Float = 1.0
     @Published var isPlaying = false
     
@@ -63,7 +64,7 @@ class WatchViewModel: ObservableObject {
     
     @objc func updateMarkers(_ notification: Notification) {
         if let markers = notification.object as? [TimeInterval] {
-            // 수신한 markers 데이터를 처리하는 로직
+            self.timeintervalMarkers = markers
             for index in markers.indices{
                 if markers[index] != -1{
                     self.markers[index] = formattedTime(markers[index])
@@ -141,6 +142,9 @@ class WatchViewModel: ObservableObject {
     }
     func sendUUID(id: String) {
         connectivityManager.sendUUIDPlayToIOS(id)
+    }
+    func deletemarker(index: Int){
+        connectivityManager.sendMarkerDeleteToIOS(index)
     }
     
     func formattedTime(_ time: TimeInterval) -> String {

@@ -5,14 +5,14 @@ struct WatchMarkerEditView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var isButtonEnabled = false // 저장하기 버튼 Enabled/Disabled
     
-    @State var data: Int // 음악 시간 데이터
+    @State var data: TimeInterval // 음악 시간 데이터
     @State private var count = 1 // 1초 증가/감소 변수
-    @State private var initialData: Int // 음악시간 초기값 저장
+    @State private var initialData: TimeInterval // 음악시간 초기값 저장
     
     @State private var showingAlert = false // EditAlert 띄우기
     @Binding var isPresented: Bool // modal 상태관리 변수
     
-    init(data: Int, isPresented: Binding<Bool>) {
+    init(data: TimeInterval, isPresented: Binding<Bool>) {
         self.data = data
         self._initialData = State(initialValue: data)
         self._isPresented = isPresented
@@ -43,7 +43,7 @@ struct WatchMarkerEditView: View {
                     Spacer()
                     
                     // MARK: 현재 마커 시간
-                    Text("\(convertTime(seconds: data))")
+                    Text("\(formattedTime(data))")
                         .font(.system(size: 22))
                     
                     Spacer()

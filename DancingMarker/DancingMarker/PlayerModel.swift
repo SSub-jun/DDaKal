@@ -102,6 +102,12 @@ class PlayerModel: ObservableObject {
             name: .UUIDPlay,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationMarkerDeleteAction),
+            name: .markerDelete,
+            object: nil
+        )
     }
     
     @objc func notificationPlaytoggleAction(_ notification: Notification) {
@@ -180,38 +186,62 @@ class PlayerModel: ObservableObject {
         self.countNum += 1
         if let uuid = notification.object as? String, let idToPlay = UUID(uuidString: uuid) {
             if let selectedMusic = musicList.first(where: { $0.id == idToPlay }) {
-                if self.music == nil {
-                    // 음원이 nil 일 때 (처음 노래를 켤 때)
-                    self.music = selectedMusic
-                    self.isPlaying = true
-                    self.initAudioPlayer(for: selectedMusic)
-                    self.playAudio()
-                    print("음원 \(self.music?.title)으로 처음 재생됨")
-                } else if self.music?.id == selectedMusic.id {
-                    // 현재 재생 중인 음원과 동일할 때
-                    print("음원 그대로임 \(self.music?.title)")
-                    if !self.isPlaying {
-                        // 음원이 정지된 상태라면 재생 시작
-                        print("정지였었삼: \(self.music?.title)")
+                DispatchQueue.main.async{
+                    if self.music == nil {
+                        // 음원이 nil 일 때 (처음 노래를 켤 때)
+                        self.music = selectedMusic
                         self.isPlaying = true
+                        self.initAudioPlayer(for: selectedMusic)
+                        self.playAudio()
+                        print("음원 \(self.music?.title)으로 처음 재생됨")
+                    } else if self.music?.id == selectedMusic.id {
+                        // 현재 재생 중인 음원과 동일할 때
+                        print("음원 그대로임 \(self.music?.title)")
+                        if !self.isPlaying {
+                            // 음원이 정지된 상태라면 재생 시작
+                            print("정지였었삼: \(self.music?.title)")
+                            self.isPlaying = true
+                            self.playAudio()
+                        }
+                    } else {
+                        // 새로운 음원으로 변경되었을 경우
+                        self.stopAudio()
+                        self.stopTimer() // 기존 타이머 중지
+                        
+                        self.music = selectedMusic
+                        self.isPlaying = true
+                        self.initAudioPlayer(for: selectedMusic)
+                        print("음원 \(self.music?.title)으로 바뀜")
+                        
                         self.playAudio()
                     }
-                } else {
-                    // 새로운 음원으로 변경되었을 경우
-                    self.stopAudio()
-                    self.stopTimer() // 기존 타이머 중지
-                    
-                    self.music = selectedMusic
-                    self.isPlaying = true
-                    self.initAudioPlayer(for: selectedMusic)
-                    print("음원 \(self.music?.title)으로 바뀜")
-                    
-                    self.playAudio()
+                    if let audioPlayer = self.audioPlayer {
+                        self.currentTime = audioPlayer.currentTime
+                        self.duration = audioPlayer.duration
+                    }
+                    self.sendPlayingInformation()
                 }
+                
             }
-            self.sendPlayingInformation()
         } else {
             print("Invalid UUID string or object is not a string.")
+        }
+    }
+    
+    @objc func notificationMarkerDeleteAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        if let index = notification.object as? Int {
+            guard let music = self.music else { return }
+
+            do {
+                self.deleteMarker(at: index)
+                try modelContext.save()
+                self.connectivityManager.sendMarkersToWatch(music.markers)
+            } catch {
+                print("Failed to save context: \(error.localizedDescription)")
+            }
+        } else {
+            print("Invalid marker index or index out of bounds")
         }
     }
     
@@ -353,6 +383,7 @@ class PlayerModel: ObservableObject {
         music.markers[index] = time
         do {
             try modelContext.save()
+            self.connectivityManager.sendMarkersToWatch(music.markers)
         } catch {
             print("Failed to save context after saving marker: \(error.localizedDescription)")
         }
@@ -366,6 +397,7 @@ class PlayerModel: ObservableObject {
         
         do {
             try modelContext.save()
+            self.connectivityManager.sendMarkersToWatch(music.markers)
         } catch {
             print("Failed to save context after deleting marker: \(error.localizedDescription)")
         }
