@@ -6,11 +6,14 @@
 // 
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State private var navigationManager = NavigationManager()
     @State private var showMusicList = false
     @State private var currentView: PathType? = nil
+    @Query var musicList: [Music] = []
+    @EnvironmentObject var playerModel: PlayerModel
 
     var body: some View {
         NavigationStack(path: $navigationManager.path) {
@@ -32,6 +35,7 @@ struct ContentView: View {
         .environment(navigationManager)
         .onAppear {
             resetShowMusicList()
+            playerModel.sendMusicListToWatch(with: musicList)
         }
     }
     
@@ -48,3 +52,5 @@ struct ContentView: View {
     ContentView()
         .preferredColorScheme(.dark)
 }
+
+

@@ -58,13 +58,19 @@ class WatchViewModel: ObservableObject {
         self.musicList = UserDefaults.standard.getMusicList()
     }
     convenience init() {
-           self.init(connectivityManager: WatchConnectivityManager())
-       }
+        self.init(connectivityManager: WatchConnectivityManager())
+    }
     
     @objc func updateMarkers(_ notification: Notification) {
         if let markers = notification.object as? [TimeInterval] {
             // 수신한 markers 데이터를 처리하는 로직
-            self.markers = markers.compactMap { self.formattedTime($0) }
+            for index in markers.indices{
+                if markers[index] != -1{
+                    self.markers[index] = formattedTime(markers[index])
+                } else{
+                    self.markers[index] = "99:59"
+                }
+            }
         }
     }
     
@@ -131,7 +137,7 @@ class WatchViewModel: ObservableObject {
         connectivityManager.sendOriginalPlaybackToIOS()
     }
     func requireMusicList() {
-//        connectivityManager.
+        //        connectivityManager.
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -170,15 +176,15 @@ extension UserDefaults {
     private enum Keys {
         static let musicList = "musicList"
     }
-
+    
     func saveMusicList(_ list: [String]) {
         set(list, forKey: Keys.musicList)
     }
-
+    
     func getMusicList() -> [String] {
         return array(forKey: Keys.musicList) as? [String] ?? []
     }
-
+    
     func clearMusicList() {
         removeObject(forKey: Keys.musicList)
     }
