@@ -59,6 +59,7 @@ struct PlayingView: View {
                             Image(systemName: "minus")
                                 .foregroundStyle(.white)
                         }
+                        .padding(10)
                         Spacer()
                         
                         Button(action: {
@@ -77,6 +78,7 @@ struct PlayingView: View {
                             Image(systemName: "plus")
                                 .foregroundStyle(.white)
                         }
+                        .padding(10)
                     }
                     .padding(.horizontal, 20)
                 )
