@@ -275,7 +275,7 @@ class PlayerModel: ObservableObject {
     }
     
     func increasePlaybackRate() {
-        if self.playbackRate < 2.0 {
+        if self.playbackRate < 1.5 {
             self.playbackRate += 0.1
             self.updateAudioPlayer()
         }
