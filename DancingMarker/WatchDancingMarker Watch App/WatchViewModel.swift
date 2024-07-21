@@ -10,6 +10,7 @@ import SwiftData
 class WatchViewModel: ObservableObject {
     
     var connectivityManager: WatchConnectivityManager
+    @Published var musicTitle: String  = ""
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
     @Published var timeintervalMarkers: [TimeInterval] = [0.0, 0.0, 0.0]
     @Published var speed: Float = 1.0
@@ -56,6 +57,12 @@ class WatchViewModel: ObservableObject {
             name: .sendMusicList,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMusicTitle(_:)),
+            name: .sendMusicTitle,
+            object: nil
+        )
         self.musicList = UserDefaults.standard.getMusicList()
     }
     convenience init() {
@@ -77,14 +84,12 @@ class WatchViewModel: ObservableObject {
     
     @objc func updateSpeed(_ notification: Notification) {
         if let speed = notification.object as? Float {
-            // 수신한 markers 데이터를 처리하는 로직
             self.speed = speed
         }
     }
     
     @objc func updateIsPlaying(_ notification: Notification) {
         if let isPlaying = notification.object as? Bool {
-            // 수신한 markers 데이터를 처리하는 로직
             self.isPlaying = isPlaying
             if isPlaying {
                 startTimer()
@@ -96,7 +101,6 @@ class WatchViewModel: ObservableObject {
     
     @objc func updatePlayingTimes(_ notification: Notification) {
         if let playingTimes = notification.object as? [TimeInterval] {
-            // 수신한 markers 데이터를 처리하는 로직
             DispatchQueue.main.async{
                 self.currentTime = playingTimes[0]
                 self.duration = playingTimes[1]
@@ -107,15 +111,18 @@ class WatchViewModel: ObservableObject {
     }
     
     @objc func updateMusicList(_ notification: Notification) {
-        print("musicList ok")
-        
         if let musics = notification.object as? [[String]] {
             // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
             UserDefaults.standard.clearMusicList()
             UserDefaults.standard.saveMusicList(musics)
             self.musicList = musics
         }
-        
+    }
+    
+    @objc func updateMusicTitle(_ notification: Notification) {
+        if let musicTitle = notification.object as? String {
+            self.musicTitle = musicTitle
+        }
     }
     
     func playToggle() {

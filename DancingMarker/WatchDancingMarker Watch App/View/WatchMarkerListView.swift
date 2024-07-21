@@ -7,7 +7,7 @@ struct WatchMarkerListView: View {
     let columns = [ GridItem(.flexible()) ]
     
     @EnvironmentObject var viewModel: WatchViewModel
-
+    
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
@@ -22,26 +22,27 @@ struct WatchMarkerListView: View {
                     // 여기서 임시데이터가 아닌 스위프트에 저장되어있는 data를 cell 변수로 넣어서 보여주기
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(viewModel.timeintervalMarkers.indices, id: \.self) { index in
-                            NavigationLink(value: index) {
-                                if viewModel.timeintervalMarkers[index] != -1{
+                            if viewModel.timeintervalMarkers[index] != -1{
+                                NavigationLink(value: index) {
                                     WatchMarkerListCellView(data: viewModel.timeintervalMarkers[index])
-                                } else{
-                                    ZStack {
-                                        Rectangle()
-                                            .fill(Color.gray.opacity(0.2))
-                                            .cornerRadius(4)
-                                            .frame(height: 44)
-                                        HStack {
-                                            Image(systemName: "shield.fill")
-                                                .resizable()
-                                                .frame(width: 12, height: 20)
-                                                .padding()
-                                            Text("없음")
-                                        }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                
+                            } else{
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.2))
+                                        .cornerRadius(4)
+                                        .frame(height: 44)
+                                    HStack {
+                                        Image(systemName: "shield.fill")
+                                            .resizable()
+                                            .frame(width: 12, height: 20)
+                                            .padding()
+                                        Text("없음")
                                     }
                                 }
                             }
-                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.horizontal)

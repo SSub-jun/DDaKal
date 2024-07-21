@@ -14,8 +14,7 @@ struct WatchPlayingView: View {
         
         VStack {
             HStack {
-                // SwiftData 음원 Title + Artist 들어가면 됨 ( artist 없을시 "" 처리 )
-                Text("NewJeans-Supernatural")
+                Text("\(viewModel.musicTitle)")
                     .font(.system(size: 12))
             }
             HStack {

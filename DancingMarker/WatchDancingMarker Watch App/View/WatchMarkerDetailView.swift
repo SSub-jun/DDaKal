@@ -9,7 +9,6 @@ struct WatchMarkerDetailView: View {
     @EnvironmentObject var viewModel: WatchViewModel
 
     let index: Int
-    let data: TimeInterval = 0.0
     
     var body: some View {
         VStack(spacing: 10) {
@@ -24,7 +23,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(EditButtonStyle())
             .fullScreenCover(isPresented: $isShowingEditView) {
-                WatchMarkerEditView(data: data, isPresented: $isShowingEditView)
+                WatchMarkerEditView(data: viewModel.timeintervalMarkers[index], isPresented: $isShowingEditView, index:index)
             }
             
             Button(action: {

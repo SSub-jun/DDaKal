@@ -33,5 +33,8 @@ struct WatchMusicListView: View {
                 }
             }
         }
+        .onAppear{
+            viewModel.connectivityManager.sendRequireMusicListToIOS()
+        }
     }
 }
