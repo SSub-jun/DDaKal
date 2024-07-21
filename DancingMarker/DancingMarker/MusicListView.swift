@@ -51,6 +51,7 @@ struct MusicListView: View {
                         }
                         
                     }
+                    //MARK: - 코드 정리 필요
                     .onTapGesture {
                         //DispatchQueue.main.async {
                             

@@ -78,7 +78,7 @@ struct PlayingView: View {
                                 .foregroundStyle(.white)
                         }
                     }
-                        .padding(.horizontal, 20)
+                    .padding(.horizontal, 20)
                 )
                 .padding(.bottom, 30)
                 .padding(.top, 59)
@@ -170,9 +170,6 @@ struct PlayingView: View {
             Spacer()
         }
         .padding(.horizontal, 16)
-        .onAppear {
-            guard let music = playerModel.music else { return }
-        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
     }
@@ -205,10 +202,8 @@ struct PlayingView: View {
             }
             .padding(.bottom, 8)
 
-            
         }
     }
-    
 }
 
 //#Preview {

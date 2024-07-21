@@ -174,12 +174,16 @@ class PlayerModel: ObservableObject {
             }
             
         }) {
-            Text("추가")
-                .font(.title3)
-                .foregroundColor(.white)
-                .frame(width: 360, height: 60)
-                .background(Color.buttonDarkGray)
-                .cornerRadius(12)
+            HStack(spacing: 8) {
+                Image("emptyMarker")
+                Text("추가")
+                    .font(.title3)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 360, height: 60)
+            .background(Color.buttonDarkGray)
+            .cornerRadius(12)
+            
         }
     }
     
@@ -188,11 +192,6 @@ class PlayerModel: ObservableObject {
         guard let music = music else { return }
         let newMarker = audioPlayer.currentTime
         
-//        if music.markers.count > index {
-//            music.markers[index] = newMarker
-//        } else {
-//            music.markers.append(newMarker)
-//        }
         music.markers[index] = newMarker
         //TODO: modelContext에 마커 넣기
         
@@ -208,13 +207,16 @@ class PlayerModel: ObservableObject {
         Button(action: {
             self.moveToMarker(marker)
         }) {
-            Text(formattedTime(marker))
-                .font(.title3)
-                .italic()
-                .foregroundColor(.black)
-                .frame(width: 360, height: 60)
-                .background(Color.primaryYellow)
-                .cornerRadius(12)
+            HStack(spacing: 8) {
+                Image("addedMarker")
+                Text(formattedTime(marker))
+                    .font(.title3)
+                    .italic()
+                    .foregroundColor(.black)
+            }
+            .frame(width: 360, height: 60)
+            .background(Color.primaryYellow)
+            .cornerRadius(12)
         }
         .contextMenu{
             Button(action: {
@@ -244,7 +246,6 @@ class PlayerModel: ObservableObject {
             print("Failed to save context after deleting marker: \(error.localizedDescription)")
         }
     }
-    
     
     private func moveToMarker(_ marker: TimeInterval) {
         self.audioPlayer?.currentTime = marker
@@ -289,7 +290,6 @@ class PlayerModel: ObservableObject {
     func updateAudioPlayer(with time: TimeInterval) {
         guard let audioPlayer = audioPlayer else { return }
         audioPlayer.currentTime = time
-//        connectivityManager.sendSpeedToWatch(playbackRate)
         connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
     }
     
@@ -391,7 +391,6 @@ class PlayerModel: ObservableObject {
         timer?.invalidate()
         timer = nil
     }
-
     
     /// 음원 5초 앞으로 뒤로 가기 기능
     func seekToTime(to time: TimeInterval) {
