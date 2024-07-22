@@ -12,13 +12,15 @@ struct WatchMarkerEditView: View {
     
     @State private var showingAlert = false // EditAlert 띄우기
     @Binding var isPresented: Bool // modal 상태관리 변수
+    @Binding var navigationPath: NavigationPath // 네비게이션 경로 관리 변수
     @EnvironmentObject var viewModel: WatchViewModel
 
-    init(data: TimeInterval, isPresented: Binding<Bool>, index: Int) {
+    init(data: TimeInterval, isPresented: Binding<Bool>, index: Int, navigationPath: Binding<NavigationPath>) {
         self.data = data
         self.index = index
         self._initialData = State(initialValue: data)
         self._isPresented = isPresented
+        self._navigationPath = navigationPath
     }
     
     var body: some View {
@@ -76,6 +78,7 @@ struct WatchMarkerEditView: View {
                         // 마커 시간 수정한 후 저장하는 기능이 들어가면 됩니다.
                         viewModel.connectivityManager.sendMarkerEditSuccessToIOS(forEdit: [index, count])
                         presentationMode.wrappedValue.dismiss()
+                        navigationPath.removeLast(navigationPath.count) // 루트로 이동
                     }, label: {
                         Text("저장하기")
                             .foregroundColor(data != initialData ? .white : .gray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
@@ -130,7 +133,14 @@ struct WatchMarkerEditView: View {
             viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
         }
     }
+    
+    func formattedTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
 }
+
 
 // MARK: 저장하기 버튼 스타일
 struct SaveButtonStyle: ButtonStyle {
