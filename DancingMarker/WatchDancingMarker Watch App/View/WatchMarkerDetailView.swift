@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
@@ -23,7 +22,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(EditButtonStyle())
             .fullScreenCover(isPresented: $isShowingEditView) {
-                WatchMarkerEditView(data: viewModel.timeintervalMarkers[index], isPresented: $isShowingEditView, index:index)
+                WatchMarkerEditView(data: viewModel.timeintervalMarkers[index], isPresented: $isShowingEditView, index: index, navigationPath: $navigationPath)
             }
             
             Button(action: {
@@ -45,6 +44,7 @@ struct WatchMarkerDetailView: View {
         return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
+
 
 // MARK: 마커 초기화 Alert
 struct MarkerResetAlert: View {
