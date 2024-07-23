@@ -57,6 +57,7 @@ struct PlayingView: View {
                             playerModel.decreasePlaybackRate()
                         }) {
                             Image(systemName: "minus")
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.white)
                         }
                         .padding(10)
@@ -76,6 +77,7 @@ struct PlayingView: View {
                             playerModel.increasePlaybackRate()
                         }) {
                             Image(systemName: "plus")
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.white)
                         }
                         .padding(10)
