@@ -57,6 +57,7 @@ struct PlayingView: View {
                             playerModel.decreasePlaybackRate()
                         }) {
                             Image(systemName: "minus")
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.white)
                         }
                         .padding(10)
@@ -76,6 +77,7 @@ struct PlayingView: View {
                             playerModel.increasePlaybackRate()
                         }) {
                             Image(systemName: "plus")
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.white)
                         }
                         .padding(10)
@@ -149,7 +151,7 @@ struct PlayingView: View {
                                 .frame(width: 30)
                                 .foregroundStyle(.white)
                         }
-                            .frame(width: 30)
+                        .frame(width: 30)
                     )
                 Spacer()
                 
@@ -184,8 +186,7 @@ struct PlayingView: View {
                     .font(.headline)
                 Spacer()
                 
-                Image(systemName: "questionmark.circle")
-                    .foregroundStyle(.markerPurple)
+                tipButton()
             }
             .padding(.vertical, 12)
             
@@ -206,10 +207,27 @@ struct PlayingView: View {
 
         }
     }
+    
+    @ViewBuilder
+    private func tipButton() -> some View {
+        TipButtonView()
+    }
 }
 
-//#Preview {
-//    PlayingView(music: Music(title: "노래", artist: "아티스트", path: "", markers: [], albumArt: nil))
-//        .environment(NavigationManager())
-//        .preferredColorScheme(.dark)
-//}
+struct TipButtonView: View {
+    @State private var isTipButtonPresented = false
+    
+    var body: some View {
+        Button(action: {
+            isTipButtonPresented = true
+        }) {
+            Image(systemName: "questionmark.circle")
+                .foregroundStyle(.markerPurple)
+        }
+        .fullScreenCover(isPresented: $isTipButtonPresented) {
+            TipPopupView(isTipButtonPresented: $isTipButtonPresented)
+                .presentationBackground(.black.opacity(0.6))
+        }
+        .transaction { $0.disablesAnimations = true }
+    }
+}
