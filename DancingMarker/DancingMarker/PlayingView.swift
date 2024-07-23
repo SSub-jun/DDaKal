@@ -224,7 +224,7 @@ struct TipButtonView: View {
         }
         .fullScreenCover(isPresented: $isTipButtonPresented) {
             TipPopupView(isTipButtonPresented: $isTipButtonPresented)
-                .presentationBackground(.black.opacity(0.5))
+                .presentationBackground(.black.opacity(0.6))
         }
         .transaction { $0.disablesAnimations = true }
     }

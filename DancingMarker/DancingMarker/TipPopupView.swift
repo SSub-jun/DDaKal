@@ -12,7 +12,7 @@ struct TipPopupView: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 12)
-            .fill(.black)
+            .fill(.buttonDarkGray)
             .frame(width: 360, height: 240)
             .overlay {
                 VStack {
@@ -37,10 +37,10 @@ struct TipPopupView: View {
                         Text("마커를 수정하고 싶을 때는")
                         Text("수정하고 싶은 마커를 꾹 눌러주세요.")
                     }
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 14))
-                        .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: 14))
+                    .fontWeight(.medium)
                     
                     Spacer()
                 }
