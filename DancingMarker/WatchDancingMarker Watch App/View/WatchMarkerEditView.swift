@@ -5,17 +5,22 @@ struct WatchMarkerEditView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var isButtonEnabled = false // 저장하기 버튼 Enabled/Disabled
     
-    @State var data: Int // 음악 시간 데이터
-    @State private var count = 1 // 1초 증가/감소 변수
-    @State private var initialData: Int // 음악시간 초기값 저장
+    @State var data: TimeInterval // 음악 시간 데이터
+    @State private var count = 0 // 1초 증가/감소 변수
+    @State private var initialData: TimeInterval // 음악시간 초기값 저장
+    private var index: Int
     
     @State private var showingAlert = false // EditAlert 띄우기
     @Binding var isPresented: Bool // modal 상태관리 변수
-    
-    init(data: Int, isPresented: Binding<Bool>) {
+    @Binding var navigationPath: NavigationPath // 네비게이션 경로 관리 변수
+    @EnvironmentObject var viewModel: WatchViewModel
+
+    init(data: TimeInterval, isPresented: Binding<Bool>, index: Int, navigationPath: Binding<NavigationPath>) {
         self.data = data
+        self.index = index
         self._initialData = State(initialValue: data)
         self._isPresented = isPresented
+        self._navigationPath = navigationPath
     }
     
     var body: some View {
@@ -43,7 +48,7 @@ struct WatchMarkerEditView: View {
                     Spacer()
                     
                     // MARK: 현재 마커 시간
-                    Text("\(convertTime(seconds: data))")
+                    Text("\(formattedTime(data))")
                         .font(.system(size: 22))
                     
                     Spacer()
@@ -71,10 +76,10 @@ struct WatchMarkerEditView: View {
                 HStack{
                     Button(action: {
                         // 마커 시간 수정한 후 저장하는 기능이 들어가면 됩니다.
-                        
+                        viewModel.connectivityManager.sendMarkerEditSuccessToIOS(forEdit: [index, count])
                         presentationMode.wrappedValue.dismiss()
+                        navigationPath.removeLast(navigationPath.count) // 루트로 이동
                     }, label: {
-                        
                         Text("저장하기")
                             .foregroundColor(data != initialData ? .white : .gray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
                     })
@@ -112,24 +117,30 @@ struct WatchMarkerEditView: View {
     
     // 1초 증가 함수
     func incrementCount() {
-        count += 1
-        data += 1
+        DispatchQueue.main.async{
+            count += 1
+            data += 1
+            viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
+        }
+        
     }
     
     // 1초 감소 함수
     func decrementCount() {
-        count -= 1
-        data -= 1
+        DispatchQueue.main.async{
+            count -= 1
+            data -= 1
+            viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
+        }
     }
     
-    // [분:초] formatter
-    func convertTime(seconds: Int) -> String {
-        let minutes = seconds / 60
-        let remainingSeconds = seconds % 60
-        return String(format: "%02d:%02d", minutes, remainingSeconds)
+    func formattedTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
-    
 }
+
 
 // MARK: 저장하기 버튼 스타일
 struct SaveButtonStyle: ButtonStyle {
@@ -144,8 +155,3 @@ struct SaveButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
-
-
-//#Preview {
-//    WatchMarkerEditView(data: "2:09")
-//}

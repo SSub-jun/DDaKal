@@ -13,12 +13,15 @@ struct WatchMusicListView: View {
         
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(viewModel.musicList, id: \.self) { music in // 여기서 SwiftData 가져오기
-                    if music != ""{
+                ForEach(viewModel.musicList.indices, id:\.self) { index in
+                    if  viewModel.musicList[index][0] != ""{
                         Button(action: {
-                            navigationManager.push(to: .playing)
+                            DispatchQueue.main.async{
+                                viewModel.sendUUID(id: viewModel.musicList[index][1])
+                                navigationManager.push(to: .playing)
+                            }
                         }) {
-                            Text(music) // SwiftData title 넣으면 됨.
+                            Text(viewModel.musicList[index][0])
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -29,6 +32,9 @@ struct WatchMusicListView: View {
                     }
                 }
             }
+        }
+        .onAppear{
+            viewModel.connectivityManager.sendRequireMusicListToIOS()
         }
     }
 }

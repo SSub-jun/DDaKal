@@ -18,7 +18,9 @@ class PlayerModel: ObservableObject {
     @Environment(\.modelContext) private var modelContext
     var connectivityManager: WatchConnectivityManager
     
-    @Query var musicList: [Music]
+    @Environment(NavigationManager.self) var navigationManager
+    
+    @Published var musicList: [Music] = []
     
     @Published var progress: Double = 0.0 // 예시로 초기값 설정
     @Published var formattedProgress = "0:00"
@@ -37,7 +39,7 @@ class PlayerModel: ObservableObject {
     @Published var isEditing: Bool = false
     @Published var editingIndex: Int? = nil
     @Published var editingMarker: TimeInterval = 0.0
-
+    
     init(connectivityManager: WatchConnectivityManager) {
         self.connectivityManager = connectivityManager
         NotificationCenter.default.addObserver(
@@ -90,8 +92,32 @@ class PlayerModel: ObservableObject {
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(notificationOriginalSpeedAction),
+            selector: #selector(notificationRequireMusicListAction),
             name: .requireMusicList,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationUUIDPlayAction),
+            name: .UUIDPlay,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationMarkerDeleteAction),
+            name: .markerDelete,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationMarkerEditAction),
+            name: .markerEdit,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationMarkerEditSuccessAction),
+            name: .markerEditSuccess,
             object: nil
         )
     }
@@ -138,13 +164,16 @@ class PlayerModel: ObservableObject {
         guard let music = music else { return }
         
         if let index = notification.object as? Int, index >= 0, index < music.markers.count {
-            let marker = music.markers[index]
-            guard let audioPlayer = audioPlayer else { return }
-            audioPlayer.currentTime = marker
-            self.progress = CGFloat(marker / self.duration)
-            self.formattedProgress = self.formattedTime(marker)
-            audioPlayer.play()
-            self.isPlaying = true
+            DispatchQueue.main.async{
+                let marker = music.markers[index]
+                guard let audioPlayer = self.audioPlayer else { return }
+                audioPlayer.currentTime = marker
+                self.progress = CGFloat(marker / self.duration)
+                self.formattedProgress = self.formattedTime(marker)
+                audioPlayer.play()
+                self.isPlaying = true
+                self.sendPlayingInformation()
+            }
         } else {
             print("Invalid marker index or index out of bounds")
         }
@@ -166,6 +195,101 @@ class PlayerModel: ObservableObject {
     @objc func notificationRequireMusicListAction(_ notification: Notification) {
         self.countNum = countNum + 1
         self.sendMusicListToWatch(with: musicList)
+    }
+    
+    @objc func notificationUUIDPlayAction(_ notification: Notification) {
+        self.countNum += 1
+        if let uuid = notification.object as? String, let idToPlay = UUID(uuidString: uuid) {
+            if let selectedMusic = musicList.first(where: { $0.id == idToPlay }) {
+                DispatchQueue.main.async{
+                    if self.music == nil {
+                        // 음원이 nil 일 때 (처음 노래를 켤 때)
+                        self.music = selectedMusic
+                        self.isPlaying = true
+                        self.initAudioPlayer(for: selectedMusic)
+                        self.playAudio()
+                        print("음원 \(self.music?.title)으로 처음 재생됨")
+                    } else if self.music?.id == selectedMusic.id {
+                        // 현재 재생 중인 음원과 동일할 때
+                        print("음원 그대로임 \(self.music?.title)")
+                        if !self.isPlaying {
+                            // 음원이 정지된 상태라면 재생 시작
+                            print("정지였었삼: \(self.music?.title)")
+                            self.isPlaying = true
+                            self.playAudio()
+                        }
+                    } else {
+                        // 새로운 음원으로 변경되었을 경우
+                        self.stopAudio()
+                        self.stopTimer() // 기존 타이머 중지
+                        
+                        self.music = selectedMusic
+                        self.isPlaying = true
+                        self.initAudioPlayer(for: selectedMusic)
+                        print("음원 \(self.music?.title)으로 바뀜")
+                        
+                        self.playAudio()
+                    }
+                    if let audioPlayer = self.audioPlayer {
+                        self.currentTime = audioPlayer.currentTime
+                        self.duration = audioPlayer.duration
+                    }
+                    self.sendPlayingInformation()
+                }
+                
+            }
+        } else {
+            print("Invalid UUID string or object is not a string.")
+        }
+    }
+    
+    @objc func notificationMarkerDeleteAction(_ notification: Notification) {
+        self.countNum = countNum + 1
+        if let index = notification.object as? Int {
+            guard let music = self.music else { return }
+            
+            do {
+                self.deleteMarker(at: index)
+                try modelContext.save()
+                self.connectivityManager.sendMarkersToWatch(music.markers)
+            } catch {
+                print("Failed to save context: \(error.localizedDescription)")
+            }
+        } else {
+            print("Invalid marker index or index out of bounds")
+        }
+    }
+    
+    @objc func notificationMarkerEditAction(_ notification: Notification) {
+        self.countNum += 1
+        guard let music = music else { return }
+        
+        if let forEdit = notification.object as? [Int]{
+            DispatchQueue.main.async{
+                let marker = music.markers[forEdit[0]]+Double(forEdit[1])
+                guard let audioPlayer = self.audioPlayer else { return }
+                audioPlayer.currentTime = marker
+                self.progress = CGFloat(marker / self.duration)
+                self.formattedProgress = self.formattedTime(marker)
+                audioPlayer.play()
+                self.isPlaying = true
+                self.sendPlayingInformation()
+            }
+        } else {
+            print("Invalid marker index or index out of bounds")
+        }
+    }
+    
+    @objc func notificationMarkerEditSuccessAction(_ notification: Notification) {
+        self.countNum += 1
+        guard let music = music else { return }
+        
+        if let forEdit = notification.object as? [Int]{
+            let marker = music.markers[forEdit[0]]+Double(forEdit[1])
+            guard let audioPlayer = audioPlayer else { return }
+            music.markers[forEdit[0]] = marker
+            self.connectivityManager.sendMarkersToWatch(music.markers)
+        } else { }
     }
     
     func addMarkerButton(index: Int) -> some View {
@@ -251,7 +375,7 @@ class PlayerModel: ObservableObject {
                 .frame(width: 40, height: 40)
                 .overlay {
                     Image("backward1SecIcon")
-                        
+                    
                 }
                 .onTapGesture {
                     if self.editingMarker > 1 {
@@ -289,7 +413,7 @@ class PlayerModel: ObservableObject {
                 .overlay {
                     Image(systemName: "checkmark")
                         .foregroundColor(Color.green)
-                        
+                    
                 }
                 .padding(.leading, 10)
                 .onTapGesture {
@@ -306,6 +430,7 @@ class PlayerModel: ObservableObject {
         music.markers[index] = time
         do {
             try modelContext.save()
+            self.connectivityManager.sendMarkersToWatch(music.markers)
         } catch {
             print("Failed to save context after saving marker: \(error.localizedDescription)")
         }
@@ -319,6 +444,7 @@ class PlayerModel: ObservableObject {
         
         do {
             try modelContext.save()
+            self.connectivityManager.sendMarkersToWatch(music.markers)
         } catch {
             print("Failed to save context after deleting marker: \(error.localizedDescription)")
         }
@@ -495,22 +621,30 @@ class PlayerModel: ObservableObject {
     
     func sendMusicListToWatch(with musicList: [Music]) {
         print(musicList.count)
+        self.musicList = musicList
         if musicList.count != 0{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                let musicTitles = musicList.map { $0.title }
-                print(musicTitles)
+                let musicTitles = musicList.map { [$0.title, $0.id.uuidString] }
                 self.connectivityManager.sendMusicListToWatch(musicTitles)
+                print(musicTitles)
             }
         } else {
+            self.connectivityManager.sendMusicListToWatch([["", ""]])
             print("no swiftdata musicList")
         }
     }
     
     func sendPlayingInformation() {
-        connectivityManager.sendIsPlayingToWatch(isPlaying)
-        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
-        if let music = music{
-            connectivityManager.sendMarkersToWatch(music.markers)
+        DispatchQueue.main.async{
+            if let audioPlayer = self.audioPlayer{
+                self.currentTime = audioPlayer.currentTime
+            }
+            self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
+            self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+            if let music = self.music{
+                self.connectivityManager.sendMarkersToWatch(music.markers)
+                self.connectivityManager.sendTitleToWatch(music.title)
+            }
         }
     }
 }

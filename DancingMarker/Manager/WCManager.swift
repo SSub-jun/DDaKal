@@ -172,6 +172,71 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             replyHandler(["success": false])
         }
         
+        if let action = message["action"] as? String,
+           action == "UUIDPlay" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .UUIDPlay,
+                    object: message["id"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "MarkerDelete" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .markerDelete,
+                    object: message["index"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "MarkerEdit" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .markerEdit,
+                    object: message["forEdit"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "MarkerEditSuccess" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .markerEditSuccess,
+                    object: message["forEdit"]
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
+        if let action = message["action"] as? String,
+           action == "SendRequireMusicList" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .requireMusicList,
+                    object: nil
+                )
+                replyHandler(["success": true])
+            }
+        } else {
+            replyHandler(["success": false])
+        }
+        
         
         #elseif os(watchOS)
         
@@ -244,6 +309,20 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         } else {
             replyHandler(["success": false])
         }
+        
+        if let action = message["action"] as? String,
+           action == "SendMusicTitle" {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .sendMusicTitle,
+                    object: message["musicTitle"]
+                )
+                replyHandler(["success": true])
+                print("성공!")
+            }
+        } else {
+            replyHandler(["success": false])
+        }
         #endif
     }
     
@@ -303,10 +382,23 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
     
-    func sendMusicListToWatch(_ musics: [String]) {
+    func sendMusicListToWatch(_ musics: [[String]]) {
         let message = [
             "action": "SendMusicList",
             "musicList": musics
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendTitleToWatch(_ musictitle: String) {
+        let message = [
+            "action": "SendMusicTitle",
+            "musicTitle": musictitle
         ] as [String : Any]
 
         session.sendMessage(message) { replyHandler in
@@ -422,6 +514,19 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    func sendUUIDPlayToIOS(_ id: String) {
+        let message = [
+            "action": "UUIDPlay",
+            "id": id
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
     #endif
     
     func sendMarkerPlayToIOS(_ index: Int) {
@@ -449,6 +554,45 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             print(error.localizedDescription)
         }
     }
+    
+    func sendMarkerDeleteToIOS(_ index: Int) {
+        let message = [
+            "action": "MarkerDelete",
+            "index": index
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendMarkerEditToIOS(forEdit: [Int]) {
+        let message = [
+            "action": "MarkerEdit",
+            "forEdit": forEdit
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
+    
+    func sendMarkerEditSuccessToIOS(forEdit: [Int]) {
+        let message = [
+            "action": "MarkerEditSuccess",
+            "forEdit": forEdit
+        ] as [String : Any]
+
+        session.sendMessage(message) { replyHandler in
+            print(replyHandler)
+        } errorHandler: { error in
+            print(error.localizedDescription)
+        }
+    }
 }
 
 extension Notification.Name {
@@ -463,10 +607,16 @@ extension Notification.Name {
     static let decreaseSpeed = Notification.Name("SendDecreasePlayback")
     static let originalSpeed = Notification.Name("SendOriginalSpeed")
     static let requireMusicList = Notification.Name("SendRequireMusicList")
+    static let UUIDPlay = Notification.Name("SendUUIDPlay")
+    static let markerDelete = Notification.Name("MarkerDelete")
+    static let markerEdit = Notification.Name("MarkerEdit")
+    static let markerEditSuccess = Notification.Name("MarkerEditSuccess")
 
     static let sendMarkers = Notification.Name("SendMarkers")
     static let sendSpeed = Notification.Name("SendSpeed")
     static let sendIsPlaying = Notification.Name("SendIsPlaying")
     static let sendPlayingTimes = Notification.Name("SendPlayingTimes")
     static let sendMusicList = Notification.Name("SendMusicList")
+    static let sendMusicTitle = Notification.Name("SendMusicTitle")
+
 }

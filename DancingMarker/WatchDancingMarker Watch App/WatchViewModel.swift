@@ -10,7 +10,9 @@ import SwiftData
 class WatchViewModel: ObservableObject {
     
     var connectivityManager: WatchConnectivityManager
+    @Published var musicTitle: String  = ""
     @Published var markers: [String] = ["99:59", "99:59", "99:59"]
+    @Published var timeintervalMarkers: [TimeInterval] = [0.0, 0.0, 0.0]
     @Published var speed: Float = 1.0
     @Published var isPlaying = false
     
@@ -19,7 +21,7 @@ class WatchViewModel: ObservableObject {
     @Published var formattedDuration = "0:00"
     @Published var duration: TimeInterval = 0.0 // 예시로 재생 시간 설정
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
-    @Published var musicList: [String] = []
+    @Published var musicList: [[String]] = []
     
     private var timer: Timer?
     
@@ -55,6 +57,12 @@ class WatchViewModel: ObservableObject {
             name: .sendMusicList,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMusicTitle(_:)),
+            name: .sendMusicTitle,
+            object: nil
+        )
         self.musicList = UserDefaults.standard.getMusicList()
     }
     convenience init() {
@@ -63,7 +71,7 @@ class WatchViewModel: ObservableObject {
     
     @objc func updateMarkers(_ notification: Notification) {
         if let markers = notification.object as? [TimeInterval] {
-            // 수신한 markers 데이터를 처리하는 로직
+            self.timeintervalMarkers = markers
             for index in markers.indices{
                 if markers[index] != -1{
                     self.markers[index] = formattedTime(markers[index])
@@ -76,14 +84,12 @@ class WatchViewModel: ObservableObject {
     
     @objc func updateSpeed(_ notification: Notification) {
         if let speed = notification.object as? Float {
-            // 수신한 markers 데이터를 처리하는 로직
             self.speed = speed
         }
     }
     
     @objc func updateIsPlaying(_ notification: Notification) {
         if let isPlaying = notification.object as? Bool {
-            // 수신한 markers 데이터를 처리하는 로직
             self.isPlaying = isPlaying
             if isPlaying {
                 startTimer()
@@ -95,7 +101,6 @@ class WatchViewModel: ObservableObject {
     
     @objc func updatePlayingTimes(_ notification: Notification) {
         if let playingTimes = notification.object as? [TimeInterval] {
-            // 수신한 markers 데이터를 처리하는 로직
             DispatchQueue.main.async{
                 self.currentTime = playingTimes[0]
                 self.duration = playingTimes[1]
@@ -106,14 +111,17 @@ class WatchViewModel: ObservableObject {
     }
     
     @objc func updateMusicList(_ notification: Notification) {
-        print("musicList ok")
-        if let musics = notification.object as? [String] {
-            if let musics = notification.object as? [String] {
-                // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
-                UserDefaults.standard.clearMusicList()
-                UserDefaults.standard.saveMusicList(musics)
-                self.musicList = musics
-            }
+        if let musics = notification.object as? [[String]] {
+            // UserDefaults를 초기화하고 새로운 musicList를 저장합니다.
+            UserDefaults.standard.clearMusicList()
+            UserDefaults.standard.saveMusicList(musics)
+            self.musicList = musics
+        }
+    }
+    
+    @objc func updateMusicTitle(_ notification: Notification) {
+        if let musicTitle = notification.object as? String {
+            self.musicTitle = musicTitle
         }
     }
     
@@ -138,6 +146,12 @@ class WatchViewModel: ObservableObject {
     }
     func requireMusicList() {
         //        connectivityManager.
+    }
+    func sendUUID(id: String) {
+        connectivityManager.sendUUIDPlayToIOS(id)
+    }
+    func deletemarker(index: Int){
+        connectivityManager.sendMarkerDeleteToIOS(index)
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
@@ -177,12 +191,12 @@ extension UserDefaults {
         static let musicList = "musicList"
     }
     
-    func saveMusicList(_ list: [String]) {
+    func saveMusicList(_ list: [[String]]) {
         set(list, forKey: Keys.musicList)
     }
     
-    func getMusicList() -> [String] {
-        return array(forKey: Keys.musicList) as? [String] ?? []
+    func getMusicList() -> [[String]] {
+        return array(forKey: Keys.musicList) as? [[String]] ?? []
     }
     
     func clearMusicList() {

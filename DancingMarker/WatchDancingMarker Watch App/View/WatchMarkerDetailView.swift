@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct WatchMarkerDetailView: View {
@@ -6,12 +5,13 @@ struct WatchMarkerDetailView: View {
     @Binding var navigationPath: NavigationPath
     @State private var isShowingEditView = false // 수정하기 Bool 변수
     @State private var isShownResetAlert = false // 초기화하기 Bool 변수
-    
-    let data: Int
+    @EnvironmentObject var viewModel: WatchViewModel
+
+    let index: Int
     
     var body: some View {
         VStack(spacing: 10) {
-            Text("\(convertTime(seconds: data))")
+            Text("\(viewModel.markers[index])")
                 .font(.system(size: 17))
                 .padding(.bottom)
             
@@ -22,7 +22,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(EditButtonStyle())
             .fullScreenCover(isPresented: $isShowingEditView) {
-                WatchMarkerEditView(data: data, isPresented: $isShowingEditView)
+                WatchMarkerEditView(data: viewModel.timeintervalMarkers[index], isPresented: $isShowingEditView, index: index, navigationPath: $navigationPath)
             }
             
             Button(action: {
@@ -32,7 +32,7 @@ struct WatchMarkerDetailView: View {
             })
             .buttonStyle(ResetButtonStyle())
             .fullScreenCover(isPresented: $isShownResetAlert) {
-                MarkerResetAlert(navigationPath: $navigationPath)
+                MarkerResetAlert(navigationPath: $navigationPath, index: index)
             }
         }
         .padding()
@@ -45,11 +45,15 @@ struct WatchMarkerDetailView: View {
     }
 }
 
+
 // MARK: 마커 초기화 Alert
 struct MarkerResetAlert: View {
     
     @Environment(\.presentationMode) var presentationMode
     @Binding var navigationPath: NavigationPath
+    @EnvironmentObject var viewModel: WatchViewModel
+
+    let index: Int
     
     var body: some View {
         NavigationView {
@@ -66,9 +70,9 @@ struct MarkerResetAlert: View {
                 .frame(maxWidth: .infinity)
                 
                 Button(action: {
-                    
-                    // 마커 초기화 기능이 들어가면 됩니다.
-                    
+                    viewModel.timeintervalMarkers[index] = -1
+                    viewModel.markers[index] = "99:59"
+                    viewModel.deletemarker(index: index)
                     navigationPath.removeLast(navigationPath.count) // 초기화 되면서 뷰 이동
                 }, label: {
                     Text("초기화하기")
