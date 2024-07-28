@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct WatchMarkerListView: View {
     
     @State private var navigationPath = NavigationPath()
@@ -18,7 +17,6 @@ struct WatchMarkerListView: View {
                             .padding([.leading, .bottom])
                         Spacer()
                     }
-                    
                     // 여기서 임시데이터가 아닌 스위프트에 저장되어있는 data를 cell 변수로 넣어서 보여주기
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(viewModel.timeintervalMarkers.indices, id: \.self) { index in
@@ -27,7 +25,6 @@ struct WatchMarkerListView: View {
                                     WatchMarkerListCellView(data: viewModel.timeintervalMarkers[index])
                                 }
                                 .buttonStyle(PlainButtonStyle())
-                                
                             } else{
                                 ZStack {
                                     Rectangle()
@@ -35,11 +32,12 @@ struct WatchMarkerListView: View {
                                         .cornerRadius(4)
                                         .frame(height: 44)
                                     HStack {
-                                        Image(systemName: "shield.fill")
+                                        Image("emptyMarker")
                                             .resizable()
                                             .frame(width: 12, height: 20)
                                             .padding()
                                         Text("없음")
+                                            .font(.system(size: 14))
                                     }
                                 }
                             }
@@ -63,7 +61,7 @@ struct WatchMarkerListCellView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color.gray.opacity(0.2))
+                .fill(.primaryYellow)
                 .cornerRadius(4)
                 .frame(height: 44)
             HStack {
@@ -74,7 +72,7 @@ struct WatchMarkerListCellView: View {
     }
     
     func markerImage() -> some View {
-        Image(systemName: "shield.fill")
+        Image("addedMarker")
             .resizable()
             .frame(width: 12, height: 20)
             .padding()
@@ -82,6 +80,9 @@ struct WatchMarkerListCellView: View {
     
     func markerTime() -> some View {
         Text("\(formattedTime(data))")
+            .font(.system(size: 14))
+            .foregroundColor(.black)
+            .italic()
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
