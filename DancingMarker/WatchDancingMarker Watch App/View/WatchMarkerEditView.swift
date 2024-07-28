@@ -35,12 +35,7 @@ struct WatchMarkerEditView: View {
                             .fill(.gray.opacity(0.2))
                             .frame(width: 40, height: 40)
                         
-                        Image(systemName: "gobackward")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                        
-                        Text("1")
-                        
+                        Image("backward1SecIcon")
                     }
                     .onTapGesture {
                         decrementCount() // 임시로 만들어준 1초 감소 함수입니다.
@@ -59,17 +54,13 @@ struct WatchMarkerEditView: View {
                             .fill(.gray.opacity(0.2))
                             .frame(width: 40, height: 40)
                         
-                        Image(systemName: "goforward")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                        
-                        Text("1")
+                        Image("forward1SecIcon")
                     }
                     .onTapGesture {
                         incrementCount() // 임시로 만들어준 1초 감소 함수입니다.
                     }
                 }
-                
+                .padding(.horizontal)
                 Spacer()
                 
                 // MARK: 저장하기 버튼

@@ -28,7 +28,7 @@ struct WatchMarkerDetailView: View {
             Button(action: {
                 self.isShownResetAlert.toggle()
             }, label: {
-                Text("초기화하기")
+                Text("삭제하기")
             })
             .buttonStyle(ResetButtonStyle())
             .fullScreenCover(isPresented: $isShownResetAlert) {
@@ -75,7 +75,7 @@ struct MarkerResetAlert: View {
                     viewModel.deletemarker(index: index)
                     navigationPath.removeLast(navigationPath.count) // 초기화 되면서 뷰 이동
                 }, label: {
-                    Text("초기화하기")
+                    Text("삭제하기")
                 })
                 .buttonStyle(ResetButtonStyle())
             }
