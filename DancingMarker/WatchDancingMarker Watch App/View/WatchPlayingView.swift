@@ -36,7 +36,6 @@ struct WatchPlayingView: View {
                         Image(systemName: "gobackward.5")
                             .resizable()
                             .frame(width: 20, height: 20)
-                        
                     })
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -53,10 +52,10 @@ struct WatchPlayingView: View {
                         viewModel.playToggle()
                     }, label: {
                         Image(systemName:
-                              viewModel.isPlaying == true ? "pause.fill" : "play.fill"
+                                viewModel.isPlaying == true ? "pause.fill" : "play.fill"
                         ) // 재생 on/off에 따라 이미지 변경
-                            .resizable()
-                            .frame(width: 22, height: 22)
+                        .resizable()
+                        .frame(width: 22, height: 22)
                     })
                     .buttonBorderShape(.circle)
                     .buttonStyle(PlainButtonStyle())
@@ -109,7 +108,7 @@ struct WatchPlayingView: View {
 // MARK: 재생 버튼 ProgressBar
 struct CircleProgressView: View {
     
-//    @Binding var progress: Double
+    //    @Binding var progress: Double
     var progress: Double
     
     var body: some View {
@@ -120,7 +119,6 @@ struct CircleProgressView: View {
                 .trim(from: 0.0, to: progress)
                 .stroke(Color.white, lineWidth: 3)
                 .rotationEffect(Angle(degrees: -90))
-            
         }
     }
 }

@@ -14,7 +14,7 @@ struct WatchMarkerEditView: View {
     @Binding var isPresented: Bool // modal 상태관리 변수
     @Binding var navigationPath: NavigationPath // 네비게이션 경로 관리 변수
     @EnvironmentObject var viewModel: WatchViewModel
-
+    
     init(data: TimeInterval, isPresented: Binding<Bool>, index: Int, navigationPath: Binding<NavigationPath>) {
         self.data = data
         self.index = index
@@ -105,9 +105,8 @@ struct WatchMarkerEditView: View {
             }
         }
     }
-    
     // 1초 증가 함수
-    func incrementCount() {
+    private func incrementCount() {
         DispatchQueue.main.async{
             count += 1
             data += 1
@@ -115,23 +114,20 @@ struct WatchMarkerEditView: View {
         }
         
     }
-    
     // 1초 감소 함수
-    func decrementCount() {
+    private func decrementCount() {
         DispatchQueue.main.async{
             count -= 1
             data -= 1
             viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
         }
     }
-    
-    func formattedTime(_ time: TimeInterval) -> String {
+    private func formattedTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
 }
-
 
 // MARK: 저장하기 버튼 스타일
 struct SaveButtonStyle: ButtonStyle {

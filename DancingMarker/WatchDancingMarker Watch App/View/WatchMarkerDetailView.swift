@@ -6,7 +6,7 @@ struct WatchMarkerDetailView: View {
     @State private var isShowingEditView = false // 수정하기 Bool 변수
     @State private var isShownResetAlert = false // 초기화하기 Bool 변수
     @EnvironmentObject var viewModel: WatchViewModel
-
+    
     let index: Int
     
     var body: some View {
@@ -38,7 +38,7 @@ struct WatchMarkerDetailView: View {
         .padding()
     }
     
-    func convertTime(seconds: Int) -> String {
+    private func convertTime(seconds: Int) -> String {
         let minutes = seconds / 60
         let remainingSeconds = seconds % 60
         return String(format: "%02d:%02d", minutes, remainingSeconds)
@@ -52,7 +52,7 @@ struct MarkerResetAlert: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var navigationPath: NavigationPath
     @EnvironmentObject var viewModel: WatchViewModel
-
+    
     let index: Int
     
     var body: some View {
@@ -93,7 +93,6 @@ struct MarkerResetAlert: View {
                 }
             }
             .padding()
-            
         }
     }
 }
@@ -131,7 +130,6 @@ struct MarkerEditAlert: View {
                     Text("계속 수정하기")
                 })
                 .buttonStyle(ContinueEditButtonStyle())
-                
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -165,7 +163,6 @@ struct ContinueEditButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
-
 // MARK: 변경사항 폐기 버튼 스타일
 struct DiscardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -180,8 +177,6 @@ struct DiscardButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
-
-
 // MARK: 수정하기버튼 Button Style
 struct EditButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -195,7 +190,6 @@ struct EditButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
-
 // MARK: 초기화버튼 Button Style
 struct ResetButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
