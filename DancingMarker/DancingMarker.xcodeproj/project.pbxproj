@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F18C8A12C5679A3003972E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
 		5104B7F62C3D67F2008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		513304052C4D513900CC5F22 /* TipPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513304042C4D513900CC5F22 /* TipPopupView.swift */; };
@@ -329,6 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF99C2C29809A00C02FF9 /* Preview Assets.xcassets in Resources */,
+				1F18C8A12C5679A3003972E3 /* Assets.xcassets in Resources */,
 				901BF9992C29809A00C02FF9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,7 +516,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
-				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+				DEVELOPMENT_TEAM = WTK65UP9RZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
@@ -546,7 +548,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
-				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+				DEVELOPMENT_TEAM = WTK65UP9RZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
@@ -577,7 +579,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+				DEVELOPMENT_TEAM = WTK65UP9RZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
@@ -608,7 +610,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 2U3B7G3F2A;
+				DEVELOPMENT_TEAM = WTK65UP9RZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
