@@ -34,6 +34,7 @@
 		90A4722F2C450867008577A2 /* WCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A4722E2C450867008577A2 /* WCManager.swift */; };
 		90A472312C450A68008577A2 /* WatchDancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */; };
 		90A472322C450AB6008577A2 /* WCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A4722E2C450867008577A2 /* WCManager.swift */; };
+		90A542362C6E1ECC00B0F694 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9982C29809A00C02FF9 /* Assets.xcassets */; };
 		90E28F4C2C2D057A009098BE /* MusicListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E28F4B2C2D057A009098BE /* MusicListView.swift */; };
 		90E28F4E2C2D0592009098BE /* MusicAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E28F4D2C2D0592009098BE /* MusicAddView.swift */; };
 		90E28F502C2D05A3009098BE /* MusicEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E28F4F2C2D05A3009098BE /* MusicEditView.swift */; };
@@ -93,6 +94,7 @@
 		90A4722B2C450825008577A2 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		90A4722E2C450867008577A2 /* WCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCManager.swift; sourceTree = "<group>"; };
 		90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchDancingMarkerApp.swift; path = "WatchDancingMarker Watch App/WatchDancingMarkerApp.swift"; sourceTree = SOURCE_ROOT; };
+		90A542372C6E1F0100B0F694 /* WatchDancingMarker-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "WatchDancingMarker-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		90E28F4B2C2D057A009098BE /* MusicListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListView.swift; sourceTree = "<group>"; };
 		90E28F4D2C2D0592009098BE /* MusicAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAddView.swift; sourceTree = "<group>"; };
 		90E28F4F2C2D05A3009098BE /* MusicEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicEditView.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 		901BF9932C29809900C02FF9 /* WatchDancingMarker Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				90A542372C6E1F0100B0F694 /* WatchDancingMarker-Watch-App-Info.plist */,
 				901BF9B72C2A5F5D00C02FF9 /* View */,
 				901BF9B52C2A533200C02FF9 /* WatchNavigationManager.swift */,
 				902077052C458ABB00988D2B /* WatchViewModel.swift */,
@@ -321,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF9882C29804B00C02FF9 /* Preview Assets.xcassets in Resources */,
+				90A542362C6E1ECC00B0F694 /* Assets.xcassets in Resources */,
 				901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,11 +520,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 5Z2TRCRXZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "음원 파일을 읽어오기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "다운로드 파일을 읽어오기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "음원 파일 접근";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -548,11 +555,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 5Z2TRCRXZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "음원 파일을 읽어오기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "다운로드 파일을 읽어오기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "음원 파일 접근";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -579,9 +589,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 5Z2TRCRXZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WatchDancingMarker-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = test.DancingMarker;
@@ -610,9 +621,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 5Z2TRCRXZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WatchDancingMarker-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchDancingMarker;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = test.DancingMarker;
