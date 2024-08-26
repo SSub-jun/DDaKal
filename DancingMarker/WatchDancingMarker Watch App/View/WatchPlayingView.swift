@@ -25,60 +25,65 @@ struct WatchPlayingView: View {
             }
             
             HStack{
-                ZStack {
-                    Circle()
-                        .fill(Color.gray.opacity(0.2))
-                        .cornerRadius(4)
-                        .frame(height: 35)
-                    Button(action:{
-                        viewModel.playBackward()
-                    }, label:{
-                        Image(systemName: "gobackward.5")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    })
-                    .buttonStyle(PlainButtonStyle())
-                }
-                .frame(maxWidth: .infinity)
+                Spacer()
+                
+                Circle()
+                    .fill(Color.gray.opacity(0.2))
+                    .cornerRadius(4)
+                    .frame(height: 35)
+                    .overlay(
+                        Button(action: {
+                            viewModel.playBackward()
+                        }, label: {
+                            Image(systemName: "gobackward.5")
+                                .resizable()
+                                .frame(width: 20, height: 21)
+                        })
+                        .buttonStyle(PlainButtonStyle())
+                    )
+                
+                Spacer()
                 
                 ZStack {
                     Circle()
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 44)
+                        .overlay(
+                            Button(action: {
+                                viewModel.playToggle()
+                            }, label: {
+                                Image(systemName:
+                                        viewModel.isPlaying == true ? "pause.fill" : "play.fill"
+                                ) // 재생 on/off에 따라 이미지 변경
+                                .resizable()
+                                .frame(width: 22, height: 22)
+                            })
+                            .buttonBorderShape(.circle)
+                            .buttonStyle(PlainButtonStyle())
+                        )
+                    
                     CircleProgressView(progress: viewModel.progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
                         .frame(width: 42, height: 42)
-                    
-                    Button(action: {
-                        viewModel.playToggle()
-                    }, label: {
-                        Image(systemName:
-                                viewModel.isPlaying == true ? "pause.fill" : "play.fill"
-                        ) // 재생 on/off에 따라 이미지 변경
-                        .resizable()
-                        .frame(width: 22, height: 22)
-                    })
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(PlainButtonStyle())
                 }
                 
-                ZStack {
-                    Circle()
-                        .fill(Color.gray.opacity(0.2))
-                        .cornerRadius(4)
-                        .frame(height: 35)
-                    
-                    Button(action:{
-                        viewModel.playForward()
-                    }, label:{
-                        Image(systemName: "goforward.5")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        
-                    })
-                    .buttonStyle(PlainButtonStyle())
-                }
-                .frame(maxWidth: .infinity)
+                Spacer()
                 
+                Circle()
+                    .fill(Color.gray.opacity(0.2))
+                    .cornerRadius(4)
+                    .frame(height: 35)
+                    .overlay(
+                        Button(action: {
+                            viewModel.playForward()
+                        }, label: {
+                            Image(systemName: "goforward.5")
+                                .resizable()
+                                .frame(width: 20, height: 21)
+                        })
+                        .buttonStyle(PlainButtonStyle())
+                    )
+                
+                Spacer()
             }
             
             HStack {
