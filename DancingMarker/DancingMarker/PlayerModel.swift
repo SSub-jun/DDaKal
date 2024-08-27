@@ -546,13 +546,15 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
+            remoteControlCenterInfo()
+            setupControlCenterControls()
+            
             // 타이머 시작
             startTimer()
         } catch {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
-    
     
     func togglePlayback() {
         DispatchQueue.main.async{
@@ -607,16 +609,19 @@ class PlayerModel: ObservableObject {
     
     func backward5Sec() {
         guard let player = audioPlayer else { return }
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             let newTime = max(player.currentTime - 5, 0)
             self.seekToTime(to: newTime)
+            self.updateNowPlayingControlCenter()
         }
     }
     
     func forward5Sec() {
         guard let player = audioPlayer else { return }
-        let newTime = min(player.currentTime + 5, player.duration)
-        self.seekToTime(to: newTime)
+        DispatchQueue.main.async {
+            let newTime = min(player.currentTime + 5, player.duration)
+            self.seekToTime(to: newTime)
+        }
     }
     
     func sendMusicListToWatch(with musicList: [Music]) {
@@ -646,5 +651,61 @@ class PlayerModel: ObservableObject {
                 self.connectivityManager.sendTitleToWatch(music.title)
             }
         }
+    }
+    
+    private func remoteControlCenterInfo() {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+        
+        if let albumArtData = music?.albumArt, let albumArt = UIImage(data: albumArtData) {
+            let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
+                return albumArt
+            })
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.music?.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = self.music?.artist
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+    
+    private func setupControlCenterControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.playCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.togglePlayback()
+            return MPRemoteCommandHandlerStatus.success
+        }
+
+        commandCenter.pauseCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.togglePlayback()
+            return MPRemoteCommandHandlerStatus.success
+        }
+
+        commandCenter.skipBackwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.backward5Sec()
+            return .success
+        }
+
+        commandCenter.skipForwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.forward5Sec()
+            return .success
+        }
+
+        commandCenter.skipBackwardCommand.preferredIntervals = [5]
+        commandCenter.skipForwardCommand.preferredIntervals = [5]
+    }
+    
+    private func updateNowPlayingControlCenter() {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.playbackRate
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 }
