@@ -1,4 +1,5 @@
 import SwiftUI
+import Mixpanel
 
 struct WatchPlayingMarkerView: View {
     
@@ -24,8 +25,10 @@ struct WatchPlayingMarkerView: View {
             .onTapGesture {
                 if viewModel.markers[0] == "99:59"{
                     viewModel.connectivityManager.sendMarkerSaveToIOS(0)
+                    saveMarker1()
                 } else {
                     viewModel.connectivityManager.sendMarkerPlayToIOS(0)
+                    playMarker1()
                 }
             }
             
@@ -47,8 +50,10 @@ struct WatchPlayingMarkerView: View {
             .onTapGesture {
                 if viewModel.markers[1] == "99:59"{
                     viewModel.connectivityManager.sendMarkerSaveToIOS(1)
+                    saveMarker2()
                 } else {
                     viewModel.connectivityManager.sendMarkerPlayToIOS(1)
+                    playMarker2()
                 }
             }
             
@@ -70,11 +75,43 @@ struct WatchPlayingMarkerView: View {
             .onTapGesture {
                 if viewModel.markers[2] == "99:59"{
                     viewModel.connectivityManager.sendMarkerSaveToIOS(2)
+                    saveMarker3()
                 } else {
                     viewModel.connectivityManager.sendMarkerPlayToIOS(2)
+                    playMarker3()
                 }
             }
         }
         .padding(.bottom)
+    }
+    
+    private func saveMarker1() {
+        Mixpanel.mainInstance().track(event: "saveMarker1")
+        Mixpanel.mainInstance().people.increment(property: "saveMarker1", by: 1)
+    }
+    
+    private func saveMarker2() {
+        Mixpanel.mainInstance().track(event: "saveMarker2")
+        Mixpanel.mainInstance().people.increment(property: "saveMarker2", by: 1)
+    }
+    
+    private func saveMarker3() {
+        Mixpanel.mainInstance().track(event: "saveMarker3")
+        Mixpanel.mainInstance().people.increment(property: "saveMarker3", by: 1)
+    }
+    
+    private func playMarker1() {
+        Mixpanel.mainInstance().track(event: "playMarker1")
+        Mixpanel.mainInstance().people.increment(property: "playMarker1", by: 1)
+    }
+    
+    private func playMarker2() {
+        Mixpanel.mainInstance().track(event: "playMarker2")
+        Mixpanel.mainInstance().people.increment(property: "playMarker2", by: 1)
+    }
+    
+    private func playMarker3() {
+        Mixpanel.mainInstance().track(event: "playMarker3")
+        Mixpanel.mainInstance().people.increment(property: "playMarker3", by: 1)
     }
 }
