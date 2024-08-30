@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1F18C8A12C5679A3003972E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
+		1F3EEBC92C8207F600926178 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3EEBC82C8207F600926178 /* Mixpanel */; };
+		1FA08BAA2C8208B10082C266 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 1FA08BA92C8208B10082C266 /* Mixpanel */; };
 		5104B7F62C3D67F2008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		513304052C4D513900CC5F22 /* TipPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513304042C4D513900CC5F22 /* TipPopupView.swift */; };
@@ -108,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA08BAA2C8208B10082C266 /* Mixpanel in Frameworks */,
 				90A4722C2C450825008577A2 /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3EEBC92C8207F600926178 /* Mixpanel in Frameworks */,
 				90A4722A2C45080D008577A2 /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,6 +264,9 @@
 				901BF99E2C29809A00C02FF9 /* PBXTargetDependency */,
 			);
 			name = DancingMarker;
+			packageProductDependencies = (
+				1FA08BA92C8208B10082C266 /* Mixpanel */,
+			);
 			productName = DancingMarker;
 			productReference = 901BF97D2C29804A00C02FF9 /* DancingMarker.app */;
 			productType = "com.apple.product-type.application";
@@ -277,6 +284,9 @@
 			dependencies = (
 			);
 			name = "WatchDancingMarker Watch App";
+			packageProductDependencies = (
+				1F3EEBC82C8207F600926178 /* Mixpanel */,
+			);
 			productName = "WatchDancingMarker Watch App";
 			productReference = 901BF9922C29809900C02FF9 /* WatchDancingMarker Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -308,6 +318,9 @@
 				Base,
 			);
 			mainGroup = 901BF9742C29804A00C02FF9;
+			packageReferences = (
+				1F8E41EF2C8207C00013680B /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
+			);
 			productRefGroup = 901BF97E2C29804A00C02FF9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -676,6 +689,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1F8E41EF2C8207C00013680B /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mixpanel/mixpanel-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1F3EEBC82C8207F600926178 /* Mixpanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1F8E41EF2C8207C00013680B /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
+			productName = Mixpanel;
+		};
+		1FA08BA92C8208B10082C266 /* Mixpanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1F8E41EF2C8207C00013680B /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
+			productName = Mixpanel;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 901BF9752C29804A00C02FF9 /* Project object */;
 }
