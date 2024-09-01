@@ -58,9 +58,10 @@ struct PlayingView: View {
                         }) {
                             Image(systemName: "minus")
                                 .frame(width: 30, height: 30)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(playerModel.playbackRate <= 0.5 ? .inactiveGray : .white)
                         }
                         .padding(10)
+                        .disabled(playerModel.playbackRate <= 0.5)
                         Spacer()
                         
                         Button(action: {
@@ -78,9 +79,10 @@ struct PlayingView: View {
                         }) {
                             Image(systemName: "plus")
                                 .frame(width: 30, height: 30)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(playerModel.playbackRate >= 1.5 ? .inactiveGray : .white)
                         }
                         .padding(10)
+                        .disabled(playerModel.playbackRate >= 1.5)
                     }
                     .padding(.horizontal, 20)
                 )

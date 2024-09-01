@@ -546,6 +546,9 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
+            remoteControlCenterInfo()
+            setupControlCenterControls()
+            
             // 타이머 시작
             startTimer()
         } catch {
@@ -553,20 +556,24 @@ class PlayerModel: ObservableObject {
         }
     }
     
-    
     func togglePlayback() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             if let audioPlayer = self.audioPlayer {
                 if self.isPlaying {
                     audioPlayer.pause()
+                    self.updateNowPlayingControlCenter()
                 } else {
                     audioPlayer.play()
+                    self.updateNowPlayingControlCenter()
                 }
+                // 재생, 정지 상태 바꿔주기
                 self.isPlaying.toggle()
+                
+                // 백그라운드, 워치에 반영하기
+                self.updateNowPlayingControlCenter()
             }
-            self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
         }
-        connectivityManager.sendPlayingTimesToWatch([currentTime, duration])
+        
     }
     
     func startTimer() {
@@ -599,15 +606,17 @@ class PlayerModel: ObservableObject {
         guard let player = audioPlayer else { return }
         DispatchQueue.main.async{
             player.currentTime = time
+            self.currentTime = time
             self.progress = CGFloat(time / player.duration)
             self.formattedProgress = self.formattedTime(time)
+            self.updateNowPlayingControlCenter()
             self.connectivityManager.sendPlayingTimesToWatch([player.currentTime, self.duration])
         }
     }
     
     func backward5Sec() {
         guard let player = audioPlayer else { return }
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             let newTime = max(player.currentTime - 5, 0)
             self.seekToTime(to: newTime)
         }
@@ -615,8 +624,10 @@ class PlayerModel: ObservableObject {
     
     func forward5Sec() {
         guard let player = audioPlayer else { return }
-        let newTime = min(player.currentTime + 5, player.duration)
-        self.seekToTime(to: newTime)
+        DispatchQueue.main.async {
+            let newTime = min(player.currentTime + 5, player.duration)
+            self.seekToTime(to: newTime)
+        }
     }
     
     func sendMusicListToWatch(with musicList: [Music]) {
@@ -646,5 +657,67 @@ class PlayerModel: ObservableObject {
                 self.connectivityManager.sendTitleToWatch(music.title)
             }
         }
+    }
+    
+    /// LiveActivity 함수 (백그라운드 재생, 정지, 5초 앞뒤로)
+    private func remoteControlCenterInfo() {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+        
+        if let albumArtData = music?.albumArt, let albumArt = UIImage(data: albumArtData) {
+            let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
+                return albumArt
+            })
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.music?.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = self.music?.artist
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+    
+    private func setupControlCenterControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.playCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.togglePlayback()
+            return .success
+        }
+
+        commandCenter.pauseCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.togglePlayback()
+            return .success
+        }
+
+        commandCenter.skipBackwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.backward5Sec()
+            return .success
+        }
+
+        commandCenter.skipForwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.forward5Sec()
+            return .success
+        }
+
+        // 백그라운드에서 5초 간격으로 앞뒤로 할 수 있게
+        commandCenter.skipBackwardCommand.preferredIntervals = [5]
+        commandCenter.skipForwardCommand.preferredIntervals = [5]
+    }
+    
+    private func updateNowPlayingControlCenter() {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayer?.currentTime
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.isPlaying ? 1.0 : 0.0
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        
+        // 워치에 재생 정보 반영
+        self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
+        self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
     }
 }
