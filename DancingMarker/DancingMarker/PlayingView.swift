@@ -121,6 +121,7 @@ struct PlayingView: View {
                         }))
                 }
                 .frame(height: 5)
+                .padding(.bottom, 3)
                 
                 HStack {
                     Text("\(playerModel.formattedProgress)")

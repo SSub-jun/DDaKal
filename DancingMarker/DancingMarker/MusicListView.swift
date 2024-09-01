@@ -116,8 +116,17 @@ struct MusicListView: View {
             
             NowPlayingView()
                 .frame(height: 240) // 미니 플레이어의 높이 조정
-                .background(.nowPlayingGray) // 배경색을 추가하여 구분
-                .padding(.bottom, 0) // 화면 하단에 붙이기 위한 패딩
+                .background(.nowPlayingGray)
+                .clipShape(
+                    .rect(
+                        topLeadingRadius: 20,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 20
+                    )
+                )
+                .padding(.bottom, 0)
+            
         }
         .navigationTitle("내 음악")
         .toolbar {

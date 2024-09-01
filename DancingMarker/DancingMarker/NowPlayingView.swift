@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NowPlayingView: View {
+    @Environment(NavigationManager.self) var navigationManager
     @EnvironmentObject var playerModel: PlayerModel
     
     var body: some View {
@@ -56,6 +57,10 @@ struct NowPlayingView: View {
                     Spacer()
                 }
             }
+            .onTapGesture {
+                navigationManager.push(to: .playing)
+            }
+            .padding(.bottom, 8)
             
             /// 슬라이더
             VStack() {
@@ -82,6 +87,7 @@ struct NowPlayingView: View {
                         }))
                 }
                 .frame(height: 5)
+                .padding(.bottom, 3)
                 
                 HStack {
                     Text("\(playerModel.formattedProgress)")
@@ -91,7 +97,7 @@ struct NowPlayingView: View {
             }
             
             /// 제어 버튼
-            HStack {
+            HStack(alignment: .center, spacing: 50) {  
                 Circle()
                     .foregroundStyle(.buttonDarkGray)
                     .frame(width: 60)
@@ -106,7 +112,7 @@ struct NowPlayingView: View {
                                 .foregroundStyle(.white)
                         }
                     )
-                Spacer()
+                    .padding(.leading, 28)
                 
                 Circle()
                     .foregroundStyle(.buttonDarkGray)
@@ -121,9 +127,7 @@ struct NowPlayingView: View {
                                 .frame(width: 30)
                                 .foregroundStyle(.white)
                         }
-                        .frame(width: 30)
                     )
-                Spacer()
                 
                 Circle()
                     .foregroundStyle(.buttonDarkGray)
@@ -139,8 +143,9 @@ struct NowPlayingView: View {
                                 .foregroundStyle(.white)
                         }
                     )
+                    .padding(.trailing, 28)
             }
-            
+            .padding(.bottom, 7)
         }
         .padding(.horizontal, 16)
         
