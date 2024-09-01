@@ -26,8 +26,15 @@ struct PlayingView: View {
                             .cornerRadius(13)
                     } else {
                         RoundedRectangle(cornerRadius: 13)
-                            .fill(Color.gray)
+                            .fill(.textLightGray)
                             .frame(width: 66, height: 66)
+                            .overlay {
+                                Image(systemName: "music.note")
+                                    .resizable()
+                                    .padding()
+                                    .scaledToFit()
+                                    .foregroundColor(.gray) 
+                            }
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -114,6 +121,7 @@ struct PlayingView: View {
                         }))
                 }
                 .frame(height: 5)
+                .padding(.bottom, 3)
                 
                 HStack {
                     Text("\(playerModel.formattedProgress)")

@@ -38,7 +38,7 @@ struct MusicListView: View {
                 
             } else {
                 List(musicList, id: \.self) { music in
-                    HStack(spacing: 10){
+                    HStack(spacing: 10) {
                         if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
                             Image(uiImage: albumArt)
                                 .resizable()
@@ -46,8 +46,15 @@ struct MusicListView: View {
                                 .cornerRadius(13)
                         } else {
                             RoundedRectangle(cornerRadius: 13)
-                                .fill(Color.gray)
+                                .fill(.textLightGray)
                                 .frame(width: 66, height: 66)
+                                .overlay {
+                                    Image(systemName: "music.note")
+                                        .resizable()
+                                        .padding()
+                                        .scaledToFit()
+                                        .foregroundColor(.gray)
+                                }
                         }
                         
                         VStack(alignment: .leading, spacing: 12) {
@@ -60,9 +67,11 @@ struct MusicListView: View {
                         .contextMenu {
                             musicContextMenu(music: music)
                         }
+                        Spacer()
                         
                     }
                     //MARK: - 코드 정리 필요
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         //DispatchQueue.main.async {
                             
@@ -101,10 +110,23 @@ struct MusicListView: View {
                         // PlayingView로 이동
                         navigationManager.push(to: .playing)
                     }
-
                 }
                 .listStyle(.inset)
+                
+                NowPlayingView()
+                    .frame(height: 240) // 미니 플레이어의 높이 조정
+                    .background(.nowPlayingGray)
+                    .clipShape(
+                        .rect(
+                            topLeadingRadius: 20,
+                            bottomLeadingRadius: 0,
+                            bottomTrailingRadius: 0,
+                            topTrailingRadius: 20
+                        )
+                    )
+                    .padding(.bottom, 0)
             }
+            
         }
         .navigationTitle("내 음악")
         .toolbar {
@@ -133,6 +155,12 @@ struct MusicListView: View {
                 print("Failed to import file: \(error.localizedDescription)")
             }
         }
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    @ViewBuilder
+    private func tipButton() -> some View {
+        TipButtonView()
     }
     
     private func fetchMusicMetadata(from url: URL) async throws -> (String, String, Data?) {
