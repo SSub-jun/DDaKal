@@ -9,7 +9,8 @@ struct WatchPlayingView: View {
     @State var showMarkerListOverlay: Bool = false
     
     @State var progress: Double = 0.25 // 현재 진행 상황을 나타내는 변수
-    
+    @State private var isIdle = true
+
     var body: some View {
         
         VStack {
@@ -92,6 +93,13 @@ struct WatchPlayingView: View {
             }
             .padding(.bottom, 10)
         }
+        .focusable(true)
+        .digitalCrownRotation(detent: $viewModel.crownVolume, from: 0, through: 60, by: 3, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true
+        )
+        .onChange(of: viewModel.crownVolume) { newValue in
+            viewModel.handleCrownValueChange(newValue)
+        }
+        .scrollIndicators(.hidden)
         .edgesIgnoringSafeArea(.bottom)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing){
