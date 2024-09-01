@@ -107,9 +107,8 @@ struct WatchPlayingView: View {
                     showMarkerListOverlay = true
                 }, label:{
                     Image(systemName: "list.bullet")
-                        .foregroundColor(.yellow)
+                        .foregroundColor(.primaryYellow)
                 })
-                .frame(width:50)
             }
         }
         .fullScreenCover(isPresented: $showMarkerListOverlay, content: {
