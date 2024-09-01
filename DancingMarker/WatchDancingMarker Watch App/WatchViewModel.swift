@@ -206,8 +206,9 @@ class WatchViewModel: ObservableObject {
         guard isPlaying else { return }
         currentTime += 1
         if currentTime >= duration {
-            currentTime = duration
+            currentTime = 0
             stopTimer()
+            isPlaying = false
         }
         progress = currentTime / duration
         formattedProgress = formattedTime(currentTime)
