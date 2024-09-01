@@ -46,8 +46,15 @@ struct MusicListView: View {
                                 .cornerRadius(13)
                         } else {
                             RoundedRectangle(cornerRadius: 13)
-                                .fill(Color.gray)
+                                .fill(.textLightGray)
                                 .frame(width: 66, height: 66)
+                                .overlay {
+                                    Image(systemName: "music.note")
+                                        .resizable()
+                                        .padding()
+                                        .scaledToFit()
+                                        .foregroundColor(.gray)
+                                }
                         }
                         
                         VStack(alignment: .leading, spacing: 12) {
@@ -101,10 +108,16 @@ struct MusicListView: View {
                         // PlayingView로 이동
                         navigationManager.push(to: .playing)
                     }
-
+                    
+                    
                 }
                 .listStyle(.inset)
             }
+            
+            NowPlayingView()
+                .frame(height: 240) // 미니 플레이어의 높이 조정
+                .background(.nowPlayingGray) // 배경색을 추가하여 구분
+                .padding(.bottom, 0) // 화면 하단에 붙이기 위한 패딩
         }
         .navigationTitle("내 음악")
         .toolbar {
@@ -133,6 +146,12 @@ struct MusicListView: View {
                 print("Failed to import file: \(error.localizedDescription)")
             }
         }
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    @ViewBuilder
+    private func tipButton() -> some View {
+        TipButtonView()
     }
     
     private func fetchMusicMetadata(from url: URL) async throws -> (String, String, Data?) {
