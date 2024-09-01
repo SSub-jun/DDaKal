@@ -41,6 +41,7 @@ struct NowPlayingView: View {
                             .font(.body)
                     }
                     Spacer()
+                    
                 } else {
                     // 음악이 없는 경우
                     RoundedRectangle(cornerRadius: 13)
@@ -53,13 +54,18 @@ struct NowPlayingView: View {
                                 .scaledToFit()
                                 .foregroundColor(.gray)
                         }
-                    
                     Spacer()
                 }
+                Spacer()
             }
+            .contentShape(Rectangle())
             .onTapGesture {
+                guard playerModel.music != nil else {
+                    return
+                }
                 navigationManager.push(to: .playing)
             }
+
             .padding(.bottom, 8)
             
             /// 슬라이더
