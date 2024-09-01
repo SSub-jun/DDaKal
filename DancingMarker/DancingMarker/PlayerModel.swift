@@ -120,6 +120,12 @@ class PlayerModel: ObservableObject {
             name: .markerEditSuccess,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(notificationChangeVolumeAction),
+            name: .changeVolume,
+            object: nil
+        )
     }
     
     @objc func notificationPlaytoggleAction(_ notification: Notification) {
@@ -289,6 +295,15 @@ class PlayerModel: ObservableObject {
             guard let audioPlayer = audioPlayer else { return }
             music.markers[forEdit[0]] = marker
             self.connectivityManager.sendMarkersToWatch(music.markers)
+        } else { }
+    }
+    
+    @objc func notificationChangeVolumeAction(_ notification: Notification) {
+        self.countNum += 1
+        guard let music = music else { return }
+        
+        if let volume = notification.object as? Float{
+            self.setPlayerVolume(volume)
         } else { }
     }
     
@@ -542,6 +557,8 @@ class PlayerModel: ObservableObject {
             audioPlayer.prepareToPlay()
             audioPlayer.enableRate = true
             
+            connectivityManager.sendSystemVolumeToWatch(AVAudioSession.sharedInstance().outputVolume)
+            
             // 포맷된 길이 설정
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
@@ -659,6 +676,10 @@ class PlayerModel: ObservableObject {
         }
     }
     
+    func setPlayerVolume(_ volume: Float) {
+        MPVolumeView.setVolume(volume)
+    }
+
     /// LiveActivity 함수 (백그라운드 재생, 정지, 5초 앞뒤로)
     private func remoteControlCenterInfo() {
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
@@ -719,5 +740,16 @@ class PlayerModel: ObservableObject {
         // 워치에 재생 정보 반영
         self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
         self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
+    }
+}
+
+extension MPVolumeView {
+    static func setVolume(_ volume: Float) -> Void {
+        let volumeView = MPVolumeView()
+        let slider = volumeView.subviews.first(where: {$0 is UISlider }) as? UISlider
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
+            slider?.value = volume
+        }
     }
 }

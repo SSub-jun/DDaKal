@@ -23,6 +23,9 @@ class WatchViewModel: ObservableObject {
     @Published var currentTime: TimeInterval = 0.0 // 예시로 현재 시간 설정
     @Published var musicList: [[String]] = []
     
+    @Published var crownVolume: Float = 0.5  // 초기 볼륨 값 (0.0 ~ 1.0)
+    @Published var lastSentCrownValue: Float = 0.5  // 마지막으로 전송된 Crown 값
+
     private var timer: Timer?
     
     init(connectivityManager: WatchConnectivityManager) {
@@ -61,6 +64,12 @@ class WatchViewModel: ObservableObject {
             self,
             selector: #selector(updateMusicTitle(_:)),
             name: .sendMusicTitle,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(setVolumeBySystem(_:)),
+            name: .sendSystemVolume,
             object: nil
         )
         self.musicList = UserDefaults.standard.getMusicList()
@@ -124,6 +133,11 @@ class WatchViewModel: ObservableObject {
             self.musicTitle = musicTitle
         }
     }
+    @objc func setVolumeBySystem(_ notification: Notification) {
+        if let systemVolume = notification.object as? Float {
+            self.crownVolume = systemVolume * 60
+        }
+    }
     
     func playToggle() {
         connectivityManager.sendPlayToggleToIOS()
@@ -152,6 +166,20 @@ class WatchViewModel: ObservableObject {
     }
     func deletemarker(index: Int){
         connectivityManager.sendMarkerDeleteToIOS(index)
+    }
+    func changeVolume(){
+        let volumeToSend = self.crownVolume / 60
+        connectivityManager.sendVolumeChangeToIOS(volumeToSend)
+    }
+    
+    func handleCrownValueChange(_ newValue: Float) {
+        // 일정 수준 이상 변화했을 때만 iOS로 메시지 전송
+        let threshold: Float = 0.05  // 변화 임계값
+        if abs(newValue - lastSentCrownValue) >= threshold {
+            let volumeToSend = self.crownVolume / 60
+            connectivityManager.sendVolumeChangeToIOS(volumeToSend)
+            lastSentCrownValue = newValue  // 마지막 전송 값 업데이트
+        }
     }
     
     func formattedTime(_ time: TimeInterval) -> String {
