@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     @State private var navigationManager = WatchNavigationManager()
+    
     var body: some View {
         ZStack{
             NavigationStack(path: $navigationManager.path) {
