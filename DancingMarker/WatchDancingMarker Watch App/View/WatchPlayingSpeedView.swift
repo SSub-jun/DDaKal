@@ -7,7 +7,6 @@ struct WatchPlayingSpeedView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            
             // MARK: - 버튼
             HStack {
                 Text("-")

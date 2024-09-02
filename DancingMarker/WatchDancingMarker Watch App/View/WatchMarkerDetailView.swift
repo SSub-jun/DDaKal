@@ -145,7 +145,6 @@ struct MarkerEditAlert: View {
                 }
             }
             .padding()
-            
         }
     }
 }
