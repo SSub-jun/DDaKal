@@ -223,12 +223,12 @@ struct MusicListView: View {
     
     private func musicContextMenu(music: Music) -> some View {
         Group {
-            Button(action: {
-                // 수정 기능
-            }) {
-                Text("수정하기")
-                Image(systemName: "pencil")
-            }
+//            Button(action: {
+//                // 수정 기능
+//            }) {
+//                Text("수정하기")
+//                Image(systemName: "pencil")
+//            }
             Button(role: .destructive, action: {
                 DispatchQueue.main.async {
                     if let index = self.musicList.firstIndex(of: music) {
