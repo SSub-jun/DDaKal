@@ -113,6 +113,9 @@ struct WatchPlayingView: View {
         }
         .fullScreenCover(isPresented: $showMarkerListOverlay, content: {
             WatchMarkerListView()
+                .background{
+                    Color.black
+                }
         })
     }
 }
