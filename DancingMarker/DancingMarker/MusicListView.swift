@@ -28,10 +28,8 @@ struct MusicListView: View {
                         .frame(width: 332)
                         .padding(.bottom, 20)
                     Text("추가된 음악이 없어요.")
-                    Text("오른쪽 상단의 버튼을 눌러")
-                    Text("음악을 추가해주세요.")
                     
-                    Spacer(minLength: 220)
+                    Spacer(minLength: 250)
                 }
                 .font(.body)
                 .foregroundStyle(.inactiveGray)
@@ -135,7 +133,7 @@ struct MusicListView: View {
                     isFileImporterPresented.toggle()
                 }) {
                     Text("추가하기")
-                        .foregroundStyle(.primaryYellow)
+                        .foregroundStyle(.accent)
                 }
             }
         }

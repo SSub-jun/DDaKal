@@ -360,7 +360,7 @@ class PlayerModel: ObservableObject {
                         .foregroundColor(.black)
                 }
                 .frame(width: 360, height: 60)
-                .background(Color.primaryYellow)
+                .background(.accent)
                 .cornerRadius(12)
             }
             .contextMenu {
@@ -405,7 +405,7 @@ class PlayerModel: ObservableObject {
                     .foregroundColor(.black)
             }
             .frame(width: 200, height: 60)
-            .background(.primaryYellow)
+            .background(.accent)
             .cornerRadius(12)
             .padding(.horizontal, 6)
             

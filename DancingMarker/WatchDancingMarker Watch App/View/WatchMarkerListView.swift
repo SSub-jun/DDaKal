@@ -61,7 +61,7 @@ struct WatchMarkerListCellView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(.primaryYellow)
+                .fill(.accent)
                 .cornerRadius(4)
                 .frame(height: 44)
             HStack {

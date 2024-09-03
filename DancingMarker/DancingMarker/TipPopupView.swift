@@ -23,7 +23,7 @@ struct TipPopupView: View {
                             isTipButtonPresented = false
                         }) {
                             Text("닫기")
-                                .foregroundStyle(.primaryYellow)
+                                .foregroundStyle(.accent)
                                 .padding(.vertical, 11)
                                 .padding(.trailing, 16)
                         }

@@ -107,7 +107,7 @@ struct WatchPlayingView: View {
                     showMarkerListOverlay = true
                 }, label:{
                     Image(systemName: "list.bullet")
-                        .foregroundColor(.primaryYellow)
+                        .foregroundColor(.accentColor)
                 })
             }
         }

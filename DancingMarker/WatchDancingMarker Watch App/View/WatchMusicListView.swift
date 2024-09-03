@@ -77,7 +77,7 @@ struct WatchMusicListView: View {
     
     func bar(low: CGFloat = 0.0, high: CGFloat = 1.0) -> some View {
         RoundedRectangle(cornerRadius: 1.2)
-            .fill(.primaryYellow)
+            .fill(.accent)
             .frame(height: (drawingHeight ? high : low) * 20)
             .frame(height: 20, alignment: .bottom)
     }

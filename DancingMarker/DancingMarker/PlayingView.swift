@@ -186,6 +186,20 @@ struct PlayingView: View {
         .padding(.horizontal, 16)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                HStack {
+                    Image(systemName: "chevron.left")
+                        .bold()
+                    Text("뒤로가기") // "뒤로가기" 텍스트
+                }
+                .foregroundStyle(.accent) // 색상 지정
+                .onTapGesture {
+                    navigationManager.pop()
+                }
+            }
+        }
     }
     
     @ViewBuilder
