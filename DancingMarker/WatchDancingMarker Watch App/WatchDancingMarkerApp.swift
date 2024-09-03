@@ -24,8 +24,9 @@ struct WatchDancingMarker_Watch_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchMusicListView()
                 .environmentObject(viewModel)
+                .accentColor(.primaryYellow)
         }
     }
 }
