@@ -40,7 +40,7 @@ struct WatchPlayingSpeedView: View {
             HStack {
                 Text("+")
                     .font(.system(size: 17))
-                    .foregroundColor(viewModel.speed == 1.5 ? .gray : .white) // 1.5배가 되면 Gray색상으로
+                    .foregroundColor(viewModel.speed > 1.45 ? .gray : .white) // 1.5배가 되면 Gray색상으로
             }
             .frame(maxWidth: .infinity)
             .frame(height: 52)
