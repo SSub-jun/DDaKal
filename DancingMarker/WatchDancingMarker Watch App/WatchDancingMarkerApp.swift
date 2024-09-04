@@ -26,7 +26,7 @@ struct WatchDancingMarker_Watch_AppApp: App {
         WindowGroup {
             WatchMusicListView()
                 .environmentObject(viewModel)
-                .accentColor(.primaryYellow)
+                .accentColor(.accent)
         }
     }
 }
