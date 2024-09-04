@@ -1,8 +1,10 @@
 
 import SwiftUI
+import Mixpanel
 
 struct WatchPlayingView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(WatchNavigationManager.self) var navigationManager
     @EnvironmentObject var viewModel: WatchViewModel
     
@@ -10,7 +12,7 @@ struct WatchPlayingView: View {
     
     @State var progress: Double = 0.25 // 현재 진행 상황을 나타내는 변수
     @State private var isIdle = true
-
+    
     var body: some View {
         
         VStack {
@@ -52,17 +54,19 @@ struct WatchPlayingView: View {
                         .overlay(
                             Button(action: {
                                 viewModel.playToggle()
+                                if viewModel.isPlaying != true {
+                                    mixpanelPlayMusic()
+                                }
                             }, label: {
                                 Image(systemName:
                                         viewModel.isPlaying == true ? "pause.fill" : "play.fill"
                                 ) // 재생 on/off에 따라 이미지 변경
                                 .resizable()
-                                .frame(width: 22, height: 22)
+                                .frame(width: 18, height: 18)
                             })
                             .buttonBorderShape(.circle)
                             .buttonStyle(PlainButtonStyle())
                         )
-                    
                     CircleProgressView(progress: viewModel.progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
                         .frame(width: 42, height: 42)
                 }
@@ -83,7 +87,6 @@ struct WatchPlayingView: View {
                         })
                         .buttonStyle(PlainButtonStyle())
                     )
-                
                 Spacer()
             }
             
@@ -94,21 +97,33 @@ struct WatchPlayingView: View {
             .padding(.bottom, 10)
         }
         .focusable(true)
+        .scrollIndicators(.hidden)
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationBarBackButtonHidden(true)
         .digitalCrownRotation(detent: $viewModel.crownVolume, from: 0, through: 60, by: 3, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true
         )
         .onChange(of: viewModel.crownVolume) { newValue in
             viewModel.handleCrownValueChange(newValue)
         }
-        .scrollIndicators(.hidden)
-        .edgesIgnoringSafeArea(.bottom)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading){
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.primaryYellow)
+                        
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing){
-                Button(action:{
+                Button(action: {
                     showMarkerListOverlay = true
-                }, label:{
+                }) {
                     Image(systemName: "list.bullet")
                         .foregroundColor(.primaryYellow)
-                })
+                }
             }
         }
         .fullScreenCover(isPresented: $showMarkerListOverlay, content: {
@@ -117,6 +132,11 @@ struct WatchPlayingView: View {
                     Color.black
                 }
         })
+    }
+    
+    private func mixpanelPlayMusic() {
+        Mixpanel.mainInstance().track(event: "노래 재생")
+        Mixpanel.mainInstance().people.increment(property: "playMusic", by: 1)
     }
 }
 
