@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import AVFoundation
+import MediaPlayer
 
 struct MusicListView: View {
     @Environment(NavigationManager.self) var navigationManager
@@ -28,10 +29,8 @@ struct MusicListView: View {
                         .frame(width: 332)
                         .padding(.bottom, 20)
                     Text("추가된 음악이 없어요.")
-                    Text("오른쪽 상단의 버튼을 눌러")
-                    Text("음악을 추가해주세요.")
                     
-                    Spacer(minLength: 220)
+                    Spacer(minLength: 250)
                 }
                 .font(.body)
                 .foregroundStyle(.inactiveGray)
@@ -73,43 +72,44 @@ struct MusicListView: View {
                     //MARK: - 코드 정리 필요
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        //DispatchQueue.main.async {
-                            
-                            let selectedMusic = music
-                            
-                            if playerModel.music == nil {
-                                // 음원이 nil 일 때 (처음 노래를 켤 때)
-                                playerModel.music = selectedMusic
-                                playerModel.isPlaying = true
-                                playerModel.initAudioPlayer(for: selectedMusic)
-                                playerModel.playAudio()
-                                print("음원 \(playerModel.music?.title)으로 처음 재생됨")
-                            } else if playerModel.music?.id == selectedMusic.id {
-                                // 현재 재생 중인 음원과 동일할 때
-                                print("음원 그대로임 \(playerModel.music?.title)")
-                                if !playerModel.isPlaying {
-                                    // 음원이 정지된 상태라면 재생 시작
-                                    print("정지였었삼: \(playerModel.music?.title)")
-                                    playerModel.isPlaying = true
-                                    playerModel.playAudio()
-                                }
-                            } else {
-                                // 새로운 음원으로 변경되었을 경우
-                                playerModel.stopAudio()
-                                playerModel.stopTimer() // 기존 타이머 중지
-                                
-                                playerModel.music = selectedMusic
-                                playerModel.isPlaying = true
-                                playerModel.initAudioPlayer(for: selectedMusic)
-                                print("음원 \(playerModel.music?.title)으로 바뀜")
-                                
-                                playerModel.playAudio()
-                            }
-                        playerModel.sendPlayingInformation()
+                        let selectedMusic = music
                         
-                        // PlayingView로 이동
+                        if playerModel.music == nil || playerModel.music?.id != selectedMusic.id {
+                            // 새로운 곡이 선택되었거나 처음 재생하는 경우
+                            playerModel.stopAudio()
+                            playerModel.stopTimer()
+                            
+                            // 오디오 세션 활성화
+                            try? AVAudioSession.sharedInstance().setActive(true)
+                            
+                            playerModel.music = selectedMusic
+                            playerModel.initAudioPlayer(for: selectedMusic)
+                            playerModel.isPlaying = true
+                            playerModel.playAudio()
+                            
+                            // Now Playing 정보 설정 및 업데이트
+                            playerModel.updateNowPlayingControlCenter()
+                            
+                            print("음원 \(playerModel.music?.title)으로 바뀜")
+                        } else if !playerModel.isPlaying {
+                            // 동일한 곡이지만 정지된 상태에서 재생을 눌렀을 때
+                            playerModel.isPlaying = true
+                            playerModel.playAudio()
+                            
+                            // Now Playing 정보 업데이트
+                            playerModel.updateNowPlayingControlCenter()
+                            
+                            print("음원 \(playerModel.music?.title) 재생됨")
+                        } else {
+                            // 동일한 곡이 이미 재생 중인 경우
+                            print("이미 재생 중인 음원 \(playerModel.music?.title)")
+                        }
+                        
+                        // 재생 정보를 보내고, PlayingView로 이동
+                        playerModel.sendPlayingInformation()
                         navigationManager.push(to: .playing)
                     }
+
                 }
                 .listStyle(.inset)
                 
@@ -135,7 +135,7 @@ struct MusicListView: View {
                     isFileImporterPresented.toggle()
                 }) {
                     Text("추가하기")
-                        .foregroundStyle(.primaryYellow)
+                        .foregroundStyle(.accent)
                 }
             }
         }
@@ -225,12 +225,12 @@ struct MusicListView: View {
     
     private func musicContextMenu(music: Music) -> some View {
         Group {
-            Button(action: {
-                // 수정 기능
-            }) {
-                Text("수정하기")
-                Image(systemName: "pencil")
-            }
+//            Button(action: {
+//                // 수정 기능
+//            }) {
+//                Text("수정하기")
+//                Image(systemName: "pencil")
+//            }
             Button(role: .destructive, action: {
                 DispatchQueue.main.async {
                     if let index = self.musicList.firstIndex(of: music) {

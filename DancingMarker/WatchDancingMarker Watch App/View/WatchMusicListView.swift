@@ -17,7 +17,7 @@ struct WatchMusicListView: View {
             HStack{
                 Text("Music Marker")
                     .font(.system(size:14, weight:.semibold))
-                    .foregroundStyle(Color.primaryYellow)
+                    .foregroundStyle(.accent)
                     .padding(.leading, 11)
                 Spacer()
             }.padding(.top, 0)
@@ -93,13 +93,13 @@ struct WatchMusicListView: View {
     
     func bar(low: CGFloat = 0.0, high: CGFloat = 1.0) -> some View {
         RoundedRectangle(cornerRadius: 1.2)
-            .fill(.primaryYellow)
+            .fill(.accent)
             .frame(height: (drawingHeight ? high : low) * 18)
             .frame(width:1.6, height: 18, alignment: .center)
     }
     func stopBar() -> some View {
         RoundedRectangle(cornerRadius: 1.2)
-            .fill(.primaryYellow)
+            .fill(.accent)
             .frame(width:1.6, height: 2.5, alignment: .center)
     }
     

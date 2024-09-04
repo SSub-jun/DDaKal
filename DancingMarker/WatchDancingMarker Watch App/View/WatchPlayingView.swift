@@ -112,7 +112,7 @@ struct WatchPlayingView: View {
                 }) {
                     HStack {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.primaryYellow)
+                            .foregroundStyle(.accent)
                         
                     }
                 }
@@ -122,7 +122,7 @@ struct WatchPlayingView: View {
                     showMarkerListOverlay = true
                 }) {
                     Image(systemName: "list.bullet")
-                        .foregroundColor(.primaryYellow)
+                        .foregroundStyle(.accent)
                 }
             }
         }

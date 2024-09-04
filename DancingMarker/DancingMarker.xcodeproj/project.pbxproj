@@ -11,12 +11,12 @@
 		1F32F5852C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90A542372C6E1F0100B0F694 /* WatchDancingMarker-Watch-App-Info.plist */; };
 		1F32F5862C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90A542372C6E1F0100B0F694 /* WatchDancingMarker-Watch-App-Info.plist */; };
 		1F3EEBC92C8207F600926178 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3EEBC82C8207F600926178 /* Mixpanel */; };
-		1F5746F22C8616D500DA1C0C /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */; };
-		1F5746F32C8616D600DA1C0C /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */; };
 		1FA08BAA2C8208B10082C266 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 1FA08BA92C8208B10082C266 /* Mixpanel */; };
 		5104B7F62C3D67F2008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		513304052C4D513900CC5F22 /* TipPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513304042C4D513900CC5F22 /* TipPopupView.swift */; };
+		516EB0A22C87362C00F62DD2 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */; };
+		516EB0A32C87362C00F62DD2 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */; };
 		901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
 		901BF9832C29804A00C02FF9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9822C29804A00C02FF9 /* ContentView.swift */; };
 		901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
@@ -73,9 +73,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		5104B7F52C3D67F2008E10E8 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
 		513304042C4D513900CC5F22 /* TipPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipPopupView.swift; sourceTree = "<group>"; };
+		516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		51FD01772C3BC6B1003F99B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingMarkerApp.swift; sourceTree = "<group>"; };
@@ -149,7 +149,7 @@
 		901BF9742C29804A00C02FF9 = {
 			isa = PBXGroup;
 			children = (
-				1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */,
+				516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */,
 				90A4722D2C450837008577A2 /* Manager */,
 				901BF97F2C29804A00C02FF9 /* DancingMarker */,
 				901BF9932C29809900C02FF9 /* WatchDancingMarker Watch App */,
@@ -340,7 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF9882C29804B00C02FF9 /* Preview Assets.xcassets in Resources */,
-				1F5746F22C8616D500DA1C0C /* Secrets.xcconfig in Resources */,
+				516EB0A22C87362C00F62DD2 /* Secrets.xcconfig in Resources */,
 				1F32F5852C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */,
 				90A542362C6E1ECC00B0F694 /* Assets.xcassets in Resources */,
 				901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */,
@@ -352,7 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF99C2C29809A00C02FF9 /* Preview Assets.xcassets in Resources */,
-				1F5746F32C8616D600DA1C0C /* Secrets.xcconfig in Resources */,
+				516EB0A32C87362C00F62DD2 /* Secrets.xcconfig in Resources */,
 				1F32F5862C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */,
 				1F18C8A12C5679A3003972E3 /* Assets.xcassets in Resources */,
 				901BF9992C29809A00C02FF9 /* Assets.xcassets in Resources */,
@@ -532,7 +532,6 @@
 		};
 		901BF98C2C29804B00C02FF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -540,7 +539,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DancingMarker/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 2U3B7G3F2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DancingMarker/Info.plist;
@@ -568,7 +567,6 @@
 		};
 		901BF98D2C29804B00C02FF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -604,14 +602,13 @@
 		};
 		901BF9A12C29809A00C02FF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WatchDancingMarker Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = WTK65UP9RZ;
+				DEVELOPMENT_TEAM = 2U3B7G3F2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WatchDancingMarker-Watch-App-Info.plist";
@@ -637,7 +634,6 @@
 		};
 		901BF9A22C29809A00C02FF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F5746F12C8615BC00DA1C0C /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

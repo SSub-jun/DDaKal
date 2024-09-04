@@ -6,5 +6,9 @@
 	<array>
 		<string>audio</string>
 	</array>
+    
+    <key>UIUserInterfaceStyle</key>
+    <string>Dark</string>
+
 </dict>
 </plist>

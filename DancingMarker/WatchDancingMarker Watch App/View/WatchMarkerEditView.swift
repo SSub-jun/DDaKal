@@ -89,7 +89,7 @@ struct WatchMarkerEditView: View {
             .navigationTitle {
                 Text("수정하기")
                     .fontWeight(.heavy)
-                    .foregroundColor(.primaryYellow)
+                    .foregroundStyle(.accent)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
