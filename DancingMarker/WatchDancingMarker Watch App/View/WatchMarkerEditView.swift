@@ -72,7 +72,7 @@ struct WatchMarkerEditView: View {
                         navigationPath.removeLast(navigationPath.count) // 루트로 이동
                     }, label: {
                         Text("저장하기")
-                            .foregroundColor(data != initialData ? .white : .gray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
+                            .foregroundColor(data != initialData ? .white : .inactiveGray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
                     })
                     .buttonStyle(SaveButtonStyle())
                     .disabled(data == initialData)
@@ -81,7 +81,7 @@ struct WatchMarkerEditView: View {
             .navigationTitle {
                 Text("수정하기")
                     .fontWeight(.heavy)
-                    .foregroundColor(.yellow)
+                    .foregroundColor(.primaryYellow)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -122,6 +122,7 @@ struct WatchMarkerEditView: View {
             viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
         }
     }
+    
     private func formattedTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60

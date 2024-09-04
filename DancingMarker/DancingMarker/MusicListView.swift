@@ -244,7 +244,7 @@ struct MusicListView: View {
                     playerModel.sendMusicListToWatch(with: musicList)
                 }
             }) {
-                Text("삭제하기")
+                Text("지우기")
                 Image(systemName: "trash")
             }
         }
