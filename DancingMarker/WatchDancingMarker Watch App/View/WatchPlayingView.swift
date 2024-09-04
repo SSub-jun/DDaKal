@@ -66,7 +66,6 @@ struct WatchPlayingView: View {
                             .buttonBorderShape(.circle)
                             .buttonStyle(PlainButtonStyle())
                         )
-                    
                     CircleProgressView(progress: viewModel.progress) // 현재 노래의 길이를 value로 바꿔서 주면됨.
                         .frame(width: 42, height: 42)
                 }
@@ -87,7 +86,6 @@ struct WatchPlayingView: View {
                         })
                         .buttonStyle(PlainButtonStyle())
                     )
-                
                 Spacer()
             }
             
