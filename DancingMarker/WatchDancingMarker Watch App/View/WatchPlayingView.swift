@@ -57,7 +57,7 @@ struct WatchPlayingView: View {
                                         viewModel.isPlaying == true ? "pause.fill" : "play.fill"
                                 ) // 재생 on/off에 따라 이미지 변경
                                 .resizable()
-                                .frame(width: 22, height: 22)
+                                .frame(width: 18, height: 18)
                             })
                             .buttonBorderShape(.circle)
                             .buttonStyle(PlainButtonStyle())
