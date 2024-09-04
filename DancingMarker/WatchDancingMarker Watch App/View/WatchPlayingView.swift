@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Mixpanel
 
 struct WatchPlayingView: View {
     
@@ -52,6 +53,9 @@ struct WatchPlayingView: View {
                         .overlay(
                             Button(action: {
                                 viewModel.playToggle()
+                                if viewModel.isPlaying != true {
+                                    mixpanelPlayMusic()
+                                }
                             }, label: {
                                 Image(systemName:
                                         viewModel.isPlaying == true ? "pause.fill" : "play.fill"
@@ -117,6 +121,11 @@ struct WatchPlayingView: View {
                     Color.black
                 }
         })
+    }
+    
+    private func mixpanelPlayMusic() {
+        Mixpanel.mainInstance().track(event: "노래 재생")
+        Mixpanel.mainInstance().people.increment(property: "playMusic", by: 1)
     }
 }
 
