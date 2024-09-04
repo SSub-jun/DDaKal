@@ -515,17 +515,27 @@ class PlayerModel: ObservableObject {
     func playAudio() {
         audioPlayer?.play()
         isPlaying = true
+        print("Playing audio. isPlaying = \(isPlaying)")
     }
-    
+
     func stopAudio() {
         audioPlayer?.stop()
         isPlaying = false
+        print("Stopping audio. isPlaying = \(isPlaying)")
     }
+
     
     func initAudioPlayer(for music: Music) {
+        // 기존 플레이어가 동일한 음악을 재생 중이면 초기화하지 않음
         if let existingPlayer = self.audioPlayer, existingPlayer.isPlaying, self.music == music {
             print("The same music is already playing. No need to reinitialize.")
             return
+        }
+        
+        // 기존 플레이어가 있다면 정지 및 해제
+        if let existingPlayer = self.audioPlayer {
+            existingPlayer.stop()
+            self.audioPlayer = nil
         }
         
         let formatter = DateComponentsFormatter()
@@ -543,8 +553,9 @@ class PlayerModel: ObservableObject {
         
         do {
             // AVAudioSession 설정
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-            try AVAudioSession.sharedInstance().setActive(true)
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default, options: [])
+            try audioSession.setActive(true)
             
             // AVAudioPlayer 초기화
             self.audioPlayer = try AVAudioPlayer(contentsOf: music.path)
@@ -557,7 +568,8 @@ class PlayerModel: ObservableObject {
             audioPlayer.prepareToPlay()
             audioPlayer.enableRate = true
             
-            connectivityManager.sendSystemVolumeToWatch(AVAudioSession.sharedInstance().outputVolume)
+            // 시스템 볼륨을 워치로 전송 (필요한 경우)
+            connectivityManager.sendSystemVolumeToWatch(audioSession.outputVolume)
             
             // 포맷된 길이 설정
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
@@ -572,25 +584,26 @@ class PlayerModel: ObservableObject {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
+
     
     func togglePlayback() {
         DispatchQueue.main.async {
-            if let audioPlayer = self.audioPlayer {
-                if self.isPlaying {
-                    audioPlayer.pause()
-                    self.updateNowPlayingControlCenter()
-                } else {
-                    audioPlayer.play()
-                    self.updateNowPlayingControlCenter()
-                }
-                // 재생, 정지 상태 바꿔주기
-                self.isPlaying.toggle()
-                
-                // 백그라운드, 워치에 반영하기
-                self.updateNowPlayingControlCenter()
+            guard let audioPlayer = self.audioPlayer else {
+                print("Audio player is not available.")
+                return
             }
+            
+            if self.isPlaying {
+                print("Pausing audio.")
+                self.stopAudio()
+            } else {
+                print("Playing audio.")
+                self.playAudio()
+            }
+            
+            // 백그라운드, 워치에 반영하기
+            self.updateNowPlayingControlCenter()
         }
-        
     }
     
     func startTimer() {
@@ -685,11 +698,27 @@ class PlayerModel: ObservableObject {
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
         
-        if let albumArtData = music?.albumArt, let albumArt = UIImage(data: albumArtData) {
-            let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
-                return albumArt
-            })
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        if let music = self.music {
+            // 앨범 아트가 있는 경우
+            if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
+                let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
+                    return albumArt
+                })
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+            } else {
+                // 앨범 아트가 없을 경우 기본 이미지 사용
+                let liveActivityArtwork = liveActivityPlaceholderArtwork()
+                let artwork = MPMediaItemArtwork(boundsSize: liveActivityArtwork.size, requestHandler: { size in
+                    return liveActivityArtwork
+                })
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+            }
+            
+            nowPlayingInfo[MPMediaItemPropertyTitle] = music.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = music.artist
+        } else {
+            // 음악이 없을 경우 모든 정보 초기화
+            nowPlayingInfo.removeAll()
         }
 
         nowPlayingInfo[MPMediaItemPropertyTitle] = self.music?.title
@@ -703,12 +732,7 @@ class PlayerModel: ObservableObject {
     private func setupControlCenterControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
 
-        commandCenter.playCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
-            self.togglePlayback()
-            return .success
-        }
-
-        commandCenter.pauseCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+        commandCenter.togglePlayPauseCommand.addTarget{ (commandEvent) -> MPRemoteCommandHandlerStatus in
             self.togglePlayback()
             return .success
         }
@@ -728,12 +752,12 @@ class PlayerModel: ObservableObject {
         commandCenter.skipForwardCommand.preferredIntervals = [5]
     }
     
-    private func updateNowPlayingControlCenter() {
+    func updateNowPlayingControlCenter() {
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
 
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayer?.currentTime
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.isPlaying ? 1.0 : 0.0
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.playbackRate
 
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         
@@ -742,6 +766,33 @@ class PlayerModel: ObservableObject {
         self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
     }
 }
+
+func liveActivityPlaceholderArtwork() -> UIImage {
+    // Placeholder 뷰 생성
+    let rect = CGRect(x: 0, y: 0, width: 66, height: 66)
+    let view = UIView(frame: rect)
+    
+    // RoundedRectangle 설정
+    let roundedRect = UIView(frame: rect)
+    roundedRect.clipsToBounds = true
+    view.addSubview(roundedRect)
+    
+    // 음악 아이콘 추가
+    let imageView = UIImageView(image: UIImage(systemName: "music.note"))
+    imageView.tintColor = .gray
+    imageView.contentMode = .scaleAspectFit
+    imageView.frame = roundedRect.bounds.insetBy(dx: 10, dy: 10)
+    roundedRect.addSubview(imageView)
+    
+    // `UIView`를 `UIImage`로 변환
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0)
+    view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+    let image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return image ?? UIImage()
+}
+
 
 extension MPVolumeView {
     static func setVolume(_ volume: Float) -> Void {
