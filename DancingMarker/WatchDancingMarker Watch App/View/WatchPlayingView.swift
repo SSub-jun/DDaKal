@@ -4,6 +4,7 @@ import Mixpanel
 
 struct WatchPlayingView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(WatchNavigationManager.self) var navigationManager
     @EnvironmentObject var viewModel: WatchViewModel
     
@@ -11,7 +12,7 @@ struct WatchPlayingView: View {
     
     @State var progress: Double = 0.25 // 현재 진행 상황을 나타내는 변수
     @State private var isIdle = true
-
+    
     var body: some View {
         
         VStack {
@@ -104,13 +105,24 @@ struct WatchPlayingView: View {
         .scrollIndicators(.hidden)
         .edgesIgnoringSafeArea(.bottom)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading){
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.primaryYellow)
+                        
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing){
-                Button(action:{
+                Button(action: {
                     showMarkerListOverlay = true
-                }, label:{
+                }) {
                     Image(systemName: "list.bullet")
                         .foregroundColor(.primaryYellow)
-                })
+                }
             }
         }
         .fullScreenCover(isPresented: $showMarkerListOverlay, content: {
@@ -119,12 +131,17 @@ struct WatchPlayingView: View {
                     Color.black
                 }
         })
+        .navigationBarBackButtonHidden(true)
     }
+    
+    
     
     private func mixpanelPlayMusic() {
         Mixpanel.mainInstance().track(event: "노래 재생")
         Mixpanel.mainInstance().people.increment(property: "playMusic", by: 1)
     }
+    
+    
 }
 
 // MARK: 재생 버튼 ProgressBar
