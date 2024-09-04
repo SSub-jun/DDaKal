@@ -97,13 +97,14 @@ struct WatchPlayingView: View {
             .padding(.bottom, 10)
         }
         .focusable(true)
+        .scrollIndicators(.hidden)
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationBarBackButtonHidden(true)
         .digitalCrownRotation(detent: $viewModel.crownVolume, from: 0, through: 60, by: 3, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true
         )
         .onChange(of: viewModel.crownVolume) { newValue in
             viewModel.handleCrownValueChange(newValue)
         }
-        .scrollIndicators(.hidden)
-        .edgesIgnoringSafeArea(.bottom)
         .toolbar {
             ToolbarItem(placement: .topBarLeading){
                 Button(action: {
@@ -131,17 +132,12 @@ struct WatchPlayingView: View {
                     Color.black
                 }
         })
-        .navigationBarBackButtonHidden(true)
     }
-    
-    
     
     private func mixpanelPlayMusic() {
         Mixpanel.mainInstance().track(event: "노래 재생")
         Mixpanel.mainInstance().people.increment(property: "playMusic", by: 1)
     }
-    
-    
 }
 
 // MARK: 재생 버튼 ProgressBar
