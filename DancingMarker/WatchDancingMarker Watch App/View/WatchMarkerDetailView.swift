@@ -28,7 +28,7 @@ struct WatchMarkerDetailView: View {
             Button(action: {
                 self.isShownResetAlert.toggle()
             }, label: {
-                Text("삭제하기")
+                Text("지우기")
             })
             .buttonStyle(ResetButtonStyle())
             .fullScreenCover(isPresented: $isShownResetAlert) {
@@ -60,8 +60,8 @@ struct MarkerResetAlert: View {
             VStack {
                 Spacer()
                 HStack {
-                    Text("이 마커를\n초기화시키겠습니까?")
-                        .font(.system(size: 14))
+                    Text("이 마커에 저장된\n정보를 지우시겠습니까?")
+                        .font(.system(size: 14, weight: .regular))
                         .padding()
                         .padding(.bottom, 20)
                         .multilineTextAlignment(.center)
@@ -75,7 +75,7 @@ struct MarkerResetAlert: View {
                     viewModel.deletemarker(index: index)
                     navigationPath.removeLast(navigationPath.count) // 초기화 되면서 뷰 이동
                 }, label: {
-                    Text("삭제하기")
+                    Text("지우기")
                 })
                 .buttonStyle(ResetButtonStyle())
             }
@@ -120,7 +120,7 @@ struct MarkerEditAlert: View {
                     self.isPresented = false
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
-                    Text("변경사항 폐기")
+                    Text("변경 사항 폐기")
                 })
                 .buttonStyle(DiscardButtonStyle())
                 

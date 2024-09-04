@@ -36,10 +36,14 @@ struct WatchMarkerEditView: View {
                             .frame(width: 40, height: 40)
                         
                         Image("backward1SecIcon")
+                            .colorMultiply(data < 1 ? .inactiveGray : .white)
                     }
                     .onTapGesture {
-                        decrementCount() // 임시로 만들어준 1초 감소 함수입니다.
+                        if data > 1 {
+                            decrementCount()
+                        }
                     }
+                    
                     Spacer()
                     
                     // MARK: 현재 마커 시간
@@ -55,12 +59,16 @@ struct WatchMarkerEditView: View {
                             .frame(width: 40, height: 40)
                         
                         Image("forward1SecIcon")
+                            .colorMultiply(self.data > self.viewModel.duration - 1 ? .inactiveGray : .white)
                     }
                     .onTapGesture {
-                        incrementCount() // 임시로 만들어준 1초 감소 함수입니다.
+                        if self.data < self.viewModel.duration - 1 {
+                            incrementCount()
+                        }
                     }
                 }
                 .padding(.horizontal)
+                
                 Spacer()
                 
                 // MARK: 저장하기 버튼
@@ -72,7 +80,7 @@ struct WatchMarkerEditView: View {
                         navigationPath.removeLast(navigationPath.count) // 루트로 이동
                     }, label: {
                         Text("저장하기")
-                            .foregroundColor(data != initialData ? .white : .gray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
+                            .foregroundColor(data != initialData ? .white : .inactiveGray) // 처음의 시간이 아니라면 색상으로 활성화/비활성화 여부
                     })
                     .buttonStyle(SaveButtonStyle())
                     .disabled(data == initialData)
@@ -81,7 +89,7 @@ struct WatchMarkerEditView: View {
             .navigationTitle {
                 Text("수정하기")
                     .fontWeight(.heavy)
-                    .foregroundColor(.yellow)
+                    .foregroundColor(.primaryYellow)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -105,6 +113,7 @@ struct WatchMarkerEditView: View {
             }
         }
     }
+    
     // 1초 증가 함수
     private func incrementCount() {
         DispatchQueue.main.async{
@@ -114,6 +123,7 @@ struct WatchMarkerEditView: View {
         }
         
     }
+    
     // 1초 감소 함수
     private func decrementCount() {
         DispatchQueue.main.async{
@@ -122,6 +132,7 @@ struct WatchMarkerEditView: View {
             viewModel.connectivityManager.sendMarkerEditToIOS(forEdit: [index, count])
         }
     }
+    
     private func formattedTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60
