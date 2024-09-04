@@ -61,7 +61,7 @@ struct MarkerResetAlert: View {
                 Spacer()
                 HStack {
                     Text("이 마커에 저장된\n정보를 지우시겠습니까?")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .regular))
                         .padding()
                         .padding(.bottom, 20)
                         .multilineTextAlignment(.center)

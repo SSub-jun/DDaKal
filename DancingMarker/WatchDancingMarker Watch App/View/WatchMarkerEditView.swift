@@ -36,10 +36,14 @@ struct WatchMarkerEditView: View {
                             .frame(width: 40, height: 40)
                         
                         Image("backward1SecIcon")
+                            .colorMultiply(data < 1 ? .inactiveGray : .white)
                     }
                     .onTapGesture {
-                        decrementCount() // 임시로 만들어준 1초 감소 함수입니다.
+                        if data > 1 {
+                            decrementCount()
+                        }
                     }
+                    
                     Spacer()
                     
                     // MARK: 현재 마커 시간
@@ -55,12 +59,16 @@ struct WatchMarkerEditView: View {
                             .frame(width: 40, height: 40)
                         
                         Image("forward1SecIcon")
+                            .colorMultiply(self.data > self.viewModel.duration - 1 ? .inactiveGray : .white)
                     }
                     .onTapGesture {
-                        incrementCount() // 임시로 만들어준 1초 감소 함수입니다.
+                        if self.data < self.viewModel.duration - 1 {
+                            incrementCount()
+                        }
                     }
                 }
                 .padding(.horizontal)
+                
                 Spacer()
                 
                 // MARK: 저장하기 버튼
@@ -105,6 +113,7 @@ struct WatchMarkerEditView: View {
             }
         }
     }
+    
     // 1초 증가 함수
     private func incrementCount() {
         DispatchQueue.main.async{
@@ -114,6 +123,7 @@ struct WatchMarkerEditView: View {
         }
         
     }
+    
     // 1초 감소 함수
     private func decrementCount() {
         DispatchQueue.main.async{
