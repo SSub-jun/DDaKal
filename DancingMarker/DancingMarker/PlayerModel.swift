@@ -575,8 +575,8 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
-//            remoteControlCenterInfo()
-//            setupControlCenterControls()
+            remoteControlCenterInfo()
+            setupControlCenterControls()
             
             // 타이머 시작
             startTimer()
@@ -587,23 +587,21 @@ class PlayerModel: ObservableObject {
 
     
     func togglePlayback() {
-        DispatchQueue.main.async {
-            guard let audioPlayer = self.audioPlayer else {
-                print("Audio player is not available.")
-                return
-            }
-            
-            if self.isPlaying {
-                print("Pausing audio.")
-                self.stopAudio()
-            } else {
-                print("Playing audio.")
-                self.playAudio()
-            }
-            
-            // 백그라운드, 워치에 반영하기
-            self.updateNowPlayingControlCenter()
+        guard let audioPlayer = self.audioPlayer else {
+            print("Audio player is not available.")
+            return
         }
+        
+        if self.isPlaying {
+            print("멈춤 audio.")
+            self.stopAudio()
+        } else {
+            print("플레잉 audio.")
+            self.playAudio()
+        }
+        
+        // 백그라운드, 워치에 반영하기
+        self.updateNowPlayingControlCenter()
     }
     
     func startTimer() {
@@ -694,74 +692,80 @@ class PlayerModel: ObservableObject {
     }
 
     /// LiveActivity 함수 (백그라운드 재생, 정지, 5초 앞뒤로)
-//    private func remoteControlCenterInfo() {
-//        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-//        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
-//        
-//        if let music = self.music {
-//            // 앨범 아트가 있는 경우
-//            if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
-//                let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
-//                    return albumArt
-//                })
-//                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
-//            } else {
-//                // 앨범 아트가 없을 경우 기본 이미지 사용
-//                let liveActivityArtwork = liveActivityPlaceholderArtwork()
-//                let artwork = MPMediaItemArtwork(boundsSize: liveActivityArtwork.size, requestHandler: { size in
-//                    return liveActivityArtwork
-//                })
-//                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
-//            }
-//            
-//            nowPlayingInfo[MPMediaItemPropertyTitle] = music.title
-//            nowPlayingInfo[MPMediaItemPropertyArtist] = music.artist
-//        } else {
-//            // 음악이 없을 경우 모든 정보 초기화
-//            nowPlayingInfo.removeAll()
-//        }
-//
-//        nowPlayingInfo[MPMediaItemPropertyTitle] = self.music?.title
-//        nowPlayingInfo[MPMediaItemPropertyArtist] = self.music?.artist
-//        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
-//        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
-//
-//        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-//    }
+    private func remoteControlCenterInfo() {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+        
+        if let music = self.music {
+            // 앨범 아트가 있는 경우
+            if let albumArtData = music.albumArt, let albumArt = UIImage(data: albumArtData) {
+                let artwork = MPMediaItemArtwork(boundsSize: albumArt.size, requestHandler: { size in
+                    return albumArt
+                })
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+            } else {
+                // 앨범 아트가 없을 경우 기본 이미지 사용
+                let liveActivityArtwork = liveActivityPlaceholderArtwork()
+                let artwork = MPMediaItemArtwork(boundsSize: liveActivityArtwork.size, requestHandler: { size in
+                    return liveActivityArtwork
+                })
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+            }
+            
+            nowPlayingInfo[MPMediaItemPropertyTitle] = music.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = music.artist
+        } else {
+            // 음악이 없을 경우 모든 정보 초기화
+            nowPlayingInfo.removeAll()
+        }
+
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.music?.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = self.music?.artist
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
     
-//    private func setupControlCenterControls() {
-//        let commandCenter = MPRemoteCommandCenter.shared()
-//
-//        commandCenter.togglePlayPauseCommand.addTarget{ (commandEvent) -> MPRemoteCommandHandlerStatus in
-//            self.togglePlayback()
-//            return .success
-//        }
-//
-//        commandCenter.skipBackwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
-//            self.backward5Sec()
-//            return .success
-//        }
-//
-//        commandCenter.skipForwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
-//            self.forward5Sec()
-//            return .success
-//        }
-//        
-//        commandCenter.changePlaybackPositionCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
-//            if let positionEvent = event as? MPChangePlaybackPositionCommandEvent {
-//                self.changePlaybackPosition(to: positionEvent.positionTime)
-//                return .success
-//            }
-//            return .commandFailed
-//        }
-//
-//        // 백그라운드에서 5초 간격으로 앞뒤로 할 수 있게
-//        commandCenter.skipBackwardCommand.preferredIntervals = [5]
-//        commandCenter.skipForwardCommand.preferredIntervals = [5]
-//    }
+    private func setupControlCenterControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.togglePlayPauseCommand.removeTarget(nil)
+        commandCenter.togglePlayPauseCommand.addTarget{ (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.togglePlayback()
+            return .success
+        }
+
+        commandCenter.skipBackwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.backward5Sec()
+            return .success
+        }
+
+        commandCenter.skipForwardCommand.addTarget { (commandEvent) -> MPRemoteCommandHandlerStatus in
+            self.forward5Sec()
+            return .success
+        }
+        
+        commandCenter.changePlaybackPositionCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+            if let positionEvent = event as? MPChangePlaybackPositionCommandEvent {
+                self.changePlaybackPosition(to: positionEvent.positionTime)
+                return .success
+            }
+            return .commandFailed
+        }
+
+        // 백그라운드에서 5초 간격으로 앞뒤로 할 수 있게
+        commandCenter.skipBackwardCommand.preferredIntervals = [5]
+        commandCenter.skipForwardCommand.preferredIntervals = [5]
+    }
     
     func updateNowPlayingControlCenter() {
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        guard let music = self.music, let audioPlayer = self.audioPlayer else {
+            nowPlayingInfoCenter.nowPlayingInfo = nil
+            return
+        }
+        
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
 
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayer?.currentTime
