@@ -151,7 +151,7 @@ struct NowPlayingView: View {
                     )
                     .padding(.trailing, 28)
             }
-            .padding(.bottom, 7)
+            .padding(.bottom, 14)
         }
         .padding(.horizontal, 16)
         

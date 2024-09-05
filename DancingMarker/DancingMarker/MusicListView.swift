@@ -113,18 +113,19 @@ struct MusicListView: View {
                 }
                 .listStyle(.inset)
                 
-                NowPlayingView()
-                    .frame(height: 240) // 미니 플레이어의 높이 조정
-                    .background(.nowPlayingGray)
-                    .clipShape(
-                        .rect(
-                            topLeadingRadius: 20,
-                            bottomLeadingRadius: 0,
-                            bottomTrailingRadius: 0,
-                            topTrailingRadius: 20
+                if playerModel.music != nil {
+                    NowPlayingView()
+                        .frame(height: 240) // 미니 플레이어의 높이 조정
+                        .background(.nowPlayingGray)
+                        .clipShape(
+                            .rect(
+                                topLeadingRadius: 20,
+                                bottomLeadingRadius: 0,
+                                bottomTrailingRadius: 0,
+                                topTrailingRadius: 20
+                            )
                         )
-                    )
-                    .padding(.bottom, 0)
+                }
             }
             
         }
@@ -234,19 +235,31 @@ struct MusicListView: View {
             Button(role: .destructive, action: {
                 DispatchQueue.main.async {
                     if let index = self.musicList.firstIndex(of: music) {
+                        // 현재 삭제하려는 곡이 재생 중인 곡이라면, 플레이어를 정지하고 playerModel을 초기화
+                        if playerModel.music?.id == music.id {
+                            playerModel.stopAudio()       // 재생 중인 오디오를 정지
+                            playerModel.stopTimer()       // 타이머 정지
+                            playerModel.music = nil       // 음악을 nil로 설정
+                            playerModel.updateNowPlayingControlCenter() // Now Playing 정보 업데이트
+                        }
+
+                        // 음원 리스트에서 삭제
                         modelContext.delete(musicList[index])
-                        do{
+                        do {
                             try modelContext.save()
                         } catch {
                             print("Failed to fetch music metadata: \(error.localizedDescription)")
                         }
                     }
+
+                    // 워치로 업데이트된 음악 리스트 전송
                     playerModel.sendMusicListToWatch(with: musicList)
                 }
             }) {
-                Text("지우기")
+                Text("삭제하기")
                 Image(systemName: "trash")
             }
+
         }
     }
 }
