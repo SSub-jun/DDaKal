@@ -113,18 +113,19 @@ struct MusicListView: View {
                 }
                 .listStyle(.inset)
                 
-                NowPlayingView()
-                    .frame(height: 240) // 미니 플레이어의 높이 조정
-                    .background(.nowPlayingGray)
-                    .clipShape(
-                        .rect(
-                            topLeadingRadius: 20,
-                            bottomLeadingRadius: 0,
-                            bottomTrailingRadius: 0,
-                            topTrailingRadius: 20
+                if playerModel.music != nil {
+                    NowPlayingView()
+                        .frame(height: 240) // 미니 플레이어의 높이 조정
+                        .background(.nowPlayingGray)
+                        .clipShape(
+                            .rect(
+                                topLeadingRadius: 20,
+                                bottomLeadingRadius: 0,
+                                bottomTrailingRadius: 0,
+                                topTrailingRadius: 20
+                            )
                         )
-                    )
-                    .padding(.bottom, 0)
+                }
             }
             
         }
