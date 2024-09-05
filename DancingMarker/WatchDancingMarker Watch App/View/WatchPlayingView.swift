@@ -1,5 +1,6 @@
 
 import SwiftUI
+import SwiftData
 import Mixpanel
 
 struct WatchPlayingView: View {
@@ -7,6 +8,7 @@ struct WatchPlayingView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(WatchNavigationManager.self) var navigationManager
     @EnvironmentObject var viewModel: WatchViewModel
+    @Query var musicList: [Music] = []
     
     @State var showMarkerListOverlay: Bool = false
     
