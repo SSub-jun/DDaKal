@@ -375,8 +375,8 @@ class PlayerModel: ObservableObject {
                 Button(role: .destructive, action: {
                     self.deleteMarker(at: index)
                 }) {
-                    Text("삭제하기")
-                    Image(systemName: "trash")
+                    Text("지우기")
+                    Image(systemName: "eraser")
                 }
             }
         }
