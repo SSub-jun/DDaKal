@@ -746,6 +746,14 @@ class PlayerModel: ObservableObject {
             self.forward5Sec()
             return .success
         }
+        
+        commandCenter.changePlaybackPositionCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+            if let positionEvent = event as? MPChangePlaybackPositionCommandEvent {
+                self.changePlaybackPosition(to: positionEvent.positionTime)
+                return .success
+            }
+            return .commandFailed
+        }
 
         // 백그라운드에서 5초 간격으로 앞뒤로 할 수 있게
         commandCenter.skipBackwardCommand.preferredIntervals = [5]
@@ -765,6 +773,21 @@ class PlayerModel: ObservableObject {
         self.connectivityManager.sendIsPlayingToWatch(self.isPlaying)
         self.connectivityManager.sendPlayingTimesToWatch([self.currentTime, self.duration])
     }
+    
+    // LiveActivity 재생 위치 변경 함수
+    func changePlaybackPosition(to position: TimeInterval) {
+        guard let audioPlayer = self.audioPlayer else { return }
+        
+        // 오디오 플레이어의 재생 위치를 업데이트
+        audioPlayer.currentTime = position
+        self.currentTime = position
+        
+        // 백그라운드 재생 정보 업데이트
+        updateNowPlayingControlCenter()
+
+        print("Playback position changed to \(position)")
+    }
+
 }
 
 func liveActivityPlaceholderArtwork() -> UIImage {
