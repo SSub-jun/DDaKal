@@ -12,33 +12,46 @@ struct WatchMusicListView: View {
     @State private var drawingHeight = true
     
     var body: some View {
-        
         NavigationStack(path: $navigationManager.path) {
-            HStack{
-                Text("Music Marker")
-                    .font(.system(size:14, weight:.semibold))
-                    .foregroundStyle(.accent)
-                    .padding(.leading, 11)
-                Spacer()
-            }.padding(.top, 0)
-            ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(viewModel.musicList.indices, id:\.self) { index in
-                        if  viewModel.musicList[index][0] != ""{
-                            Button(action: {
-                                DispatchQueue.main.async{
-                                    viewModel.sendUUID(id: viewModel.musicList[index][1])
-                                    navigationManager.push(to: .playing)
+            VStack {
+                HStack{
+                    Text("Music Marker")
+                        .font(.system(size:14, weight:.semibold))
+                        .foregroundStyle(.accent)
+                        .padding(.leading, 11)
+                    Spacer()
+                }
+                .padding(.top, 0)
+                
+                if viewModel.musicList.filter{ $0 != ["",""] }.count == 0 {
+                    VStack {
+                        Spacer()
+                        Text("모바일 앱에서 음악을\n추가해주세요")
+                            .font(.system(size: 16, weight: .regular))
+                            .multilineTextAlignment(.center)
+                        Spacer()
+                    }
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns) {
+                            ForEach(viewModel.musicList.indices, id:\.self) { index in
+                                if  viewModel.musicList[index][0] != ""{
+                                    Button(action: {
+                                        DispatchQueue.main.async{
+                                            viewModel.sendUUID(id: viewModel.musicList[index][1])
+                                            navigationManager.push(to: .playing)
+                                        }
+                                    }) {
+                                        Text(viewModel.musicList[index][0])
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding()
+                                    }
+                                    .buttonBorderShape(.roundedRectangle)
+                                    .frame(maxWidth: .infinity)
                                 }
-                            }) {
-                                Text(viewModel.musicList[index][0])
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding()
                             }
-                            .buttonBorderShape(.roundedRectangle)
-                            .frame(maxWidth: .infinity)
                         }
                     }
                 }
@@ -88,6 +101,8 @@ struct WatchMusicListView: View {
         .environment(navigationManager)
         .onAppear{
             viewModel.connectivityManager.sendRequireMusicListToIOS()
+//            print("viewModel.musicList.count : \(viewModel.musicList.count)")
+//            print("viewModel.musicList : \(viewModel.musicList)")
         }
     }
     
@@ -97,6 +112,7 @@ struct WatchMusicListView: View {
             .frame(height: (drawingHeight ? high : low) * 18)
             .frame(width:1.6, height: 18, alignment: .center)
     }
+    
     func stopBar() -> some View {
         RoundedRectangle(cornerRadius: 1.2)
             .fill(.accent)
