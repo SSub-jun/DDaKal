@@ -99,11 +99,11 @@ struct WatchPlayingView: View {
             .padding(.bottom, 10)
         }
         .focusable(true)
-        .scrollIndicators(.hidden)
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarBackButtonHidden(true)
         .digitalCrownRotation(detent: $viewModel.crownVolume, from: 0, through: 60, by: 3, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true
         )
+        .scrollIndicators(.hidden)
         .onChange(of: viewModel.crownVolume) { newValue in
             viewModel.handleCrownValueChange(newValue)
         }

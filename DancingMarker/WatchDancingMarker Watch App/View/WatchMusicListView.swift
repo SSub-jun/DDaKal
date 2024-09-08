@@ -11,6 +11,11 @@ struct WatchMusicListView: View {
     
     @State private var drawingHeight = true
     
+    @Environment(\.scenePhase) var scenePhase
+    
+    @State private var afterOnAppear: Bool = true
+    
+    
     var body: some View {
         NavigationStack(path: $navigationManager.path) {
             VStack {
@@ -100,9 +105,26 @@ struct WatchMusicListView: View {
         }
         .environment(navigationManager)
         .onAppear{
-            viewModel.connectivityManager.sendRequireMusicListToIOS()
-//            print("viewModel.musicList.count : \(viewModel.musicList.count)")
-//            print("viewModel.musicList : \(viewModel.musicList)")
+//            viewModel.connectivityManager.sendRequireMusicListToIOS()
+            afterOnAppear = true
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                print("onActive")
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.005){
+                    viewModel.connectivityManager.sendRequireMusicListToIOS()
+                    print("\(viewModel.musicList)")
+                }
+            }
+        }
+        .onChange(of: afterOnAppear) { afterAppear in
+            if afterAppear == true {
+                print("onAppear")
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.005){
+                    viewModel.connectivityManager.sendRequireMusicListToIOS()
+                    afterOnAppear = false
+                }
+            }
         }
     }
     
