@@ -44,6 +44,7 @@ struct WatchPlayingView: View {
                                 .resizable()
                                 .frame(width: 20, height: 21)
                         })
+                        .frame(width: 34, height: 35)
                         .buttonStyle(PlainButtonStyle())
                     )
                 
@@ -66,6 +67,7 @@ struct WatchPlayingView: View {
                                 .resizable()
                                 .frame(width: 18, height: 18)
                             })
+                            .frame(width: 44, height: 44)
                             .buttonBorderShape(.circle)
                             .buttonStyle(PlainButtonStyle())
                         )
@@ -87,6 +89,7 @@ struct WatchPlayingView: View {
                                 .resizable()
                                 .frame(width: 20, height: 21)
                         })
+                        .frame(width: 34, height: 35)
                         .buttonStyle(PlainButtonStyle())
                     )
                 Spacer()
