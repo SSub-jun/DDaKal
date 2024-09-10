@@ -104,8 +104,14 @@ struct WatchMusicListView: View {
             }
         }
         .environment(navigationManager)
-        .onAppear{
-//            viewModel.connectivityManager.sendRequireMusicListToIOS()
+        .task {
+            if viewModel.connectivityManager.isReachable {
+                viewModel.connectivityManager.sendRequireMusicListToIOS()
+            } else {
+                viewModel.connectivityManager.sendRequireMusicListToIOS()
+                print("WatchConnectivity session is not reachable.")
+                
+            }
             afterOnAppear = true
         }
         .onChange(of: scenePhase) { newPhase in
