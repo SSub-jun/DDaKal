@@ -15,7 +15,6 @@ struct WatchMusicListView: View {
     
     @State private var afterOnAppear: Bool = true
     
-    
     var body: some View {
         NavigationStack(path: $navigationManager.path) {
             VStack {
@@ -104,14 +103,20 @@ struct WatchMusicListView: View {
             }
         }
         .environment(navigationManager)
-        .onAppear{
-//            viewModel.connectivityManager.sendRequireMusicListToIOS()
+        .task {
+            if viewModel.connectivityManager.isReachable {
+                viewModel.connectivityManager.sendRequireMusicListToIOS()
+            } else {
+                viewModel.connectivityManager.sendRequireMusicListToIOS()
+                print("WatchConnectivity session is not reachable.")
+                
+            }
             afterOnAppear = true
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
                 print("onActive")
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.005){
+                DispatchQueue.main.async {
                     viewModel.connectivityManager.sendRequireMusicListToIOS()
                     print("\(viewModel.musicList)")
                 }
@@ -120,7 +125,7 @@ struct WatchMusicListView: View {
         .onChange(of: afterOnAppear) { afterAppear in
             if afterAppear == true {
                 print("onAppear")
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.005){
+                DispatchQueue.main.async {
                     viewModel.connectivityManager.sendRequireMusicListToIOS()
                     afterOnAppear = false
                 }
@@ -128,14 +133,14 @@ struct WatchMusicListView: View {
         }
     }
     
-    func bar(low: CGFloat = 0.0, high: CGFloat = 1.0) -> some View {
+    private func bar(low: CGFloat = 0.0, high: CGFloat = 1.0) -> some View {
         RoundedRectangle(cornerRadius: 1.2)
             .fill(.accent)
             .frame(height: (drawingHeight ? high : low) * 18)
             .frame(width:1.6, height: 18, alignment: .center)
     }
     
-    func stopBar() -> some View {
+    private func stopBar() -> some View {
         RoundedRectangle(cornerRadius: 1.2)
             .fill(.accent)
             .frame(width:1.6, height: 2.5, alignment: .center)

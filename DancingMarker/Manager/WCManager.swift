@@ -10,7 +10,7 @@ import WatchConnectivity
 class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     
     private let session: WCSession = WCSession.default
-    var isReachable = false
+    @Published var isReachable = false
     
     static var shared = WatchConnectivityManager()
 
@@ -39,8 +39,13 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     
     func sessionReachabilityDidChange(_ session: WCSession) {
         DispatchQueue.main.async {
-            self.isReachable = session.isReachable
-        }
+                   self.isReachable = session.isReachable
+                   print("Reachability changed: \(self.isReachable)")
+                   if !self.isReachable {
+                       print("Session is not reachable, attempting to reactivate...")
+                       self.session.activate() // 재활성화 시도
+                   }
+               }
     }
     
     #if os(iOS)
