@@ -120,12 +120,20 @@ struct WatchMusicListView: View {
                     viewModel.connectivityManager.sendRequireMusicListToIOS()
                     print("\(viewModel.musicList)")
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                    viewModel.connectivityManager.sendRequireMusicListToIOS()
+                    print("\(viewModel.musicList)")
+                }
             }
         }
         .onChange(of: afterOnAppear) { afterAppear in
             if afterAppear == true {
                 print("onAppear")
                 DispatchQueue.main.async {
+                    viewModel.connectivityManager.sendRequireMusicListToIOS()
+                    afterOnAppear = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
                     viewModel.connectivityManager.sendRequireMusicListToIOS()
                     afterOnAppear = false
                 }
