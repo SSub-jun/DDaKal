@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,8 +14,21 @@
 		1FA08BAA2C8208B10082C266 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 1FA08BA92C8208B10082C266 /* Mixpanel */; };
 		5104B7F62C3D67F2008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
 		5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104B7F52C3D67F2008E10E8 /* Music.swift */; };
-		516EB0A22C87362C00F62DD2 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */; };
-		516EB0A32C87362C00F62DD2 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */; };
+		510D901A2CA2F1C0002E82CC /* WatchMarkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90162CA2F1C0002E82CC /* WatchMarkerDetailView.swift */; };
+		510D901B2CA2F1C0002E82CC /* WatchMarkerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90172CA2F1C0002E82CC /* WatchMarkerEditView.swift */; };
+		510D901C2CA2F1C0002E82CC /* WatchMarkerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90182CA2F1C0002E82CC /* WatchMarkerListView.swift */; };
+		510D90212CA2F1C0002E82CC /* WatchPlayingMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D901D2CA2F1C0002E82CC /* WatchPlayingMarkerView.swift */; };
+		510D90222CA2F1C0002E82CC /* WatchPlayingSpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D901E2CA2F1C0002E82CC /* WatchPlayingSpeedView.swift */; };
+		510D90232CA2F1C0002E82CC /* WatchPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D901F2CA2F1C0002E82CC /* WatchPlayingView.swift */; };
+		510D90262CA2F1C0002E82CC /* WatchMusicListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90242CA2F1C0002E82CC /* WatchMusicListView.swift */; };
+		510D902B2CA2F1C8002E82CC /* MusicEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90272CA2F1C8002E82CC /* MusicEditView.swift */; };
+		510D902C2CA2F1C8002E82CC /* MusicListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90282CA2F1C8002E82CC /* MusicListView.swift */; };
+		510D902D2CA2F1C8002E82CC /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90292CA2F1C8002E82CC /* NowPlayingView.swift */; };
+		510D90312CA2F1C8002E82CC /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D902E2CA2F1C8002E82CC /* PlayingView.swift */; };
+		510D90322CA2F1C8002E82CC /* TipPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D902F2CA2F1C8002E82CC /* TipPopupView.swift */; };
+		510D90352CA2F1C8002E82CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D90332CA2F1C8002E82CC /* ContentView.swift */; };
+		51675E282CA2F0E800D8D08F /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 51675E272CA2F0E800D8D08F /* Secrets.xcconfig */; };
+		51675E292CA2F0E800D8D08F /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 51675E272CA2F0E800D8D08F /* Secrets.xcconfig */; };
 		901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */; };
 		901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9842C29804B00C02FF9 /* Assets.xcassets */; };
 		901BF9882C29804B00C02FF9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901BF9872C29804B00C02FF9 /* Preview Assets.xcassets */; };
@@ -60,7 +73,20 @@
 
 /* Begin PBXFileReference section */
 		5104B7F52C3D67F2008E10E8 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
-		516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		510D90162CA2F1C0002E82CC /* WatchMarkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMarkerDetailView.swift; sourceTree = "<group>"; };
+		510D90172CA2F1C0002E82CC /* WatchMarkerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMarkerEditView.swift; sourceTree = "<group>"; };
+		510D90182CA2F1C0002E82CC /* WatchMarkerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMarkerListView.swift; sourceTree = "<group>"; };
+		510D901D2CA2F1C0002E82CC /* WatchPlayingMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPlayingMarkerView.swift; sourceTree = "<group>"; };
+		510D901E2CA2F1C0002E82CC /* WatchPlayingSpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPlayingSpeedView.swift; sourceTree = "<group>"; };
+		510D901F2CA2F1C0002E82CC /* WatchPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPlayingView.swift; sourceTree = "<group>"; };
+		510D90242CA2F1C0002E82CC /* WatchMusicListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMusicListView.swift; sourceTree = "<group>"; };
+		510D90272CA2F1C8002E82CC /* MusicEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicEditView.swift; sourceTree = "<group>"; };
+		510D90282CA2F1C8002E82CC /* MusicListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListView.swift; sourceTree = "<group>"; };
+		510D90292CA2F1C8002E82CC /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
+		510D902E2CA2F1C8002E82CC /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
+		510D902F2CA2F1C8002E82CC /* TipPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipPopupView.swift; sourceTree = "<group>"; };
+		510D90332CA2F1C8002E82CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		51675E272CA2F0E800D8D08F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		51FD01772C3BC6B1003F99B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		901BF97D2C29804A00C02FF9 /* DancingMarker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DancingMarker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		901BF9802C29804A00C02FF9 /* DancingMarkerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingMarkerApp.swift; sourceTree = "<group>"; };
@@ -75,19 +101,10 @@
 		90A472292C45080D008577A2 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		90A4722B2C450825008577A2 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		90A4722E2C450867008577A2 /* WCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCManager.swift; sourceTree = "<group>"; };
-		90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchDancingMarkerApp.swift; path = "WatchDancingMarker Watch App/WatchDancingMarkerApp.swift"; sourceTree = SOURCE_ROOT; };
+		90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchDancingMarkerApp.swift; path = "WatchDancingMarker Watch App/Application/WatchDancingMarkerApp.swift"; sourceTree = SOURCE_ROOT; };
 		90A542372C6E1F0100B0F694 /* WatchDancingMarker-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WatchDancingMarker-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		90E28F552C2D092E009098BE /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		518D7EFC2CA2DF9D00612544 /* WatchMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WatchMain; sourceTree = "<group>"; };
-		518D7F002CA2E0F400612544 /* WatchMarkerList */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WatchMarkerList; sourceTree = "<group>"; };
-		518D7F052CA2E2F300612544 /* Main */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Main; sourceTree = "<group>"; };
-		518D7F062CA2E39A00612544 /* Playing */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Playing; sourceTree = "<group>"; };
-		518D7F072CA2E3FF00612544 /* Content */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Content; sourceTree = "<group>"; };
-		518D7F122CA2E4E600612544 /* WatchPlaying */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WatchPlaying; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		901BF97A2C29804A00C02FF9 /* Frameworks */ = {
@@ -111,20 +128,75 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		510D90152CA2F1A7002E82CC /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		510D90192CA2F1C0002E82CC /* WatchMarkerList */ = {
+			isa = PBXGroup;
+			children = (
+				510D90162CA2F1C0002E82CC /* WatchMarkerDetailView.swift */,
+				510D90172CA2F1C0002E82CC /* WatchMarkerEditView.swift */,
+				510D90182CA2F1C0002E82CC /* WatchMarkerListView.swift */,
+			);
+			path = WatchMarkerList;
+			sourceTree = "<group>";
+		};
+		510D90202CA2F1C0002E82CC /* WatchPlaying */ = {
+			isa = PBXGroup;
+			children = (
+				510D901D2CA2F1C0002E82CC /* WatchPlayingMarkerView.swift */,
+				510D901E2CA2F1C0002E82CC /* WatchPlayingSpeedView.swift */,
+				510D901F2CA2F1C0002E82CC /* WatchPlayingView.swift */,
+			);
+			path = WatchPlaying;
+			sourceTree = "<group>";
+		};
+		510D90252CA2F1C0002E82CC /* WatchMain */ = {
+			isa = PBXGroup;
+			children = (
+				510D90242CA2F1C0002E82CC /* WatchMusicListView.swift */,
+			);
+			path = WatchMain;
+			sourceTree = "<group>";
+		};
+		510D902A2CA2F1C8002E82CC /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				510D90272CA2F1C8002E82CC /* MusicEditView.swift */,
+				510D90282CA2F1C8002E82CC /* MusicListView.swift */,
+				510D90292CA2F1C8002E82CC /* NowPlayingView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		510D90302CA2F1C8002E82CC /* Playing */ = {
+			isa = PBXGroup;
+			children = (
+				510D902E2CA2F1C8002E82CC /* PlayingView.swift */,
+				510D902F2CA2F1C8002E82CC /* TipPopupView.swift */,
+			);
+			path = Playing;
+			sourceTree = "<group>";
+		};
+		510D90342CA2F1C8002E82CC /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				510D90332CA2F1C8002E82CC /* ContentView.swift */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
 		513303FF2C4CD65400CC5F22 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
 				901BF9842C29804B00C02FF9 /* Assets.xcassets */,
 			);
 			path = Resource;
-			sourceTree = "<group>";
-		};
-		518D7EFE2CA2E00700612544 /* Application */ = {
-			isa = PBXGroup;
-			children = (
-				90A472302C450A68008577A2 /* WatchDancingMarkerApp.swift */,
-			);
-			path = Application;
 			sourceTree = "<group>";
 		};
 		518D7F012CA2E1D700612544 /* ViewModel */ = {
@@ -154,9 +226,9 @@
 		518D7F042CA2E27B00612544 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				518D7F072CA2E3FF00612544 /* Content */,
-				518D7F052CA2E2F300612544 /* Main */,
-				518D7F062CA2E39A00612544 /* Playing */,
+				510D90342CA2F1C8002E82CC /* Content */,
+				510D902A2CA2F1C8002E82CC /* Main */,
+				510D90302CA2F1C8002E82CC /* Playing */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -180,7 +252,7 @@
 		901BF9742C29804A00C02FF9 = {
 			isa = PBXGroup;
 			children = (
-				516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */,
+				51675E272CA2F0E800D8D08F /* Secrets.xcconfig */,
 				90A4722D2C450837008577A2 /* Manager */,
 				901BF97F2C29804A00C02FF9 /* DancingMarker */,
 				901BF9932C29809900C02FF9 /* WatchDancingMarker Watch App */,
@@ -225,7 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				901BF9B52C2A533200C02FF9 /* WatchNavigationManager.swift */,
-				518D7EFE2CA2E00700612544 /* Application */,
+				510D90152CA2F1A7002E82CC /* Application */,
 				518D7F012CA2E1D700612544 /* ViewModel */,
 				901BF9B72C2A5F5D00C02FF9 /* View */,
 				518D7F162CA2E52700612544 /* Resource */,
@@ -246,9 +318,9 @@
 		901BF9B72C2A5F5D00C02FF9 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				518D7EFC2CA2DF9D00612544 /* WatchMain */,
-				518D7F122CA2E4E600612544 /* WatchPlaying */,
-				518D7F002CA2E0F400612544 /* WatchMarkerList */,
+				510D90252CA2F1C0002E82CC /* WatchMain */,
+				510D90202CA2F1C0002E82CC /* WatchPlaying */,
+				510D90192CA2F1C0002E82CC /* WatchMarkerList */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -287,11 +359,6 @@
 			dependencies = (
 				901BF99E2C29809A00C02FF9 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				518D7F052CA2E2F300612544 /* Main */,
-				518D7F062CA2E39A00612544 /* Playing */,
-				518D7F072CA2E3FF00612544 /* Content */,
-			);
 			name = DancingMarker;
 			packageProductDependencies = (
 				1FA08BA92C8208B10082C266 /* Mixpanel */,
@@ -311,11 +378,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				518D7EFC2CA2DF9D00612544 /* WatchMain */,
-				518D7F002CA2E0F400612544 /* WatchMarkerList */,
-				518D7F122CA2E4E600612544 /* WatchPlaying */,
 			);
 			name = "WatchDancingMarker Watch App";
 			packageProductDependencies = (
@@ -371,7 +433,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF9882C29804B00C02FF9 /* Preview Assets.xcassets in Resources */,
-				516EB0A22C87362C00F62DD2 /* Secrets.xcconfig in Resources */,
+				51675E282CA2F0E800D8D08F /* Secrets.xcconfig in Resources */,
 				1F32F5852C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */,
 				90A542362C6E1ECC00B0F694 /* Assets.xcassets in Resources */,
 				901BF9852C29804B00C02FF9 /* Assets.xcassets in Resources */,
@@ -383,7 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				901BF99C2C29809A00C02FF9 /* Preview Assets.xcassets in Resources */,
-				516EB0A32C87362C00F62DD2 /* Secrets.xcconfig in Resources */,
+				51675E292CA2F0E800D8D08F /* Secrets.xcconfig in Resources */,
 				1F32F5862C84835300D851E6 /* WatchDancingMarker-Watch-App-Info.plist in Resources */,
 				1F18C8A12C5679A3003972E3 /* Assets.xcassets in Resources */,
 				901BF9992C29809A00C02FF9 /* Assets.xcassets in Resources */,
@@ -397,6 +459,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510D90312CA2F1C8002E82CC /* PlayingView.swift in Sources */,
+				510D90352CA2F1C8002E82CC /* ContentView.swift in Sources */,
+				510D90322CA2F1C8002E82CC /* TipPopupView.swift in Sources */,
+				510D902B2CA2F1C8002E82CC /* MusicEditView.swift in Sources */,
+				510D902C2CA2F1C8002E82CC /* MusicListView.swift in Sources */,
+				510D902D2CA2F1C8002E82CC /* NowPlayingView.swift in Sources */,
 				901BF9812C29804A00C02FF9 /* DancingMarkerApp.swift in Sources */,
 				902077082C464CB800988D2B /* PlayerModel.swift in Sources */,
 				90A4722F2C450867008577A2 /* WCManager.swift in Sources */,
@@ -411,9 +479,16 @@
 			files = (
 				90A472322C450AB6008577A2 /* WCManager.swift in Sources */,
 				902077062C458ABB00988D2B /* WatchViewModel.swift in Sources */,
+				510D90262CA2F1C0002E82CC /* WatchMusicListView.swift in Sources */,
+				510D901A2CA2F1C0002E82CC /* WatchMarkerDetailView.swift in Sources */,
+				510D901B2CA2F1C0002E82CC /* WatchMarkerEditView.swift in Sources */,
+				510D901C2CA2F1C0002E82CC /* WatchMarkerListView.swift in Sources */,
 				5104B7F82C3D6C3F008E10E8 /* Music.swift in Sources */,
 				90A472312C450A68008577A2 /* WatchDancingMarkerApp.swift in Sources */,
 				901BF9B62C2A533200C02FF9 /* WatchNavigationManager.swift in Sources */,
+				510D90212CA2F1C0002E82CC /* WatchPlayingMarkerView.swift in Sources */,
+				510D90222CA2F1C0002E82CC /* WatchPlayingSpeedView.swift in Sources */,
+				510D90232CA2F1C0002E82CC /* WatchPlayingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,7 +624,6 @@
 		};
 		901BF98C2C29804B00C02FF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -593,7 +667,6 @@
 		};
 		901BF98D2C29804B00C02FF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -636,7 +709,6 @@
 		};
 		901BF9A12C29809A00C02FF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -671,7 +743,6 @@
 		};
 		901BF9A22C29809A00C02FF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 516EB0A12C87362C00F62DD2 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
