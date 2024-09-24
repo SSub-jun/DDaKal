@@ -205,7 +205,7 @@ struct MusicListView: View {
             let newMusic = Music(
                 title: title,
                 artist: artist,
-                path: uniqueFileURL,
+                fileName: uniqueFileURL.lastPathComponent,
                 markers: [-1, -1, -1],
                 albumArt: albumArt
             )
@@ -217,11 +217,6 @@ struct MusicListView: View {
         } catch {
             print("Failed to fetch music metadata: \(error.localizedDescription)")
         }
-    }
-    
-    private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
     }
     
     private func musicContextMenu(music: Music) -> some View {

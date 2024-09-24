@@ -543,11 +543,13 @@ class PlayerModel: ObservableObject {
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior = [.pad]
         
-        print("Attempting to load file at path: \(music.path)")
+        // `fileURL`을 통해 동적으로 파일 경로 조합
+        let musicFileURL = music.fileURL
+        print("Attempting to load file at path: \(musicFileURL.path)")
         
         // 파일 존재 여부 확인
-        guard FileManager.default.fileExists(atPath: music.path.path) else {
-            print("File not found at path: \(music.path)")
+        guard FileManager.default.fileExists(atPath: musicFileURL.path) else {
+            print("File not found at path: \(musicFileURL.path)")
             return
         }
         
@@ -558,7 +560,7 @@ class PlayerModel: ObservableObject {
             try audioSession.setActive(true)
             
             // AVAudioPlayer 초기화
-            self.audioPlayer = try AVAudioPlayer(contentsOf: music.path)
+            self.audioPlayer = try AVAudioPlayer(contentsOf: musicFileURL)
             guard let audioPlayer = self.audioPlayer else {
                 print("Failed to initialize audio player")
                 return
@@ -575,6 +577,7 @@ class PlayerModel: ObservableObject {
             formattedDuration = formatter.string(from: audioPlayer.duration) ?? "0:00"
             duration = audioPlayer.duration
             
+            // Now Playing 정보 업데이트 및 Control Center 설정
             remoteControlCenterInfo()
             setupControlCenterControls()
             
@@ -584,7 +587,6 @@ class PlayerModel: ObservableObject {
             print("Error initializing audio player: \(error.localizedDescription)")
         }
     }
-
     
     func togglePlayback() {
         guard let audioPlayer = self.audioPlayer else {
