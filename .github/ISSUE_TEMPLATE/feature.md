@@ -1,38 +1,14 @@
 ---
 name: Feature
-about: issue template
-title: ''
+about: 구현 기능에 대한 목표와 작업(Task)을 적어주세요.
+title: "[FEAT]"
 labels: ''
 assignees: ''
 
 ---
 
----
-name: Feature
-about: 구현 기능에 대한 목표와 작업(Task)을 적어주세요.
-title: "[FEAT]"
-labels: enhancement
-assignees: mosiccan
+## 기능 설명
+> 추가하려는 기능에 대해 간결하게 설명해주세요
 
----
-
-## 💡 기능
-<!-- 아래에 어떤 기능인지 적어주세요 --> 
-기능을 작성해주세요
-
-## ✏️ 설명
-<!-- 아래에 설명을 적어주세요 --> 
-설명을 작성해주세요
-
-## ✅ 해야할 일
-
-- [ ] Todo 1
-- [ ] Todo 2
-
-## 💯 예상 결과물
-<!-- 아래에 예상 결과물을 적어주세요 -->
-
-<br>
-
-### Etc
-<!-- 작업 중 특이사항이 생기면 적어주세요 -->
+## 작업 목록
+- [ ] TODO
