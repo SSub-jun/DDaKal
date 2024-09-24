@@ -1,14 +1,20 @@
 ---
 name: Feature
 about: 구현 기능에 대한 목표와 작업(Task)을 적어주세요.
-title: "[FEAT]"
-labels: ''
+title: "[Feat/Fix/Bug] title"
+labels: Feat, Fix, Bug, 
 assignees: ''
 
 ---
 
-## 기능 설명
-> 추가하려는 기능에 대해 간결하게 설명해주세요
+## 작업 목적
 
-## 작업 목록
+> 작업에 대한 간단한 설명
+
+## 작업 상세 내용
+
 - [ ] TODO
+- [ ] TODO
+- [ ] TODO
+
+## 기타사항
