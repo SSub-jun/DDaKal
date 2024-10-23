@@ -185,7 +185,6 @@ class PlayerModel: ObservableObject {
         }
     }
     
-    
     @objc func notificationMarkerSaveAction(_ notification: Notification) {
         self.countNum = countNum + 1
         guard let music = music else { return }
@@ -523,7 +522,6 @@ class PlayerModel: ObservableObject {
         isPlaying = false
         print("Stopping audio. isPlaying = \(isPlaying)")
     }
-
     
     func initAudioPlayer(for music: Music) {
         // 기존 플레이어가 동일한 음악을 재생 중이면 초기화하지 않음
@@ -569,6 +567,9 @@ class PlayerModel: ObservableObject {
             // 오디오 플레이어 준비 및 속성 설정
             audioPlayer.prepareToPlay()
             audioPlayer.enableRate = true
+            
+            // 무한 반복 설정
+            audioPlayer.numberOfLoops = -1
             
             // 시스템 볼륨을 워치로 전송 (필요한 경우)
             connectivityManager.sendSystemVolumeToWatch(audioSession.outputVolume)
@@ -793,7 +794,6 @@ class PlayerModel: ObservableObject {
 
         print("Playback position changed to \(position)")
     }
-
 }
 
 func liveActivityPlaceholderArtwork() -> UIImage {
