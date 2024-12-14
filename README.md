@@ -40,7 +40,7 @@
       <td colspan="1" align="center"><b>이상도</b></td>
     </tr>
     <tr>
-  <td colspan="1" align="center"><code>Product Manager</code></td>
+  <td colspan="1" align="center"><code>ProductManager</code></td>
   <td colspan="1" align="center"><code>Designer</code></td>
   <td colspan="1" align="center"><code>Developer</code></td>
   <td colspan="1" align="center"><code>Developer</code></td>
