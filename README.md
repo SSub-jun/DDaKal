@@ -32,7 +32,6 @@
 
 #### 🟡 팀원 소개
 <table>
-  <tbody>
     <tr>
       <td colspan="1" align="center"><b>김예지</b></td>
       <td colspan="1" align="center"><b>이윤지</b></td>
@@ -50,9 +49,16 @@
     <tr>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/b621f31f-174d-4bf5-b51b-84dd8bbd31f5" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/142d05b4-448e-40a5-ac97-19b5d3fec456" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
-      <td align="center"><a href=""><img src="https://github.com/DeveloperAcademy-POSTECH/2024-MC2-M17-Kodari/assets/108053426/5dffc651-46ff-45a1-87eb-c29aa61feec4" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
-      <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/6b1d0dc4-1f64-4e64-8f4b-d80fca0bb234" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
+      <td align="center"><a href=""><img src="https://avatars.githubusercontent.com/u/130440930?v=4" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
+      <td align="center"><a href=""><img src="https://avatars.githubusercontent.com/u/82072195?v=4" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/15102c50-b525-482e-9796-de49c4bbe1a3" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
+    </tr>
+  <tr>
+      <td colspan="1" align="center"><a href="https://github.com/SSub-jun">김예지</a></td>
+      <td colspan="1" align="center"><a href="https://github.com/KeenieY">@KeenieY</a></td>
+      <td colspan="1" align="center"><a href="https://github.com/SSub-jun">@SSub-jun</a></td>
+      <td colspan="1" align="center"><a href="https://github.com/mosiccan">@mosiccan</a></td>
+      <td colspan="1" align="center"><a href="https://github.com/SANGDOLEE">@SANGDOLEE</a></td>
     </tr>
   </tbody>
 </table>
