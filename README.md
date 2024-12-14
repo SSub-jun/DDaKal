@@ -48,13 +48,13 @@
 </tr>
     <tr>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/b621f31f-174d-4bf5-b51b-84dd8bbd31f5" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
-      <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/142d05b4-448e-40a5-ac97-19b5d3fec456" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
+      <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/72477f63-165f-4e84-a1f1-38ec54e43830" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://avatars.githubusercontent.com/u/130440930?v=4" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://avatars.githubusercontent.com/u/82072195?v=4" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/15102c50-b525-482e-9796-de49c4bbe1a3" width="150px;" alt=""/><br /><sub><b></b></sub></a></td>
     </tr>
   <tr>
-      <td colspan="1" align="center"><a href="https://github.com/SSub-jun">김예지</a></td>
+      <td colspan="1" align="center"><a href="https://github.com/yajikim">@yajikim</a></td>
       <td colspan="1" align="center"><a href="https://github.com/KeenieY">@KeenieY</a></td>
       <td colspan="1" align="center"><a href="https://github.com/SSub-jun">@SSub-jun</a></td>
       <td colspan="1" align="center"><a href="https://github.com/mosiccan">@mosiccan</a></td>
@@ -75,7 +75,7 @@
       <td colspan="1" align="center"><b>메인 화면</b></td>
     </tr>
     <tr>
-      <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/6995575d-5bbe-41ac-8e51-15e828285545" width="230px;" alt=""/><br /><sub><b></b></sub></a></td>
+      <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/5aa7eccf-3f3e-4d1d-9b46-65d146a6cdc7" width="230px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/337a80ec-ad9a-4db7-b1c6-4ae7e6a55193" width="230px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center"><a href=""><img src="https://github.com/user-attachments/assets/5e05bca5-0a7a-42bf-b5d4-844dcbcaa51b" width="230px;" alt=""/><br /><sub><b></b></sub></a></td>
     </tr>
