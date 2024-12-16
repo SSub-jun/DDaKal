@@ -30,6 +30,15 @@
 
 ---
 
+#### 🟡 Frameworks and Libraries
+
+- SwiftUI
+- SwiftData
+- AVFoundation
+- WatchConnectivity
+
+---
+
 #### 🟡 팀원 소개
 <table>
     <tr>
